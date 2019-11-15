@@ -1,0 +1,333 @@
+---
+title: "20191009_gettingtidy"
+author: "Matt Paul"
+date: "10/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## BRC intro
+
+
+
+## What does it mean to be tidy?
+
+Every dataset is different. But if we are ointeracintg with them having a standarad format i.e. count matrix or
+
+There are many ways to do things. Everyone has their favourite syntax. 
+
+Many of us taught BaseR. Which is great. 
+
+Although many fundamental data processing functions exist in R, they have been a bit convoluted to date and have lacked consistent coding and the ability to easily flow together → leads to difficult-to-read nested functions and/or choppy code.
+
+Tidyverse is a collection of tools and a philosphy to approaching data analysis that often makes data wrangling easier. They're self described as an opionionated group of packages. But packages in the tidyverse community readily talk to one another. 
+
+More efficient code
+Easier to remember syntax
+Easier to read syntax
+
+## What are the main tools in the tidyverse?
+
+readr – reading data into R
+tidyr – creating tidy data frames (Tibbles)
+dplyr – mainpulating data
+ggplot2 – making pretty graphs
+stringr – working with strings
+purr - iterating over data
+tibble - working with tibbles
+
+Other tools have now been made for the tidyverse. Overlap with biocoudctor. But these are the linchpins that hold it together. 
+
+## What are we doing today
+
+Workflow Image for working with data. 
+
+## First step lets load in the data we are using today
+```{r}
+load(file='~/Documents/Box Sync/RU/Teaching/tidyR/my_tidy.Rdata')
+```
+
+## Are all data frames equal?
+```{r}
+head(df1)
+head(df2)
+head(df3a)
+head(df3b)
+```
+
+## What it is to be tidy?
+
+A tidy dataset is a data frame (or table) for which the following are true:
+
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
+
+Our first dataframe is tidy
+
+## Why bother?
+
+Consistent dataframe layouts help to ensure not just the values are present, but also the relationships between datapoints.
+
+Tidy data works well with R because R is a vectorized programming language. Data structures in R are built from vectors and R’s operations are optimized to work with vectors. Tidy data takes advantage of both of these traits.
+
+R stores tabular data as a data frame, a list of atomic vectors arranged to look like a table. Each column in the table is an atomic vector in the list.
+
+
+## When its in this format it is then super easy to interact with -> dplyr
+
+```{r}
+library(dplyr)
+
+#These tools hav same logic
+
+# -> insert graphic here
+# https://github.com/trinker/tidyr_in_a_nutshell
+
+#Select allows you to make a vector or dataframe from a specific variable or variables
+select(df1,common_name)
+select(df1,age_classbylength,common_name)
+
+#Filter allows you to remove obsevrations based on specific criteria
+filter(df1,common_name=='Sockeye salmon')
+filter(df1,length_mm>200)
+
+#Arrange sorts the dataframe based on a specific variable or variables
+arrange(df1, length_mm)
+arrange(df1, common_name, desc(length_mm))
+
+#Mutate creates a new variable based on some form of computation
+mutate(df1,scale(IGF1_ng_ml, center = TRUE, scale = TRUE))
+mutate(df1,IGFngml_zscore=scale(IGF1_ng_ml, center = TRUE, scale = TRUE))
+
+#Summarize applies aggregating or summary function to a group
+df1_byname <- group_by(df1, common_name)
+summarise(df1_byname, count=n())
+summarise(df1_byname, IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
+
+#Grouping can help ask questions with other fucntions
+
+#Smallest two from each species
+filter(df1_byname, rank(length_mm) <= 2)
+
+#Need at least 5 from each species
+filter(df1_byname, n() > 5)
+
+#Make new vriable using within group metrics
+mutate(df1_byname,IGFngml_mm=scale(IGF1_ng_ml, center = TRUE, scale = TRUE))
+
+```
+
+Piping to put them together.
+```{r}
+
+# -> same graphic as before , but extend
+# https://github.com/trinker/tidyr_in_a_nutshell
+
+#Piping allows you to pass the result from one expression into another. 
+
+
+# Without pipe
+df1_byname <- group_by(df1, common_name)
+summarise(df1_byname, IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
+
+#With pipe
+group_by(df1, common_name) %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
+
+
+
+group_by(df1, common_name) %>% filter(length_mm>200) %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
+
+
+mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% group_by(common_name, size) %>% filter() %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
+
+mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% group_by(common_name, size) %>% filter() %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %>% filter(common_name!='Coho salmon')  %>% filter(common_name!='Sockeye salmon')
+
+```
+
+## Say want to graph what is going on with these fish? age species. IGF per length. 
+```{r}
+library(ggplot2)
+
+mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% group_by(common_name, size) %>% filter() %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %>% filter(common_name!='Coho salmon')  %>% filter(common_name!='Sockeye salmon') %>% ggplot( aes(x=IGF1_ng_ml_ave,group=interaction(common_name, size))) + geom_bar(stat="identity")
+
+```
+
+CHALLENGE
+```{r}
+GET A SPECIFIC GROUP AND PLOT IT. 
+```
+
+ANSWER
+```{r}
+GET A SPECIIFC GROUP AND PLOT IT. 
+```
+
+
+## So we blasted through what being tidy can give you. So how we do get tidy? Reading the data in and mkaing tibbles.
+Now lets tidy some data. We know how to work a little bit with some data. 
+
+ReadR:
+read_csv(): comma separated (CSV) files
+read_tsv(): tab separated files
+read_delim(): general delimited files
+read_fwf(): fixed width files
+read_table(): tabular files where columns are separated by white-space.
+read_log(): web log files
+
+```{r}
+library(tidyverse)
+
+#Base gives you everything
+untidy_counts_base <- read.csv("~/Documents/Box Sync/RU/Teaching/tidyR/dataset/hemato_rnaseq_counts.csv")
+
+#readr gives you a tibble
+untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/tidyR/dataset/hemato_rnaseq_counts.csv")
+untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/tidyR/dataset/hemato_rnaseq_counts.csv", col_types = cols(
+    ENTREZ = col_character(),
+    CD34.1 = col_integer(),
+    ORTHO.1 = col_integer(),
+    CD34.2 = col_integer(),
+    ORTHO.2 = col_integer()
+  ))
+
+```
+
+
+subsetting tibbles
+
+#Converting Tibbles - Backl and Forth
+```{r}
+as_tibble(untidy_counts_base)
+untidy_counts_base<-as_tibble(untidy_counts_base) %>% mutate_at(vars(ENTREZ), as.character)
+untidy_counts_base
+
+as.data.frame(untidy_counts_base)
+```
+
+Make your own tibble. Lets grab some metadata 
+```{r}
+library(org.Hs.eg.db)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+
+keys<-untidy_counts$ENTREZ
+symbols<-select(org.Hs.eg.db, keys=keys,columns="SYMBOL", keytype="ENTREZID")
+chrs<-select(TxDb.Hsapiens.UCSC.hg19.knownGene, keys=keys, columns="TXCHROM", keytype="GENEID")
+
+geneExons <- exonsBy(TxDb.Hsapiens.UCSC.hg19.knownGene,by="gene")[keys]
+txsLength<-sapply(geneExons, function(x){x %>% reduce() %>% width() %>% sum()})
+
+counts_metadata<-tibble(ID=symbols$ENTREZID,SYMBOL=symbols$SYMBOL,CHR=chrs$TXCHROM,LENGTH=txsLength)
+
+```
+
+What is wrong with this dataframe from a tidy viewpoint?
+
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
+
+```{r}
+untidy_counts
+```
+
+A siongle avirable with multiple columns
+
+How do we get tidy? - Pivot tools (formerly known as gather/spread )
+```{r}
+tidier_counts<-pivot_longer(untidy_counts, cols=c(-ENTREZ), names_to = c("Sample"), values_to = "counts")
+   
+pivot_wider(tidier_counts, names_from = c("Sample"), values_from = "counts")
+```
+
+What next?
+```{r}
+tidier_counts
+```
+
+Multiple variables in a single column
+
+How do we get tidy? - Cleaning up
+```{r}
+tidy_counts<-separate(tidier_counts, Sample, sep="_", into=c("CellType","Rep"), remove=FALSE)
+
+#rememebr you can alawys pipe this all together as well
+untidy_counts %>% pivot_longer(cols=c(-ENTREZ), names_to = c("Sample"), values_to = "counts") %>% separate(Sample, sep="_", into=c("CellType","Rep"), remove=FALSE)
+```
+
+So now we have two realted tidy dataframes. Can we put them together?
+
+You need a key. Often we want this to be unique i.e. ENTREZ ID. 
+
+```{r}
+
+inner_join(tidy_counts,counts_metadata, by = c("ENTREZ" = "ID"))
+
+```
+
+## There are many ways to join things
+
+Inner Join 
+* Keeps all obsevrations in x and y with matching keys
+
+Outer Join
+* A left join keeps all observations in x and those in y with matching keys.
+* A right join keeps all observations in y and those in x with matching keys. 
+* A full join keeps all observations in x and y
+
+## Example - I only want to look at expressed genes
+
+```{r}
+expressed_genes<-tidy_counts %>% group_by(ENTREZ) %>% summarise(count_total=sum(counts)) %>% filter(count_total>0)
+
+left_join(tidy_counts,expressed_genes, by = c("ENTREZ" = "ENTREZ")) %>% print(n=20)
+tidy_counts_expressed<-right_join(tidy_counts,expressed_genes, by = c("ENTREZ" = "ENTREZ"))
+tidy_counts_expressed  %>% print(n=20)
+```
+
+
+## Example - I only want to look at expressed genes
+```{r}
+Filtering joins
+
+```
+
+## Calcucate CPMs and TPMs
+
+Show diagram of the math
+
+```{r}
+tidy_counts_expressed <- tidy_counts_expressed  %>% group_by(Sample) %>% mutate(CPM=(counts/sum(counts))*1000000)
+
+tidy_counts_expressed <- tidy_counts_expressed %>% inner_join(counts_metadata, by = c("ENTREZ" = "ID")) %>%  mutate(TPM=(counts/(LENGTH/1000))/(sum(counts)/1000000))
+
+
+tidy_counts_expressed %>% ggplot(aes(x=CPM, y=TPM)) +geom_point() + scale_x_continuous(name="log2(CPM)",trans='log2') + scale_y_continuous(name="log2(TPM)",trans='log2') 
+```
+
+
+
+
+
+# tidy history and ethos
+```{r}
+
+Tidy data was popularized by Hadley Wickham, and it serves as the basis for many R packages and functions. You can learn more about tidy data by reading Tidy Data a paper written by Hadley Wickham and published in the Journal of Statistical Software. Tidy Data is available online at www.jstatsoft.org/v59/i10/paper.
+
+
+```
+
+## BRC outro
+```{r}
+
+```
+
+
+
+
+
+
+

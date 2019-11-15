@@ -1,0 +1,59 @@
+---
+title: "20191101_prep_data_tidyr"
+author: "Matt Paul"
+date: "11/1/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load in what we need
+```{r}
+require(reshape2)
+require(tidyverse)
+
+```
+
+
+# dataset 1
+```{r}
+#https://www.webapps.nwfsc.noaa.gov/apex/parrdata/inventory/tables/table/ocean_juvenile_salmon_metrics
+
+df1<-read_csv('~/Documents/Box Sync/RU/Teaching/tidyR/dataset/oceanjuvenilesalmon_NOAA.csv')
+df1<- df1 %>% select(salmon_id_number,common_name,age_classbylength,field_length_millimeters,insulin_like_grwth_fct_1_ng_ml) %>% as.data.frame
+colnames(df1)[1]<-"salmon_id"
+colnames(df1)[4]<-"length_mm"
+colnames(df1)[5]<-"IGF1_ng_ml"
+
+df2<-melt(df1, id=c("salmon_id","common_name","age_classbylength")) %>% arrange(salmon_id)
+
+df3a <- df2[df2$variable=='length_mm',]
+rownames(df3a)<-1:100
+df3b <- df2[df2$variable=='IGF1_ng_ml',]
+rownames(df3b)<-1:100
+```
+
+# dataset 2
+```{r}
+library(DESeq2)
+load('~/Documents/Box Sync/RU/Teaching/tidyR/dataset/dds.RData')
+dds_counts<-counts(dds)
+
+dds_counts<-cbind(rownames(dds_counts)[c(253:320,323:354)],dds_counts[c(253:320,323:354),c(7,12,1,6)])
+colnames(dds_counts)<-c('ENTREZ', 'CD34_1', 'ORTHO_1', 'CD34_2', 'ORTHO_2')
+
+write.csv(dds_counts,'~/Documents/Box Sync/RU/Teaching/tidyR/dataset/hemato_rnaseq_counts.csv', row.names = F)
+```
+
+
+
+#save out all the datasets we are going to use
+```{r}
+#save as a rdata object
+save(df1, df2, df3a, df3b, file='~/Documents/Box Sync/RU/Teaching/tidyR/my_tidy.Rdata')
+
+```
+
+
