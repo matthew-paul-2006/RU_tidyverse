@@ -186,16 +186,16 @@ read_log(): web log files
 library(tidyverse)
 
 #Base gives you everything
-untidy_counts_base <- read.csv("~/Documents/Box Sync/RU/Teaching/tidyR/dataset/hemato_rnaseq_counts.csv")
+untidy_counts_base <- read.csv("~/Documents/Box Sync/RU/Teaching/teaching/tidyR/dataset/hemato_rnaseq_counts.csv")
 
 #readr gives you a tibble
-untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/tidyR/dataset/hemato_rnaseq_counts.csv")
-untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/tidyR/dataset/hemato_rnaseq_counts.csv", col_types = cols(
+untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/teaching/tidyR/dataset/hemato_rnaseq_counts.csv")
+untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/teaching/tidyR/dataset/hemato_rnaseq_counts.csv", col_types = cols(
     ENTREZ = col_character(),
-    CD34.1 = col_integer(),
-    ORTHO.1 = col_integer(),
-    CD34.2 = col_integer(),
-    ORTHO.2 = col_integer()
+    CD34_1 = col_integer(),
+    ORTHO_1 = col_integer(),
+    CD34_2 = col_integer(),
+    ORTHO_2 = col_integer()
   ))
 
 ```
@@ -203,8 +203,12 @@ untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/tidyR/dataset/hemato
 #subsetting tibbles
 
 ```{r}
+untidy_counts[,1]
+untidy_counts[1,]
+untidy_counts[1]
 
-
+untidy_counts[[1]]
+untidy_counts$ENTREZ
 ```
 
 #Converting Tibbles - Backl and Forth
@@ -261,6 +265,8 @@ Multiple variables in a single column
 How do we get tidy? - Cleaning up
 ```{r}
 tidy_counts<-separate(tidier_counts, Sample, sep="_", into=c("CellType","Rep"), remove=FALSE)
+#UNITE IS ALSO A THING
+
 
 #rememebr you can alawys pipe this all together as well
 untidy_counts %>% pivot_longer(cols=c(-ENTREZ), names_to = c("Sample"), values_to = "counts") %>% separate(Sample, sep="_", into=c("CellType","Rep"), remove=FALSE)
