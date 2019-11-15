@@ -47,15 +47,15 @@ Workflow Image for working with data.
 
 ## First step lets load in the data we are using today
 ```{r}
-load(file='~/Documents/Box Sync/RU/Teaching/tidyR/my_tidy.Rdata')
+load(file='~/Documents/Box Sync/RU/Teaching/teaching/tidyR/my_tidy.Rdata')
 ```
 
 ## Are all data frames equal?
 ```{r}
-head(df1)
-head(df2)
-head(df3a)
-head(df3b)
+df1
+df2
+df3a
+df3b
 ```
 
 ## What it is to be tidy?
@@ -90,10 +90,14 @@ library(dplyr)
 #Select allows you to make a vector or dataframe from a specific variable or variables
 select(df1,common_name)
 select(df1,age_classbylength,common_name)
+select(df1, -length_mm)
+select(df1, common_name:length_mm)
 
-#Filter allows you to remove obsevrations based on specific criteria
+#Filter allows you to remove observations based on specific criteria
 filter(df1,common_name=='Sockeye salmon')
-filter(df1,length_mm>200)
+filter(df1,common_name %in% c('Sockeye salmon', 'Sockeye salmon'))
+filter(df1, str_ends(common_name, 'salmon'))
+filter(df1,length_mm>200 | length_mm<120)
 
 #Arrange sorts the dataframe based on a specific variable or variables
 arrange(df1, length_mm)
@@ -196,8 +200,12 @@ untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/tidyR/dataset/hemato
 
 ```
 
+#subsetting tibbles
 
-subsetting tibbles
+```{r}
+
+
+```
 
 #Converting Tibbles - Backl and Forth
 ```{r}
@@ -308,17 +316,27 @@ tidy_counts_expressed <- tidy_counts_expressed %>% inner_join(counts_metadata, b
 tidy_counts_expressed %>% ggplot(aes(x=CPM, y=TPM)) +geom_point() + scale_x_continuous(name="log2(CPM)",trans='log2') + scale_y_continuous(name="log2(TPM)",trans='log2') 
 ```
 
+writing out
+```{r}
+write_csv etc
+
+```
+
+
 
 
 
 
 # tidy history and ethos
-```{r}
 
-Tidy data was popularized by Hadley Wickham, and it serves as the basis for many R packages and functions. You can learn more about tidy data by reading Tidy Data a paper written by Hadley Wickham and published in the Journal of Statistical Software. Tidy Data is available online at www.jstatsoft.org/v59/i10/paper.
+Hadley Wickham (Chief Scientist at RStudio) has been the driving force behind the tidyverse. It now serves as the basis for many R packages and functions. 
+
+There is a lot of support at https://www.tidyverse.org/
+
+Hadley also wrote a paper about why tidy data is best: www.jstatsoft.org/v59/i10/paper.
 
 
-```
+
 
 ## BRC outro
 ```{r}
