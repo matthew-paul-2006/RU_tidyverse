@@ -2,7 +2,13 @@
 title: "20191009_gettingtidy"
 author: "Matt Paul"
 date: "10/9/2019"
-output: html_document
+output: 
+  html_document:
+    number_sections: TRUE
+    theme: yeti
+    highlight: tango
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -11,40 +17,53 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## BRC intro
 
+The BRC is:
+Basic BRC plug.
 
+# Introduction to Data Wrangling with Tidy
+## A problem we face when dealing with data regularly.
+
+Every dataset is different. Sometimes very different.
+
+There are many ways to do things. Everyone has their favorite syntax. 
+
+The issue:  
+Many fundamental data processing functions exist in *Base R* and beyond. Sometimes they can be inconsistent or unnecessarily complex. The result is code that is confusing and doesn't flow i.e. nested functions
 
 ## What does it mean to be tidy?
 
-Every dataset is different. But if we are ointeracintg with them having a standarad format i.e. count matrix or
+Tidyverse is most importantly a philosophy for data analysis that more often then not makes wrangling data easier. The tidyverse community have built what they describe as an "opinionated" group of packages. These packages readily talk to one another. 
 
-There are many ways to do things. Everyone has their favourite syntax. 
+* More efficient code
+* Easier to remember syntax
+* Easier to read syntax
 
-Many of us taught BaseR. Which is great. 
+## What does it actually mean to be tidy?
 
-Although many fundamental data processing functions exist in R, they have been a bit convoluted to date and have lacked consistent coding and the ability to easily flow together → leads to difficult-to-read nested functions and/or choppy code.
-
-Tidyverse is a collection of tools and a philosphy to approaching data analysis that often makes data wrangling easier. They're self described as an opionionated group of packages. But packages in the tidyverse community readily talk to one another. 
-
-More efficient code
-Easier to remember syntax
-Easier to read syntax
+* A defined vision for coding style in R  
+* A defined vision for data formats in R
+* A defined vision for package design in R
+* Unified set of community pushing in a cohesive direction
+* Critical mass of poeple to influence the way the whole R commnity evolves
 
 ## What are the main tools in the tidyverse?
 
-readr – reading data into R
-tidyr – creating tidy data frames (Tibbles)
-dplyr – mainpulating data
-ggplot2 – making pretty graphs
-stringr – working with strings
-purr - iterating over data
-tibble - working with tibbles
+* readr – reading data into R
+* dplyr – manipulating data
+* tibble - working with tibbles
+* tidyr – miscellaneous tools for tidying data
+* ggplot2 – making pretty graphs
+* stringr – working with strings
+* purr - iterating over data
+* forcats - working with factors
 
-Other tools have now been made for the tidyverse. Overlap with biocoudctor. But these are the linchpins that hold it together. 
+Other tools have now been made for the tidy community. This community also overlaps with bioconductor. But the packages above are the linchpins that hold it together. 
 
 ## What are we doing today
 
 Workflow Image for working with data. 
 
+# Lets get tidy!
 ## First step lets load in the data we are using today
 ```{r}
 load(file='~/Documents/Box Sync/RU/Teaching/teaching/tidyR/my_tidy.Rdata')
@@ -52,13 +71,13 @@ load(file='~/Documents/Box Sync/RU/Teaching/teaching/tidyR/my_tidy.Rdata')
 
 ## Are all data frames equal?
 ```{r}
-df1
-df2
-df3a
-df3b
+head(df1)
+head(df2)
+head(df3a)
+head(df3b)
 ```
 
-## What it is to be tidy?
+## What is a tidy dataset?
 
 A tidy dataset is a data frame (or table) for which the following are true:
 
@@ -70,108 +89,149 @@ Our first dataframe is tidy
 
 ## Why bother?
 
-Consistent dataframe layouts help to ensure not just the values are present, but also the relationships between datapoints.
+Consistent dataframe layouts help to ensure that all values are present and that relationships between data points are clear.
 
-Tidy data works well with R because R is a vectorized programming language. Data structures in R are built from vectors and R’s operations are optimized to work with vectors. Tidy data takes advantage of both of these traits.
+R is a vectorized programming language. R builds dataframes from vectotrs, and R works best when its operation are vectorized. Tidy data utilizes of both of these aspects of R.
 
-R stores tabular data as a data frame, a list of atomic vectors arranged to look like a table. Each column in the table is an atomic vector in the list.
+=> Precise and Fast
 
-
-## When its in this format it is then super easy to interact with -> dplyr
-
+## Lets load in the tidyverse
 ```{r}
-library(dplyr)
+library(tidyverse)
+```
 
-#These tools hav same logic
+# These tools hav same logic
 
-# -> insert graphic here
-# https://github.com/trinker/tidyr_in_a_nutshell
+ -> insert graphic here
+ https://github.com/trinker/tidyr_in_a_nutshell
 
-#Select allows you to make a vector or dataframe from a specific variable or variables
-select(df1,common_name)
-select(df1,age_classbylength,common_name)
-select(df1, -length_mm)
+# dplyr: A tool to access and manipulate data in a dataframe
+
+## Select
+Select allows you to make a vector or dataframe from a specific variable or variables
+```{r}
+# Select one variable (common_name)
+select(df1, common_name)
+# Select two variables (age_classbylength and common_name)
+select(df1, age_classbylength, common_name)
+# Select all but one variable (length_mm)
+select(df1,-length_mm)
+# Select all a range of contiguous varibles (common_name:length_mm)
 select(df1, common_name:length_mm)
+```
 
-#Filter allows you to remove observations based on specific criteria
-filter(df1,common_name=='Sockeye salmon')
-filter(df1,common_name %in% c('Sockeye salmon', 'Sockeye salmon'))
+## Filter
+Filter allows you to access observations based on specific criteria
+```{r}
+# Filter all observation where the variable common_name is Sockeye salmon
+filter(df1, common_name == 'Sockeye salmon')
+# Filter all observations where the variable common_name is either Sockeye salmon or Chinook Salmon
+filter(df1, common_name %in% c('Sockeye salmon', 'Chinook salmon'))
+# Filter all observations where the variable common_name ends with 'salmon'. To do this we use stringr function str_ends recognise strings that end with 'salmon'.
 filter(df1, str_ends(common_name, 'salmon'))
-filter(df1,length_mm>200 | length_mm<120)
+# Filter all observations where the variable length_mm is greater than 200 or less than 120
+filter(df1, length_mm > 200 | length_mm < 120)
+```
 
-#Arrange sorts the dataframe based on a specific variable or variables
+## Arrange
+Arrange sorts the dataframe based on a specific variable or variables
+```{r}
+# Arrange the data based on the variable length_mm
 arrange(df1, length_mm)
+# Arrange the data first based on the variable common_name, then secondly absed on length_mm in a descending order.
 arrange(df1, common_name, desc(length_mm))
+```
 
-#Mutate creates a new variable based on some form of computation
-mutate(df1,scale(IGF1_ng_ml, center = TRUE, scale = TRUE))
-mutate(df1,IGFngml_zscore=scale(IGF1_ng_ml, center = TRUE, scale = TRUE))
+## Mutate
+Mutate creates a new variable based on some form of computation
+```{r}
+# A new variable is created based on the caluclation of the z-score of the variable IGF1_ng_ml using scale()
+mutate(df1, scale(IGF1_ng_ml, center = TRUE, scale = TRUE))
+# A new variable is created called IGFngml_zscore, based on the caluclation of the z-score of the variable IGF1_ng_ml using scale()
+mutate(df1, IGFngml_zscore = scale(IGF1_ng_ml, center = TRUE, scale = TRUE))
+```
 
-#Summarize applies aggregating or summary function to a group
+## Summarize
+Summarize applies aggregating or summary function to a group
+```{r}
+# First we define the common_name as a group. 
 df1_byname <- group_by(df1, common_name)
-summarise(df1_byname, count=n())
-summarise(df1_byname, IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
+# Summarise is used to count over the grouped common_names
+summarise(df1_byname, count = n())
+# Summarise is used to calculate mean IGF1_ng_ml over the grouped common_names
+summarise(df1_byname, IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm = T))
+```
 
-#Grouping can help ask questions with other fucntions
-
-#Smallest two from each species
+## Group
+Grouping can also help ask questions with other functions
+```{r}
+# Filter obsevrations with the 2 smallest length_mm for each grouped common_names
 filter(df1_byname, rank(length_mm) <= 2)
 
-#Need at least 5 from each species
+# Filter obsevrations with at least 5 for each grouped common_names
 filter(df1_byname, n() > 5)
 
-#Make new vriable using within group metrics
-mutate(df1_byname,IGFngml_mm=scale(IGF1_ng_ml, center = TRUE, scale = TRUE))
+# A new variable is created using z-score within the grouped common_names
+mutate(df1_byname, IGFngml_zscore = scale(IGF1_ng_ml, center = TRUE, scale = TRUE))
 
 ```
 
-Piping to put them together.
+# Piping (%>%): A way to string together functions together
+Piping allows you to pass the result from one expression directly into another.
+
+ -> same graphic as before , but extend
+ https://github.com/trinker/tidyr_in_a_nutshell
+
+## Piping versus not piping
 ```{r}
-
-# -> same graphic as before , but extend
-# https://github.com/trinker/tidyr_in_a_nutshell
-
-#Piping allows you to pass the result from one expression into another. 
-
-
 # Without pipe
 df1_byname <- group_by(df1, common_name)
 summarise(df1_byname, IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
 
-#With pipe
+# With pipe
 group_by(df1, common_name) %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
+```
 
+## Building pipes together
+```{r}
+group_by(df1, common_name) %>% 
+  filter(length_mm > 200) %>% 
+  summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm = T))
 
+mutate(df1, size = if_else(length_mm > 200, 'big_fish', 'small_fish')) %>% 
+  group_by(common_name, size) %>% 
+  filter() %>% 
+  summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm = T))
 
-group_by(df1, common_name) %>% filter(length_mm>200) %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
-
-
-mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% group_by(common_name, size) %>% filter() %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
-
-mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% group_by(common_name, size) %>% filter() %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %>% filter(common_name!='Coho salmon')  %>% filter(common_name!='Sockeye salmon')
-
+mutate(df1, size = if_else(length_mm > 200, 'big_fish', 'small_fish')) %>% 
+  group_by(common_name, size) %>% 
+  filter() %>% 
+  summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm = T)) %>%
+  filter(common_name != 'Coho salmon')  %>%
+  filter(common_name !='Sockeye salmon')
 ```
 
 ## Say want to graph what is going on with these fish? age species. IGF per length. 
-```{r}
-library(ggplot2)
+```{r, warning=F, message=F}
+library(plotly)
 
-mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% group_by(common_name, size) %>% filter() %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %>% filter(common_name!='Coho salmon')  %>% filter(common_name!='Sockeye salmon') %>% ggplot( aes(x=IGF1_ng_ml_ave,group=interaction(common_name, size))) + geom_bar(stat="identity")
+p<-mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% group_by(common_name, size) %>% filter() %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %>% filter(common_name!='Coho salmon')  %>% filter(common_name!='Sockeye salmon') %>% ggplot( aes(x = common_name, y = IGF1_ng_ml_ave, group = size, fill = size)) + geom_bar(stat = "identity", position = "dodge") + theme(axis.text.x = element_text(angle = 90))
 
+ggplotly(p)
 ```
 
 CHALLENGE
 ```{r}
-GET A SPECIFIC GROUP AND PLOT IT. 
+# GET A SPECIFIC GROUP AND PLOT IT. 
 ```
 
 ANSWER
 ```{r}
-GET A SPECIIFC GROUP AND PLOT IT. 
+# GET A SPECIIFC GROUP AND PLOT IT. 
 ```
 
 
-## So we blasted through what being tidy can give you. So how we do get tidy? Reading the data in and mkaing tibbles.
+## So we blasted through what being tidy can give you. So how we do get tidy? Reading the data in and making tibbles.
 Now lets tidy some data. We know how to work a little bit with some data. 
 
 ReadR:
@@ -183,7 +243,7 @@ read_table(): tabular files where columns are separated by white-space.
 read_log(): web log files
 
 ```{r}
-library(tidyverse)
+
 
 #Base gives you everything
 untidy_counts_base <- read.csv("~/Documents/Box Sync/RU/Teaching/teaching/tidyR/dataset/hemato_rnaseq_counts.csv")
@@ -211,7 +271,7 @@ untidy_counts[[1]]
 untidy_counts$ENTREZ
 ```
 
-#Converting Tibbles - Backl and Forth
+#Converting Tibbles - Back and Forth
 ```{r}
 as_tibble(untidy_counts_base)
 untidy_counts_base<-as_tibble(untidy_counts_base) %>% mutate_at(vars(ENTREZ), as.character)
@@ -220,7 +280,7 @@ untidy_counts_base
 as.data.frame(untidy_counts_base)
 ```
 
-Make your own tibble. Lets grab some metadata 
+# Make your own tibble. Lets grab some metadata 
 ```{r}
 library(org.Hs.eg.db)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
@@ -236,7 +296,7 @@ counts_metadata<-tibble(ID=symbols$ENTREZID,SYMBOL=symbols$SYMBOL,CHR=chrs$TXCHR
 
 ```
 
-What is wrong with this dataframe from a tidy viewpoint?
+# What is wrong with this dataframe from a tidy viewpoint?
 
 * Each variable has its own column
 * Each observation has its own row
@@ -246,21 +306,21 @@ What is wrong with this dataframe from a tidy viewpoint?
 untidy_counts
 ```
 
-A siongle avirable with multiple columns
+A single variable with multiple columns
 
-How do we get tidy? - Pivot tools (formerly known as gather/spread )
+# How do we get tidy? - Pivot tools (formerly known as gather/spread )
 ```{r}
 tidier_counts<-pivot_longer(untidy_counts, cols=c(-ENTREZ), names_to = c("Sample"), values_to = "counts")
    
 pivot_wider(tidier_counts, names_from = c("Sample"), values_from = "counts")
 ```
 
-What next?
+# What next?
 ```{r}
 tidier_counts
 ```
 
-Multiple variables in a single column
+# Multiple variables in a single column
 
 How do we get tidy? - Cleaning up
 ```{r}
@@ -272,7 +332,7 @@ tidy_counts<-separate(tidier_counts, Sample, sep="_", into=c("CellType","Rep"), 
 untidy_counts %>% pivot_longer(cols=c(-ENTREZ), names_to = c("Sample"), values_to = "counts") %>% separate(Sample, sep="_", into=c("CellType","Rep"), remove=FALSE)
 ```
 
-So now we have two realted tidy dataframes. Can we put them together?
+# So now we have two related tidy data frames. Can we put them together?
 
 You need a key. Often we want this to be unique i.e. ENTREZ ID. 
 
@@ -285,7 +345,7 @@ inner_join(tidy_counts,counts_metadata, by = c("ENTREZ" = "ID"))
 ## There are many ways to join things
 
 Inner Join 
-* Keeps all obsevrations in x and y with matching keys
+* Keeps all observations in x and y with matching keys
 
 Outer Join
 * A left join keeps all observations in x and those in y with matching keys.
@@ -305,11 +365,11 @@ tidy_counts_expressed  %>% print(n=20)
 
 ## Example - I only want to look at expressed genes
 ```{r}
-Filtering joins
+# Filtering joins
 
 ```
 
-## Calcucate CPMs and TPMs
+## Calculate CPMs and TPMs
 
 Show diagram of the math
 
@@ -319,19 +379,41 @@ tidy_counts_expressed <- tidy_counts_expressed  %>% group_by(Sample) %>% mutate(
 tidy_counts_expressed <- tidy_counts_expressed %>% inner_join(counts_metadata, by = c("ENTREZ" = "ID")) %>%  mutate(TPM=(counts/(LENGTH/1000))/(sum(counts)/1000000))
 
 
-tidy_counts_expressed %>% ggplot(aes(x=CPM, y=TPM)) +geom_point() + scale_x_continuous(name="log2(CPM)",trans='log2') + scale_y_continuous(name="log2(TPM)",trans='log2') 
+p <- tidy_counts_expressed %>% ggplot(aes(x=CPM, y=TPM)) +geom_point() + scale_x_continuous(name="log2(CPM)",trans='log2') + scale_y_continuous(name="log2(TPM)",trans='log2') 
+
+ggplotly(p)
 ```
 
 writing out
 ```{r}
-write_csv etc
+# write_csv etc
 
 ```
 
 
+# At this point we have covered the most essential facets of tidy
+~~readr – reading data into R~~
+~~dplyr – mainpulating data~~
+~~tibble - working with tibbles~~
+~~tidyr – miscellaneous tools for tidying data~~
+ggplot2 – making pretty graphs
+stringr – working with strings
+purr - iterating over data
+forcats - working with factors
 
+#stringr
 
+Character manipulation: these functions allow you to manipulate individual characters within the strings in character vectors.
 
+Whitespace tools to add, remove, and manipulate whitespace.
+
+Locale sensitive operations whose operations will vary from locale to locale.
+
+Pattern matching functions. These recognise four engines of pattern description. The most common is regular expressions, but there are three other tools.
+
+#purr
+
+applying functions to datasets
 
 # tidy history and ethos
 
