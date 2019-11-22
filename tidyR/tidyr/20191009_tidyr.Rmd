@@ -44,7 +44,7 @@ Tidyverse is most importantly a philosophy for data analysis that more often the
 * A defined vision for data formats in R
 * A defined vision for package design in R
 * Unified set of community pushing in a cohesive direction
-* Critical mass of poeple to influence the way the whole R commnity evolves
+* Critical mass of people to influence the way the whole R community evolves
 
 ## What are the main tools in the tidyverse?
 
@@ -91,7 +91,7 @@ Our first dataframe is tidy
 
 Consistent dataframe layouts help to ensure that all values are present and that relationships between data points are clear.
 
-R is a vectorized programming language. R builds dataframes from vectotrs, and R works best when its operation are vectorized. Tidy data utilizes of both of these aspects of R.
+R is a vectorized programming language. R builds data frames from vectors, and R works best when its operation are vectorized. Tidy data utilizes of both of these aspects of R.
 
 => Precise and Fast
 
@@ -100,7 +100,7 @@ R is a vectorized programming language. R builds dataframes from vectotrs, and R
 library(tidyverse)
 ```
 
-# These tools hav same logic
+# These tools have same logic
 
  -> insert graphic here
  https://github.com/trinker/tidyr_in_a_nutshell
@@ -138,7 +138,7 @@ Arrange sorts the dataframe based on a specific variable or variables
 ```{r}
 # Arrange the data based on the variable length_mm
 arrange(df1, length_mm)
-# Arrange the data first based on the variable common_name, then secondly absed on length_mm in a descending order.
+# Arrange the data first based on the variable common_name, then secondly based on length_mm in a descending order.
 arrange(df1, common_name, desc(length_mm))
 ```
 
@@ -194,18 +194,26 @@ group_by(df1, common_name) %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T
 
 ## Building pipes together
 ```{r}
+# (1) Group by common_name
+# (2) Filter to all those that have length bigger then 200
+# (3) Summarise is used to calculate mean IGF1_ng_ml over the grouped common_names for these larger fish
 group_by(df1, common_name) %>% 
   filter(length_mm > 200) %>% 
   summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm = T))
 
+# (1) Create new variable that is discrete label depending on size of the fish
+# (2) Group by common_name and size
+# (3) Summarise is used to calculate mean IGF1_ng_ml over the grouped common_names and sizes
 mutate(df1, size = if_else(length_mm > 200, 'big_fish', 'small_fish')) %>% 
   group_by(common_name, size) %>% 
-  filter() %>% 
   summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm = T))
 
+# (1) Create new variable that is discrete label depending on size of the fish
+# (2) Group by common_name and size
+# (3) Summarise is used to calculate mean IGF1_ng_ml over the grouped common_names and sizes
+# (4) Filter out Coho and Sockeye salmon
 mutate(df1, size = if_else(length_mm > 200, 'big_fish', 'small_fish')) %>% 
   group_by(common_name, size) %>% 
-  filter() %>% 
   summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm = T)) %>%
   filter(common_name != 'Coho salmon')  %>%
   filter(common_name !='Sockeye salmon')
@@ -215,7 +223,14 @@ mutate(df1, size = if_else(length_mm > 200, 'big_fish', 'small_fish')) %>%
 ```{r, warning=F, message=F}
 library(plotly)
 
-p<-mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% group_by(common_name, size) %>% filter() %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %>% filter(common_name!='Coho salmon')  %>% filter(common_name!='Sockeye salmon') %>% ggplot( aes(x = common_name, y = IGF1_ng_ml_ave, group = size, fill = size)) + geom_bar(stat = "identity", position = "dodge") + theme(axis.text.x = element_text(angle = 90))
+p<-mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% 
+  group_by(common_name, size) %>% 
+  summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %>% 
+  filter(common_name!='Coho salmon')  %>% 
+  filter(common_name!='Sockeye salmon') %>% 
+  ggplot( aes(x = common_name, y = IGF1_ng_ml_ave, group = size, fill = size)) +
+  geom_bar(stat = "identity", position = "dodge") + 
+  theme(axis.text.x = element_text(angle = 90))
 
 ggplotly(p)
 ```
@@ -231,25 +246,30 @@ ANSWER
 ```
 
 
-## So we blasted through what being tidy can give you. So how we do get tidy? Reading the data in and making tibbles.
-Now lets tidy some data. We know how to work a little bit with some data. 
+# ReadR: Reading data into R
+So we blasted through what being tidy can give you. 
+Now lets tidy some data. First step is to read in data. 
 
 ReadR:
-read_csv(): comma separated (CSV) files
-read_tsv(): tab separated files
-read_delim(): general delimited files
-read_fwf(): fixed width files
-read_table(): tabular files where columns are separated by white-space.
-read_log(): web log files
 
+* read_csv(): comma separated (CSV) files  
+* read_tsv(): tab separated files  
+* read_delim(): general delimited files  
+* read_fwf(): fixed width files  
+* read_table(): tabular files where columns are separated by white-space  
+* read_log(): web log files   
+
+## ReadR vs Base
 ```{r}
-
-
 #Base gives you everything
 untidy_counts_base <- read.csv("~/Documents/Box Sync/RU/Teaching/teaching/tidyR/dataset/hemato_rnaseq_counts.csv")
+head(untidy_counts_base)
 
-#readr gives you a tibble
+#ReadR gives you a tibble
 untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/teaching/tidyR/dataset/hemato_rnaseq_counts.csv")
+untidy_counts
+
+#Tibbles carry and display extra information. While reading in it is easy to specify datatype. 
 untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/teaching/tidyR/dataset/hemato_rnaseq_counts.csv", col_types = cols(
     ENTREZ = col_character(),
     CD34_1 = col_integer(),
@@ -257,46 +277,69 @@ untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/teaching/tidyR/datas
     CD34_2 = col_integer(),
     ORTHO_2 = col_integer()
   ))
+untidy_counts
 
 ```
 
-#subsetting tibbles
+# Tibbles
 
+## Subsetting tibbles
 ```{r}
+#Can use the same way as base to interact with the tibble dataframe
 untidy_counts[,1]
 untidy_counts[1,]
+
+#Can also not specify which dimension you pull from. This will default to grabbing the column
 untidy_counts[1]
 
+#All the prior outputs have been outputting another tibble. If double brackets are used a vector is returned 
 untidy_counts[[1]]
+
+#This is also the case if you use the dollar and colname to access a column
 untidy_counts$ENTREZ
 ```
 
-#Converting Tibbles - Back and Forth
+## Converting Tibbles - Back and Forth
 ```{r}
+#Can convert base dataframes into tibbles
 as_tibble(untidy_counts_base)
-untidy_counts_base<-as_tibble(untidy_counts_base) %>% mutate_at(vars(ENTREZ), as.character)
+
+#Once it is a tibble it is straightforward to modify the datatype
+untidy_counts_base <- as_tibble(untidy_counts_base) %>%
+  mutate_at(vars(ENTREZ), as.character)
 untidy_counts_base
 
+#Some tools are not tibble friendly. Calling as.data.frame is sufficient to convert it back to a base data frame
 as.data.frame(untidy_counts_base)
 ```
 
-# Make your own tibble. Lets grab some metadata 
-```{r}
+## Make your own tibble. Lets grab some metadata to do this. 
+```{r, warning=FALSE, message=FALSE}
+# Lets load in some packages
 library(org.Hs.eg.db)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 
-keys<-untidy_counts$ENTREZ
-symbols<-select(org.Hs.eg.db, keys=keys,columns="SYMBOL", keytype="ENTREZID")
-chrs<-select(TxDb.Hsapiens.UCSC.hg19.knownGene, keys=keys, columns="TXCHROM", keytype="GENEID")
+#Lets use the ENTREZ ID as a key
+keys <- untidy_counts$ENTREZ
 
+#We can use the ENTREZ ID to look up Gene Symbol
+symbols <- select(org.Hs.eg.db, keys=keys,columns="SYMBOL", keytype="ENTREZID")
+
+#We can use the ENTREZ ID to look up the chormosome the gene resides on
+chrs <- select(TxDb.Hsapiens.UCSC.hg19.knownGene, keys=keys, columns="TXCHROM", keytype="GENEID")
+
+#We can use the ENTREZ ID to get a list of genes with grange of their exons
 geneExons <- exonsBy(TxDb.Hsapiens.UCSC.hg19.knownGene,by="gene")[keys]
-txsLength<-sapply(geneExons, function(x){x %>% reduce() %>% width() %>% sum()})
 
-counts_metadata<-tibble(ID=symbols$ENTREZID,SYMBOL=symbols$SYMBOL,CHR=chrs$TXCHROM,LENGTH=txsLength)
+#We will then use an apply to get the transcript length from each gene in the list. The transcript length is calculated by first flattening overalpping exons with reduce(), then calculating the length of each exon with width(), then summing upthe total exon length to get our transcript length. 
+txsLength <- sapply(geneExons, function(x){ x %>% reduce() %>% width() %>% sum() })
 
+# FInally we have all this metadata. Lets put it together into a tibble. 
+counts_metadata <- tibble(ID=symbols$ENTREZID,SYMBOL=symbols$SYMBOL,CHR=chrs$TXCHROM,LENGTH=txsLength)
 ```
 
-# What is wrong with this dataframe from a tidy viewpoint?
+# Tidying data up
+## What is wrong with this dataframe from a tidy viewpoint?
 
 * Each variable has its own column
 * Each observation has its own row
@@ -308,38 +351,49 @@ untidy_counts
 
 A single variable with multiple columns
 
-# How do we get tidy? - Pivot tools (formerly known as gather/spread )
+## How do we get tidy? - Pivot tools (formerly known as gather/spread )
 ```{r}
+#Pivot longer allows you to collapse variables single varibles that are spread over multiple columns
 tidier_counts<-pivot_longer(untidy_counts, cols=c(-ENTREZ), names_to = c("Sample"), values_to = "counts")
-   
+
+#Pivot wider allows you to spread single variables over multiple columns   
 pivot_wider(tidier_counts, names_from = c("Sample"), values_from = "counts")
 ```
 
-# What next?
+## What next?
 ```{r}
 tidier_counts
 ```
 
-# Multiple variables in a single column
+Multiple variables in a single column
+
+## Dealing with multiple variables in a single column
 
 How do we get tidy? - Cleaning up
 ```{r}
-tidy_counts<-separate(tidier_counts, Sample, sep="_", into=c("CellType","Rep"), remove=FALSE)
-#UNITE IS ALSO A THING
+#Seperate allows you to break a strings in a vraible by a seperator. In this case the cell type and replicate number are broken by underscore
+tidier_counts <- separate(tidier_counts, Sample, sep = "_", into=c("CellType","Rep"), remove=TRUE)
+tidier_counts
+
+#Unite can go the other way if you want to generate a key. We can use this to make sure we have a Key.
+unite(tidier_counts, Sample, CellType, Rep, remove=FALSE)
 
 
-#rememebr you can alawys pipe this all together as well
-untidy_counts %>% pivot_longer(cols=c(-ENTREZ), names_to = c("Sample"), values_to = "counts") %>% separate(Sample, sep="_", into=c("CellType","Rep"), remove=FALSE)
+#Remember you can always pipe eveyrthing together into a single expression
+tidy_counts <- untidy_counts %>% 
+  pivot_longer(cols = c(-ENTREZ), names_to = c("Sample"), values_to = "counts") %>% 
+  separate(Sample, sep = "_", into = c("CellType","Rep"), remove=FALSE)
 ```
 
-# So now we have two related tidy data frames. Can we put them together?
+# Joining: We have two related data frames. Can we link them together?
 
+
+## Data frames can be joined on a shared variable a.k.a. a key
 You need a key. Often we want this to be unique i.e. ENTREZ ID. 
-
 ```{r}
-
-inner_join(tidy_counts,counts_metadata, by = c("ENTREZ" = "ID"))
-
+tidy_counts
+counts_metadata
+inner_join(tidy_counts, counts_metadata, by = c("ENTREZ" = "ID"))
 ```
 
 ## There are many ways to join things
@@ -355,10 +409,17 @@ Outer Join
 ## Example - I only want to look at expressed genes
 
 ```{r}
-expressed_genes<-tidy_counts %>% group_by(ENTREZ) %>% summarise(count_total=sum(counts)) %>% filter(count_total>0)
+# In this pipe I group by gene, summarise the data based on the sum of counts, and filter for anything that has a count greater than 0. 
+expressed_genes <- tidy_counts %>% 
+  group_by(ENTREZ) %>% 
+  summarise(count_total=sum(counts)) %>% 
+  filter(count_total>0)
 
-left_join(tidy_counts,expressed_genes, by = c("ENTREZ" = "ENTREZ")) %>% print(n=20)
-tidy_counts_expressed<-right_join(tidy_counts,expressed_genes, by = c("ENTREZ" = "ENTREZ"))
+# Left join shows all genes as my full data frame tidy_counts is used as the backbone. Thefiltered expressed genes is secondary, and has missing values (unexpressed genes) whichare filled with NA
+left_join(tidy_counts, expressed_genes, by = c("ENTREZ" = "ENTREZ")) %>% print(n=20)
+
+# Right join shows only genes that survived filtering as it is using the second dataframe as the backbone for the new dataframe. 
+tidy_counts_expressed <- right_join(tidy_counts,expressed_genes, by = c("ENTREZ" = "ENTREZ"))
 tidy_counts_expressed  %>% print(n=20)
 ```
 
@@ -374,34 +435,41 @@ tidy_counts_expressed  %>% print(n=20)
 Show diagram of the math
 
 ```{r}
+# Use Group to focus computation on each sample. Use mutate to make new variable that is the CPM
 tidy_counts_expressed <- tidy_counts_expressed  %>% group_by(Sample) %>% mutate(CPM=(counts/sum(counts))*1000000)
 
+# Join our tidy data to the metadata, then make new variable that is the TPM
 tidy_counts_expressed <- tidy_counts_expressed %>% inner_join(counts_metadata, by = c("ENTREZ" = "ID")) %>%  mutate(TPM=(counts/(LENGTH/1000))/(sum(counts)/1000000))
 
-
+# Simple X-Y plot comparing TPM and CPM. 
 p <- tidy_counts_expressed %>% ggplot(aes(x=CPM, y=TPM)) +geom_point() + scale_x_continuous(name="log2(CPM)",trans='log2') + scale_y_continuous(name="log2(TPM)",trans='log2') 
 
 ggplotly(p)
 ```
 
-writing out
+# ReadR again: Writing your lovely new tibble to file
 ```{r}
-# write_csv etc
+#A key difference compared to base is that it does not write out row names. Tibbles generally don't have rownames. 
+#Theres a wide range of writing options. Can specify the delmiter directly or use a speicfic function
+write_delim(tidy_counts_expressed, '~/Documents/Box Sync/RU/Teaching/teaching/tidyR/expressed_genes_output.csv', delim =',')
+
+write_csv(tidy_counts_expressed, '~/Documents/Box Sync/RU/Teaching/teaching/tidyR/expressed_genes_output.csv')
 
 ```
 
 
-# At this point we have covered the most essential facets of tidy
-~~readr – reading data into R~~
-~~dplyr – mainpulating data~~
-~~tibble - working with tibbles~~
-~~tidyr – miscellaneous tools for tidying data~~
-ggplot2 – making pretty graphs
-stringr – working with strings
-purr - iterating over data
-forcats - working with factors
+## At this point we have covered or touched on the most essential facets of tidy
 
-#stringr
+* ~~readr – reading data into R~~  
+* ~~dplyr – manipulating data~~  
+* ~~tibble - working with tibbles~~  
+* ~~tidyr – miscellaneous tools for tidying data~~  
+* stringr – working with strings  
+* ggplot2 – making pretty graphs  
+* purr - iterating over data  
+* forcats - working with factors  
+
+# Stringr
 
 Character manipulation: these functions allow you to manipulate individual characters within the strings in character vectors.
 
@@ -409,21 +477,23 @@ Whitespace tools to add, remove, and manipulate whitespace.
 
 Locale sensitive operations whose operations will vary from locale to locale.
 
-Pattern matching functions. These recognise four engines of pattern description. The most common is regular expressions, but there are three other tools.
+Pattern matching functions. These recognize four engines of pattern description. The most common is regular expressions, but there are three other tools.
 
 #purr
 
 applying functions to datasets
 
-# tidy history and ethos
-
-Hadley Wickham (Chief Scientist at RStudio) has been the driving force behind the tidyverse. It now serves as the basis for many R packages and functions. 
-
-There is a lot of support at https://www.tidyverse.org/
-
-Hadley also wrote a paper about why tidy data is best: www.jstatsoft.org/v59/i10/paper.
+#forcats
 
 
+
+## Tidy beyond this workshop
+
+Hadley Wickham (Chief Scientist at RStudio) is the driving force behind the tidyverse.  
+
+Hadley wrote a paper about why he thinks tidy data is best: www.jstatsoft.org/v59/i10/paper.  
+
+There is a lot of support for all things tidy at: https://www.tidyverse.org/
 
 
 ## BRC outro
