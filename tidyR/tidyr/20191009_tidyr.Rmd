@@ -15,7 +15,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## BRC intro
+# BRC intro
 
 The BRC is:
 Basic BRC plug.
@@ -423,10 +423,13 @@ tidy_counts_expressed <- right_join(tidy_counts,expressed_genes, by = c("ENTREZ"
 tidy_counts_expressed  %>% print(n=20)
 ```
 
-
-## Example - I only want to look at expressed genes
+## Filtering joins. 
 ```{r}
-# Filtering joins
+#Semi join only keeps observations in x that are matched in y. y is only used as a reference and is not in output
+semi_join(tidy_counts, expressed_genes)
+
+#Anti join only keeps observations in x that are not matched in y. y is only used as a reference and is not in output
+anti_join(tidy_counts, expressed_genes)
 
 ```
 
@@ -434,7 +437,7 @@ tidy_counts_expressed  %>% print(n=20)
 
 Show diagram of the math
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 # Use Group to focus computation on each sample. Use mutate to make new variable that is the CPM
 tidy_counts_expressed <- tidy_counts_expressed  %>% group_by(Sample) %>% mutate(CPM=(counts/sum(counts))*1000000)
 
@@ -457,7 +460,6 @@ write_csv(tidy_counts_expressed, '~/Documents/Box Sync/RU/Teaching/teaching/tidy
 
 ```
 
-
 ## At this point we have covered or touched on the most essential facets of tidy
 
 * ~~readr – reading data into R~~  
@@ -469,7 +471,9 @@ write_csv(tidy_counts_expressed, '~/Documents/Box Sync/RU/Teaching/teaching/tidy
 * purr - iterating over data  
 * forcats - working with factors  
 
-# Stringr
+# StringR
+
+Sometimes the data you have received has errors from data entry or from conversion between data file formats i.e. whitespace or weird delimiters. Tidying data incorporates fixing these problems. Stringr is your friend for all modifications off strings. 
 
 Character manipulation: these functions allow you to manipulate individual characters within the strings in character vectors.
 
@@ -479,7 +483,73 @@ Locale sensitive operations whose operations will vary from locale to locale.
 
 Pattern matching functions. These recognize four engines of pattern description. The most common is regular expressions, but there are three other tools.
 
-#purr
+## Basic functions to interact with strings
+
+```{r}
+
+
+str_sub()
+
+x <- c("abcdef", "ghifjk")
+
+# The 3rd letter
+str_sub(x, 3, 3)
+#> [1] "c" "i"
+
+# The 2nd to 2nd-to-last character
+str_sub(x, 2, -2)
+#> [1] "bcde" "hifj"
+
+counts_metadata
+
+
+maybe use to conver to other format roman numerals.
+
+```
+
+
+```{r}
+#remove white space
+str_trim()
+
+there is the opposite(pad) but that is only really useful for outputs. 
+```
+
+
+```{r}
+
+maybe useful for converitng between gene and protien and species. etc. 
+x <- "I like horses."
+str_to_upper(x)
+#> [1] "I LIKE HORSES."
+str_to_title(x)
+#> [1] "I Like Horses."
+
+str_to_lower(x)
+
+```
+
+dealing with aptterns
+```{R}
+#detect in differnt ways
+str_detect()
+str_subset()
+
+str_ends()
+str_starts()
+
+#gives you a count
+str_count()
+
+
+#replcae
+str_replace_all() 
+
+```
+
+# ggplot
+
+# purr
 
 applying functions to datasets
 
@@ -495,8 +565,14 @@ Hadley wrote a paper about why he thinks tidy data is best: www.jstatsoft.org/v5
 
 There is a lot of support for all things tidy at: https://www.tidyverse.org/
 
+## Other Good Resources
 
-## BRC outro
+GGplot here
+
+tidy workbook
+
+
+# BRC outro
 ```{r}
 
 ```
