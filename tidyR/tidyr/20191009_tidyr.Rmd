@@ -188,10 +188,10 @@ Piping allows you to pass the result from one expression directly into another.
 ```{r}
 # Without pipe
 df1_byname <- group_by(df1, common_name)
-summarise(df1_byname, IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
+summarise(df1_byname, IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm=T))
 
 # With pipe
-group_by(df1, common_name) %>% summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T))
+group_by(df1, common_name) %>% summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm=T))
 ```
 
 ## Building pipes together
@@ -223,18 +223,18 @@ mutate(df1, size = if_else(length_mm > 200, 'big_fish', 'small_fish')) %>%
 
 ## Say want to graph what is going on with these fish? age species. IGF per length. 
 ```{r, warning=F, message=F}
-library(plotly)
 
-p<-mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% 
+p <- mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% 
   group_by(common_name, size) %>% 
-  summarise(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %>% 
+  dplyr::summarize(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %>% 
   filter(common_name!='Coho salmon')  %>% 
   filter(common_name!='Sockeye salmon') %>% 
   ggplot( aes(x = common_name, y = IGF1_ng_ml_ave, group = size, fill = size)) +
   geom_bar(stat = "identity", position = "dodge") + 
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90)) +
+  scale_fill_brewer(palette = "Paired")
 
-ggplotly(p)
+p
 ```
 
 CHALLENGE
@@ -440,16 +440,26 @@ anti_join(tidy_counts, expressed_genes)
 Show diagram of the math
 
 ```{r, warning=FALSE, message=FALSE}
+
 # Use Group to focus computation on each sample. Use mutate to make new variable that is the CPM
-tidy_counts_expressed <- tidy_counts_expressed  %>% group_by(Sample) %>% mutate(CPM=(counts/sum(counts))*1000000)
+tidy_counts_expressed <- tidy_counts_expressed  %>% 
+  group_by(Sample) %>% 
+  mutate(CPM=(counts/sum(counts))*1000000)
 
 # Join our tidy data to the metadata, then make new variable that is the TPM
-tidy_counts_expressed <- tidy_counts_expressed %>% inner_join(counts_metadata, by = c("ENTREZ" = "ID")) %>%  mutate(TPM=(counts/(LENGTH/1000))/(sum(counts)/1000000))
+tidy_counts_expressed <- tidy_counts_expressed %>% 
+  inner_join(counts_metadata, by = c("ENTREZ" = "ID")) %>%  
+  mutate(TPM=(counts/(LENGTH/1000))/(sum(counts)/1000000))
 
 # Simple X-Y plot comparing TPM and CPM. 
-p <- tidy_counts_expressed %>% ggplot(aes(x=CPM, y=TPM)) +geom_point() + scale_x_continuous(name="log2(CPM)",trans='log2') + scale_y_continuous(name="log2(TPM)",trans='log2') 
+p <- tidy_counts_expressed %>% 
+  ggplot(aes(x=CPM, y=TPM, group = 1, text = paste("Gene: ", SYMBOL))) + 
+  geom_point() + 
+  scale_x_continuous(name="log2(CPM)",trans='log2') + 
+  scale_y_continuous(name="log2(TPM)",trans='log2')
+   
 
-ggplotly(p)
+plotly::ggplotly(p)
 ```
 
 # Readr again: Writing your lovely new tibble to file
@@ -464,14 +474,90 @@ write_csv(tidy_counts_expressed, '~/Documents/Box Sync/RU/Teaching/teaching/tidy
 
 ## At this point we have covered or touched on the most essential facets of tidy
 
+* ~~ggplot2 – making pretty graphs~~ 
 * ~~readr – reading data into R~~  
 * ~~dplyr – manipulating data~~  
 * ~~tibble - working with tibbles~~  
-* ~~tidyr – miscellaneous tools for tidying data~~  
+* ~~tidyr – miscellaneous tools for tidying data~~
+* purrr - iterating over data  
 * stringr – working with strings  
-* ggplot2 – making pretty graphs  
-* purr - iterating over data  
 * forcats - working with factors  
+
+# purrr - Functional programming 
+
+Applying functions to datasets  
+
+Base people use for loops or apply  
+
+Big advantage it handles nested dataframes and has standard outputs
+
+## map - tidy way to iterate over a dataset 
+```{r}
+#Map is the tidy equivalent to apply. Here we take our untidy counts, trim of IDs, and then caluclate means for eaxh column. By default the output is a list
+untidy_counts %>% 
+  dplyr::select(-ENTREZ) %>% 
+  map(mean)
+
+#Same as the above line, but using map_dbl specifies the outputs is going to be a double
+untidy_counts %>% 
+  dplyr::select(-ENTREZ) %>% 
+  map_dbl(mean)
+
+#Summary also works in this context
+tidy_counts %>% 
+  dplyr::group_by(Sample) %>% 
+  dplyr::summarize(mean_counts=mean(counts))
+
+#This is an alternative method for doing this with an tidied frame
+tidy_counts %>% 
+  split(.$Sample) %>% 
+  map_dbl(~mean(.$counts))
+
+```
+
+## Nest - simplifying your dataframe by making it more complex
+```{r}
+
+tidy_counts_nest <- tidy_counts_expressed %>% 
+  dplyr::group_by(Sample) %>%
+  nest()
+
+tidy_counts_nest
+
+tidy_counts_nest$data %>% is()
+
+tidy_counts_nest$data[[1]]
+
+
+tidy_counts_nest <- tidy_counts_nest %>% 
+  mutate(my_model = map(data, ~lm(CPM ~ TPM, data = .)))
+
+tidy_counts_nest
+
+tidy_counts_nest$my_model %>% is()
+
+tidy_counts_nest$my_model[[1]]
+
+
+library(broom)
+tidy_counts_nest <- tidy_counts_nest %>% 
+  mutate(my_tidy_model = map(my_model, broom::tidy))
+
+tidy_counts_nest
+
+tidy_counts_nest$my_tidy_model[[1]]
+```
+
+## Unnest - Expand out dataframes
+```{r}
+tidy_counts_nest %>%
+  unnest(my_tidy_model)
+
+tidy_counts_nest %>%
+  unnest(my_tidy_model) %>% 
+  unnest(data)
+
+```
 
 # Stringr
 
@@ -510,47 +596,112 @@ str_pad(brc2, width=10, side='left')
 
 ```
 
-## Converting strings
+## Converting strings - Capitalization
 ```{r}
-tidy_counts_expressed %>% pull(SYMBOL) 
+#Lets reuse our counts tibble. pull from dplyr can be used to grab a tibble column and make it into a vector
+tidy_counts_expressed %>% 
+  pull(SYMBOL) %>%
+  head()
 
-tidy_counts_expressed %>% pull(SYMBOL) %>% str_to_title()
+#Here we pull our gene symbols from our tibble into a vector, and then convert them into title style capitalization
+tidy_counts_expressed %>% 
+  pull(SYMBOL) %>% 
+  str_to_title() %>% 
+  head()
 
-tidy_counts_expressed %>% mutate(SYMBOL = str_to_title(SYMBOL))
+#String manipulation functions can be used on tibbles using mutate. Here we convert gene symbols to title style capitalization
+tidy_counts_expressed %>% 
+  mutate(SYMBOL = str_to_title(SYMBOL))
 
-tidy_counts_expressed %>% mutate(CHR = str_to_upper(CHR))
+# Here we convert CHR annotation to capitals
+tidy_counts_expressed %>% 
+  mutate(CHR = str_to_upper(CHR))
+
 ```
 
 ## Finding patterns
 ```{R}
 #Find patterns in different ways
 #Detect gives a T/F whether the pattern 'salmon' is present in vector
-df1 %>% dplyr::pull(common_name) %>% str_detect('salmon')
+df1 %>% 
+  dplyr::pull(common_name) %>% 
+  str_detect('salmon')
+
 #Subset returns the match if the pattern 'salmon' is present in vector
-df1 %>% dplyr::pull(common_name) %>% str_subset('salmon') 
+df1 %>% 
+  dplyr::pull(common_name) %>% 
+  str_subset('salmon') 
+
 #Ends is similar to detect as it gives gives a T/F whether the pattern 'salmon' is present in vector, but the pattern has to be at the end. 
-df1 %>% dplyr::pull(common_name) %>% str_ends('salmon') 
-df1 %>% filter(str_ends(common_name,'salmon'))
+df1 %>% 
+  dplyr::pull(common_name) %>% 
+  str_ends('salmon') 
+
+df1 %>% 
+  filter(str_ends(common_name,'salmon'))
 
 
 #Count gives you the total number of times your pattern appears in each chracter in the vector
-df1 %>% dplyr::pull(common_name) %>% str_count('salmon')
-df1 %>% dplyr::pull(common_name) %>% str_count('o')
+df1 %>% 
+  dplyr::pull(common_name) %>% 
+  str_count('salmon')
+
+df1 %>% 
+  dplyr::pull(common_name) %>% 
+  str_count('o')
 
 #Replace
-df1 %>% dplyr::pull(common_name) %>% str_replace_all('Steelhead','Steelhead trout' ) 
-mutate(df1, common_name = str_replace_all(common_name,'Steelhead','Steelhead trout' ) )
+df1 %>% 
+  dplyr::pull(common_name) %>%
+  str_replace_all('Steelhead','Steelhead trout' )
+
+df1 %>% 
+  mutate(common_name = str_replace_all(common_name,'Steelhead','Steelhead trout' ))
 
 ```
 
-# ggplot
+# forcats - Handling factors
 
-# purr
+Factors are a data type that R uses to handle fixed categorical variables that have a known set of possible values. 
 
-applying functions to datasets
+Factors are ordered, allowing hierachy to be presevred in relatively simple vectors.
 
-#forcats
+## Making a factor
+```{r}
 
+# anything not in factor will become an NA
+# 
+# 
+# access levels
+# 
+# (short verse long gnnes?)
+# 
+# 
+# 
+# fct_count
+
+
+
+
+```
+
+## Changing the order
+```{r}
+
+
+```
+
+## Other useful things.
+```{r}
+
+# fct_c to combine
+
+```
+
+fct_reorder(): Reordering a factor by another variable.
+fct_infreq(): Reordering a factor by the frequency of values.
+fct_relevel(): Changing the order of a factor by hand.
+fct_lump(): Collapsing the least/most frequent values of a factor into “other”.
 
 
 ## Tidy beyond this workshop
@@ -570,6 +721,10 @@ googledrive: Interact with your googledrive through R
 lubridate and hms: Allow managin of calendar and time formats
 
 magrittr:
+
+broom: helps tidy up standard base function i.e. lm or t.test
+
+tidymodels:
 
 
 

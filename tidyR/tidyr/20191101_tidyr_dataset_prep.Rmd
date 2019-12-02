@@ -26,6 +26,7 @@ df1<- df1 %>% select(salmon_id_number,common_name,age_classbylength,field_length
 colnames(df1)[1]<-"salmon_id"
 colnames(df1)[4]<-"length_mm"
 colnames(df1)[5]<-"IGF1_ng_ml"
+df1<-filter(df1, !common_name == 'Hybrid steelhead and cutthroat trout')
 
 df2<-melt(df1, id=c("salmon_id","common_name","age_classbylength")) %>% arrange(salmon_id) %>%as_tibble()
 
