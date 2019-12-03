@@ -666,42 +666,104 @@ Factors are a data type that R uses to handle fixed categorical variables that h
 
 Factors are ordered, allowing hierachy to be presevred in relatively simple vectors.
 
-## Making a factor
+## Making a factor - This is all base
 ```{r}
 
-# anything not in factor will become an NA
-# 
-# 
-# access levels
-# 
-# (short verse long gnnes?)
-# 
-# 
-# 
-# fct_count
+tidy_counts_expressed_samples <- tidy_counts_expressed %>% pull(Sample) %>% factor()
+tidy_counts_expressed_samples
 
+tidy_counts_expressed %>% ungroup() %>% mutate_at(vars(Sample), as_factor) 
 
+tidy_counts_expressed %>% ungroup() %>% mutate_at(vars(Sample), as_factor) %>% pull(Sample)
 
+my_levels1<-c('ORTHO_1','ORTHO_2','CD34_1','CD34_2')
+tidy_counts_expressed %>% pull(Sample) %>% factor(levels = my_levels1 )
+
+my_levels2<-c('ORTHO_1','CD34_1')
+tidy_counts_expressed %>% pull(Sample) %>% factor(levels = my_levels2 )
+
+tidy_counts_expressed_samples %>% levels()
+
+```
+
+## Why do we factorize? For order
+```{r}
+
+tidy_counts_expressed %>% ungroup() %>% mutate_at(vars(Sample), as_factor) %>% group_by(Sample) %>% dplyr::summarize(mean_count=mean(counts)) %>% ggplot(aes(x=Sample, y= mean_count)) + geom_bar(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = 90))
 
 ```
 
 ## Changing the order
 ```{r}
 
+#fct_relevel - reorder manually
+tidy_counts_expressed %>% 
+  ungroup() %>% 
+  mutate_at(vars(Sample), as_factor) %>%
+  mutate(Sample=fct_relevel(Sample, my_levels1)) %>% 
+  pull(Sample)
+
+#fct_relevel - reorder manually
+tidy_counts_expressed %>% 
+  ungroup() %>% 
+  mutate_at(vars(Sample), as_factor) %>%
+  mutate(Sample=fct_relevel(Sample, my_levels2)) %>% 
+  pull(Sample)
+
+
+#fct_reorder - reorder based on the data
+tidy_counts_expressed %>%
+  ungroup() %>% 
+  mutate_at(vars(Sample), as_factor) %>% 
+  mutate(Sample=fct_reorder(Sample,counts,mean)) %>% 
+  pull(Sample)
 
 ```
+
+## Now our ordering can be fixed
+```{r}
+
+tidy_counts_expressed %>% 
+  ungroup() %>% 
+  mutate_at(vars(Sample), as_factor) %>%
+  mutate(Sample=fct_relevel(Sample, my_levels1)) %>% 
+  group_by(Sample) %>% dplyr::summarize(mean_count=mean(counts)) %>% ggplot(aes(x=Sample, y= mean_count)) + geom_bar(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = 90))
+
+
+```
+
 
 ## Other useful things.
 ```{r}
 
-# fct_c to combine
+df1$age_classbylength
 
+# fct_recode - Change levels manually
+df1 %>% mutate_at(vars(age_classbylength), as_factor) %>% mutate(age_classbylength=fct_recode(age_classbylength, "mixed juvenile" = "mixed age juvenile")) %>% pull(age_classbylength)
+
+df1 %>% mutate_at(vars(age_classbylength), as_factor) %>% mutate(age_classbylength=fct_recode(age_classbylength, "juvenile" = "mixed age juvenile")) %>% pull(age_classbylength)
+
+# fct_count - Count up the number of each
+df1 %>% mutate_at(vars(age_classbylength), as_factor) %>% pull(age_classbylength) %>% fct_count()
+
+# fct_infreq - mask rare factors
+df1 %>% mutate_at(vars(age_classbylength), as_factor) %>% mutate(age_classbylength=fct_lump(age_classbylength, n=2)) %>% pull(age_classbylength)
+df1 %>% mutate_at(vars(age_classbylength), as_factor) %>% mutate(age_classbylength=fct_lump(age_classbylength, n=2)) %>% pull(age_classbylength) %>% fct_count()
+
+# fct_c - combining factors
+A<-factor(c('Tom','Ji-Dung'))
+B<-factor('Matt')
+fct_c(A,B)
 ```
 
-fct_reorder(): Reordering a factor by another variable.
-fct_infreq(): Reordering a factor by the frequency of values.
-fct_relevel(): Changing the order of a factor by hand.
-fct_lump(): Collapsing the least/most frequent values of a factor into “other”.
+##CHALEENGE
+# (short verse long gnnes?)
+```{r}
+
+
+```
 
 
 ## Tidy beyond this workshop
