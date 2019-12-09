@@ -16,7 +16,6 @@ output:
     depth: 3  # upto three depths of headings (specified by #, ---
 ## and ---
 ###)
-    number_sections: false  ---
 ## if you want number sections at each table header
     theme: united  # many options for theme, this one is my favorite.
     highlight: tango  # specifies the syntax highlighting style
@@ -99,7 +98,8 @@ https://rockefelleruniversity.github.io/Plotting_In_R/
 ---
 ## First step lets load in the data we are using today
 ```{r}
-load(file='../../dataset/my_tidy.Rdata')
+cat(getwd())
+load(file='dataset/my_tidy.Rdata')
 ```
 
 ---
@@ -378,16 +378,16 @@ ReadR:
 ## ReadR vs Base
 ```{r}
 # Base gives you everything
-untidy_counts_base <- read.csv("../dataset/hemato_rnaseq_counts.csv")
+untidy_counts_base <- read.csv("dataset/hemato_rnaseq_counts.csv")
 head(untidy_counts_base)
 
 # ReadR gives you a tibble. 
 # Note the rownames are now their own column.
-untidy_counts <- read_csv("../dataset/hemato_rnaseq_counts.csv")
+untidy_counts <- read_csv("dataset/hemato_rnaseq_counts.csv")
 untidy_counts
 
 # Tibbles carry and display extra information. While reading in it is easy to specify data type. 
-untidy_counts <- read_csv("../dataset/hemato_rnaseq_counts.csv", col_types = cols(
+untidy_counts <- read_csv("dataset/hemato_rnaseq_counts.csv", col_types = cols(
     ENTREZ = col_character(),
     CD34_1 = col_integer(),
     ORTHO_1 = col_integer(),
@@ -424,7 +424,7 @@ untidy_counts$ENTREZ
 ---
 ## ANSWER
 ```{r}
-untidy_counts_test <- read_csv("../dataset/hemato_rnaseq_counts.csv", col_types = cols(
+untidy_counts_test <- read_csv("dataset/hemato_rnaseq_counts.csv", col_types = cols(
     ENTREZ = col_character(),
     CD34_1 = col_integer(),
     ORTHO_1 = col_character(),
