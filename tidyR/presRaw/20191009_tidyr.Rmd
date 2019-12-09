@@ -24,30 +24,35 @@ params:
 
 ---
 
----
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+---
+## BRC - Bioinformatics Resource Center
 
-# BRC - Bioinformatic Resource Center
+<p>&nbsp;</p>
 
 We are your local friendly bioinformaticians. 
 
-We want to help with your problematic data. New or Old. 
+<p>&nbsp;</p>
 
-Drop by and say Hi! We are currently in the IT pavillion. 
+We want to help with your problematic data. New or Old.
 
-# Introduction to Data Wrangling with Tidy
+<p>&nbsp;</p>
+
+Drop by and say Hi!
+
 ---
-## A problem we face when dealing with data regularly.
+# Data Wrangling with Tidy
+
+**Some problems we face when dealing with data regularly.**  
 
 Every dataset is different. Sometimes very different.
 
 There are many ways to do things. Everyone has their favorite syntax. 
 
-The issue:  
-Many fundamental data processing functions exist in *Base R* and beyond. Sometimes they can be inconsistent or unnecessarily complex. Espeically when dealing with non-standard dataframes. The result is code that is confusing and doesn't flow i.e. nested functions
+**The issue:**  
+Many fundamental data processing functions exist in *Base R* and beyond. Sometimes they can be inconsistent or unnecessarily complex. Especially when dealing with non-standard dataframes. The result is code that is confusing and doesn't flow i.e. nested functions
 
 ---
 ## What does it mean to be tidy?
@@ -62,7 +67,7 @@ Their manifesto: https://cran.r-project.org/web/packages/tidyverse/vignettes/man
 
 ---
 ## What does it actually mean to be tidy?
-
+<p>&nbsp;</p>
 * A defined vision for coding style in R  
 * A defined vision for data formats in R
 * A defined vision for package design in R
@@ -70,8 +75,8 @@ Their manifesto: https://cran.r-project.org/web/packages/tidyverse/vignettes/man
 * Critical mass of people to influence the way the whole R community evolves
 
 ---
-## What are the main tools in the tidyverse?
-
+## What are the main tidy tools?
+<p>&nbsp;</p>
 * ggplot2 – making pretty graphs 
 * readr – reading data into R  
 * dplyr – manipulating data  
@@ -90,25 +95,53 @@ Workflow Image for working with data.
 
 ---
 ## What we won't be doing today
+<p>&nbsp;</p>
+We already have a course online for plotting, including ggplot.     
 
-We already have a course online for plotting, including ggplot.  
 https://rockefelleruniversity.github.io/Plotting_In_R/
 
-# Lets get tidy!
 ---
-## First step lets load in the data we are using today
+# Lets get tidy!
+**First step lets load in the data we are using today**
 ```{r}
 cat(getwd())
 load(file='dataset/my_tidy.Rdata')
 ```
 
 ---
-## Are all data frames equal?
+## Are all data frames equal - (pt1)?
 ```{r,eval=FALSE,echo=TRUE}
 head(df1)
+```
+
+```{r,eval=TRUE,echo=FALSE}
+utils::head(df1)
+```
+
+```{r,eval=FALSE,echo=TRUE}
 head(df2)
+```
+
+```{r,eval=TRUE,echo=FALSE}
+utils::head(df2)
+```
+
+---
+## Are all data frames equal - (pt2)?
+```{r,eval=FALSE,echo=TRUE}
 head(df3a)
+```
+
+```{r,eval=TRUE,echo=FALSE}
+utils::head(df3a)
+```
+
+```{r,eval=FALSE,echo=TRUE}
 head(df3b)
+```
+
+```{r,eval=TRUE,echo=FALSE}
+utils::head(df3b)
 ```
 
 ---
@@ -120,6 +153,18 @@ A tidy dataset is a data frame (or table) for which the following are true:
 * Each observation has its own row
 * Each value has its own cell
 
+**Which of our dataframes is tidy?**
+
+---
+## Which is a tidy dataset?
+
+A tidy dataset is a data frame (or table) for which the following are true:
+
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
+
+**Which of our dataframes is tidy?**  
 Our first dataframe is tidy
 
 ---
@@ -143,41 +188,79 @@ library(tidyverse)
  -> insert graphic here
  https://github.com/trinker/tidyr_in_a_nutshell
 
-# dplyr: A tool to access and manipulate data in a dataframe
+---
+# dplyr
+This package contains a variety of tools to access and manipulate dataframes.
 
 ---
-## Select
-Select allows you to make a vector or dataframe from a specific variable or variables
+# dplyr::select - (pt1)
+**Select** allows you to make a vector from a specific variable
 ```{r}
 # Select one variable (common_name)
 select(df1, common_name)
+```
+
+---
+# dplyr::select - (pt2)
+**Select** allows you to make a dataframe from several variables
+```{r}
 # Select two variables (age_classbylength and common_name)
 select(df1, age_classbylength, common_name)
+```
+
+---
+# dplyr::select - (pt3)
+**Select** allows you to make a dataframe excluding a variable
+```{r}
 # Select all but one variable (length_mm)
 select(df1,-length_mm)
+```
+
+---
+# dplyr::select - (pt4)
+**Select** allows you to make a dataframe from a range of variables
+```{r}
 # Select all a range of contiguous varibles (common_name:length_mm)
 select(df1, common_name:length_mm)
 ```
 
 ---
-## Filter
-Filter allows you to access observations based on specific criteria
+# dplyr::filter - (pt1)
+**Filter** allows you to access observations based on a criteria
 ```{r}
 # Filter all observation where the variable common_name is Sockeye salmon
 filter(df1, common_name == 'Sockeye salmon')
+```
+
+---
+# dplyr::filter - (pt2)
+**Filter** allows you to access observations based on several criteria
+```{r}
 # Filter all observations where the variable common_name is either Sockeye salmon or Chinook Salmon
 filter(df1, common_name %in% c('Sockeye salmon', 'Chinook salmon'))
+```
+
+---
+# dplyr::filter - (pt3)
+**Filter** allows you to access observations based on specific strings
+```{r}
 # Filter all observations where the variable common_name ends with 'salmon'. To do this we use stringr function str_ends recognise strings that end with 'salmon'.
 filter(df1, str_ends(common_name, 'salmon'))
+```
+
+---
+# dplyr::filter - (pt4)
+**Filter** allows you to access observations based on operators
+```{r}
 # Filter all observations where the variable length_mm is greater than 200 or less than 120
 filter(df1, length_mm > 200 | length_mm < 120)
 ```
 
 ---
 ## CHALLENGE
-
-* Create a dataframe of the variables *age* and *IGF* of only the *Steelhead* fish
-* Create a dataframe of all variables but the *IGF* values, for all fish that begin with *S*
+<p>&nbsp;</p>
+* Create a dataframe with the variables *age* and *IGF* for only the *Steelhead* fish
+* Create a dataframe with all the variables except the *IGF* values, for all fish that begin with *S*
 
 ---
 ## ANSWERS
@@ -192,34 +275,43 @@ select(df1_A, -IGF1_ng_ml)
 ```
 
 ---
-## Arrange
-Arrange sorts the dataframe based on a specific variable or variables
+# dplyr::arrange - (pt1)
+*Arrange* sorts the dataframe based on a specific variable
 ```{r}
 # Arrange the data based on the variable length_mm
 arrange(df1, length_mm)
+```
+---
+# dplyr::arrange - (pt2)
+*Arrange* sorts the dataframe based on specific variables
+```{r}
 # Arrange the data first based on the variable common_name, then secondly based on length_mm in a descending order.
 arrange(df1, common_name, desc(length_mm))
 ```
 
 ---
-## Mutate
-Mutate creates a new variable based on some form of computation
+# dplyr::mutate - (pt1)
+*Mutate* creates a new variable based on some form of computation
 ```{r}
 # A new variable is created based on the calculation of the z-score of the variable IGF1_ng_ml using scale()
 mutate(df1, scale(IGF1_ng_ml))
+```
+---
+# dplyr::mutate - (pt2)
+*Mutate* creates a named variable based on some form of computation
+```{r}
 # A new variable is created called IGFngml_zscore, based on the caluclation of the z-score of the variable IGF1_ng_ml using scale()
 mutate(df1, IGFngml_zscore = scale(IGF1_ng_ml))
 ```
 
 ---
 ## CHALLENGE
-
+<p>&nbsp;</p>
 * Create a dataframe with a new variable that contains the rank of the *length* variable. Arrange this new data frame by *IGF* (lowest to highest).
 * Create a dataframe with a new variable that is *IGF*/*length*. Arrange by this new variable (highest to lowest).
 
 ---
 ## ANSWERS
-
 ```{r}
 # Create a dataframe with a new variable that contains the rank of the *length* variable. Arrange this new data frame by *IGF* (lowest to highest).
 df1_A <- mutate(df1, length_rank=rank(length_mm))
@@ -231,27 +323,41 @@ arrange(df1_A, -IGF_perlength)
 ```
 
 ---
-## Summarize
-Summarize applies aggregating or summary function to a group
+# dplyr::summarize - (pt1)
+*Summarize* applies aggregating or summary function to a group i.e. counting
 ```{r}
 # First we define the common_name as a group. 
 df1_byname <- group_by(df1, common_name)
+
 # Summarise is used to count over the grouped common_names
 summarise(df1_byname, count = n())
+```
+---
+# dplyr::summarize - (pt2)
+*Summarize* applies aggregating or summary function to a group i.e. means
+```{r}
 # Summarise is used to calculate mean IGF1_ng_ml over the grouped common_names
 summarise(df1_byname, IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm = T))
 ```
 
 ---
-## Group
-Grouping can also help ask questions with other functions
+# dplyr::group_by - (pt1)
+*Grouping* can also help filter within groups
 ```{r}
 # Filter obsevrations with the 2 smallest length_mm for each grouped common_names
 filter(df1_byname, rank(length_mm) <= 2)
-
+```
+---
+# dplyr::group_by - (pt2)
+*Grouping* can also help filter within groups
+```{r}
 # Filter obsevrations with at least 5 for each grouped common_names
 filter(df1_byname, n() > 5)
-
+```
+---
+# dplyr::group_by - (pt3)
+*Grouping* creates a new variable based on some form of computation within the group
+```{r}
 # A new variable is created using z-score within the grouped common_names
 mutate(df1_byname, IGFngml_zscore = scale(IGF1_ng_ml))
 ```
@@ -278,45 +384,56 @@ summarise(df1_A, mean_length_mm = mean(length_mm, na.rm = T))
 
 ```
 
-# Piping from magrittR (%>%): A way to string functions together
-Piping allows you to pass the result from one expression directly into another.
+# Piping to string functions together
+
+Piping was allows you to pass the result from one expression directly into another.  
+magrittR package developed the %>% pipe which is integral to the tidy way of formatting code
 
  -> same graphic as before , but extend
  https://github.com/trinker/tidyr_in_a_nutshell
 
 ---
-## Piping versus not piping
+## Piping vs. not piping
 ```{r}
 # Without pipe
 df1_byname <- group_by(df1, common_name)
 summarise(df1_byname, IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm=T))
 
 # With pipe
-group_by(df1, common_name) %>% summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm=T))
+df1 %>% group_by(common_name) %>% summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm=T))
 ```
 
 ---
-## Building pipes together
+## Linking functions with pipes - (pt1)
 ```{r}
 # (1) Group by common_name
 # (2) Filter to all those that have length bigger then 200
 # (3) Summarise is used to calculate mean IGF1_ng_ml over the grouped common_names for these larger fish
-group_by(df1, common_name) %>% 
+df1 %>%
+  group_by(common_name) %>% 
   filter(length_mm > 200) %>% 
   summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm = T))
-
+```
+---
+## Linking functions with pipes - (pt2)
+```{r}
 # (1) Create new variable that is discrete label depending on size of the fish
 # (2) Group by common_name and size
 # (3) Summarise is used to calculate mean IGF1_ng_ml over the grouped common_names and sizes
-mutate(df1, size = if_else(length_mm > 200, 'big_fish', 'small_fish')) %>% 
+df1 %>%
+  mutate(size = if_else(length_mm > 200, 'big_fish', 'small_fish')) %>% 
   group_by(common_name, size) %>% 
   summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm = T))
-
+```
+---
+## Linking functions with pipes - (pt3)
+```{r}
 # (1) Create new variable that is discrete label depending on size of the fish
 # (2) Group by common_name and size
 # (3) Summarise is used to calculate mean IGF1_ng_ml over the grouped common_names and sizes
 # (4) Filter out Coho and Sockeye salmon
-mutate(df1, size = if_else(length_mm > 200, 'big_fish', 'small_fish')) %>% 
+df1 %>%
+  mutate(size = if_else(length_mm > 200, 'big_fish', 'small_fish')) %>% 
   group_by(common_name, size) %>% 
   summarise(IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm = T)) %>%
   filter(common_name != 'Coho salmon')  %>%
@@ -324,7 +441,7 @@ mutate(df1, size = if_else(length_mm > 200, 'big_fish', 'small_fish')) %>%
 ```
 
 ---
-## You can put these pipes straight into plotting
+## You can pipe straight to plots - (pt1)
 ```{r, warning=F, message=F}
 
 p <- mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% 
@@ -332,11 +449,14 @@ p <- mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>%
   summarize(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %>% 
   filter(common_name != 'Coho salmon')  %>% 
   filter(common_name != 'Sockeye salmon') %>% 
-  ggplot( aes(x = common_name, y = IGF1_ng_ml_ave, group = size, fill = size)) +
+  ggplot(aes(x = common_name, y = IGF1_ng_ml_ave, group = size, fill = size)) +
   geom_bar(stat = "identity", position = "dodge") + 
   theme(axis.text.x = element_text(angle = 90)) +
   scale_fill_brewer(palette = "Paired")
-
+```
+---
+## You can pipe straight to plots - (pt2)
+```{r, warning=F, message=F}
 p
 ```
 
@@ -361,11 +481,12 @@ df1 %>%
   
 ```
 
-# Readr: Reading data into R
+---
+# readr: Reading data into R
 So we blasted through what being tidy can give you. 
 Now lets start from the beginning and tidy some data. First step is to read in data. 
 
-ReadR:
+readr:
 
 * read_csv(): comma separated (CSV) files  
 * read_tsv(): tab separated files  
@@ -375,10 +496,11 @@ ReadR:
 * read_log(): web log files   
 
 ---
-## ReadR vs Base
+## readr vs Base
 ```{r}
-# Base gives you everything
+
 untidy_counts_base <- read.csv("dataset/hemato_rnaseq_counts.csv")
+# Base will print out everything if you do not use head
 head(untidy_counts_base)
 
 # ReadR gives you a tibble. 
