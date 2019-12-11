@@ -9,8 +9,8 @@
 #   sapply(deletes,function(x){detach(x, character.only = TRUE)})      
 # }
 
-pathToPres <- "/Users/mattpaul/Documents/Box Sync/RU/Teaching/teaching/tidyR"
-wkdDir <- "/Users/mattpaul/Documents/Box Sync/RU/Teaching/teaching/tidyR/"
+pathToPres <- "/Users/mattpaul/Documents/Box Sync/RU/Teaching/RU_side/RU_tidyverse/tidyR/"
+wkdDir <- "/Users/mattpaul/Documents/Box Sync/RU/Teaching/RU_side/RU_tidyverse/tidyR/"
 
 
 setwd(wkdDir)
@@ -54,10 +54,13 @@ for(f in filesToCompile){
   idx <- grep('---',tx)[-c(1,2)]
   tx[idx]  <- gsub(pattern = "---", replace = "", x = tx[idx])
   writeLines(tx, con=file.path(wkdDir,"presentations","singlepage",basename(f)))
-  #render(file.path(wkdDir,"presentations","singlepage",basename(f)),output_format = "html_document",output_dir = file.path(wkdDir,"presentations","singlepage"))#, envir = new.env())
-  callr::r(rmarkdown::render(file.path(wkdDir,"presentations","singlepage",basename(f)),output_format = "html_document",output_dir = file.path(wkdDir,"presentations","singlepage"),knit_root_dir = getwd()))
+  render(file.path(wkdDir,"presentations","singlepage",basename(f)),output_format = "html_document",output_dir = file.path(wkdDir,"presentations","singlepage"),knit_root_dir = getwd())#, envir = new.env())
+  #callr::r(func=rmarkdown::render(file.path(wkdDir,"presentations","singlepage",basename(f)),output_format = "html_document",output_dir = file.path(wkdDir,"presentations","singlepage"),knit_root_dir = getwd()))
   #cleanSearch(env_defaults)
+  file.path(wkdDir,"presentations","singlepage")
 }
+
+unlink(file.path(wkdDir,"presentations/*/*.Rmd"))
 
 
 

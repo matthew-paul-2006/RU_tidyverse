@@ -649,6 +649,7 @@ txsLength <- sapply(geneExons, function(x){ x %>%
     GenomicRanges::reduce() %>%
     width() %>%
     sum() })
+counts_metadata <- tibble(ID = symbols$ENTREZID, SYMBOL = symbols$SYMBOL, CHR = chrs$TXCHROM, LENGTH = txsLength)
 ```
 # Finally we have all this metadata. Lets put it together into a tibble. 
 counts_metadata <- tibble(ID = symbols$ENTREZID, SYMBOL = symbols$SYMBOL, CHR = chrs$TXCHROM, LENGTH = txsLength)
