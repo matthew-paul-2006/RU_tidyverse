@@ -161,13 +161,9 @@ library(tidyverse)
 This package contains a variety of tools to access and manipulate dataframes.
 
 ---
-## dplyr::select
+## dplyr::select 
 **Select** allows you to make a vector from a specific variable
-```{r, echo=F, eval=T}
-# Select one variable (common_name)
-dplyr::select(df1, common_name)
-```
-```{r, echo=T, eval=F}
+```{r}
 # Select one variable (common_name)
 select(df1, common_name)
 ```
@@ -177,7 +173,7 @@ select(df1, common_name)
 **Select** allows you to make a dataframe from several variables
 ```{r}
 # Select two variables (age_classbylength and common_name)
-dplyr::select(df1, age_classbylength, common_name)
+select(df1, age_classbylength, common_name)
 ```
 
 ---
@@ -193,7 +189,7 @@ select(df1,-length_mm)
 **Select** allows you to make a dataframe from a range of variables
 ```{r}
 # Select all a range of contiguous varibles (common_name:length_mm)
-dplyr::select(df1, common_name:length_mm)
+select(df1, common_name:length_mm)
 ```
 
 ---
@@ -239,11 +235,11 @@ _ Create a dataframe with all the variables except the _IGF_ values, for all fis
 ```{r}
 # Create a dataframe of the variables _age_ and _IGF_ of only the _Steelhead_ fish
 df1_A <- filter(df1, common_name == 'Steelhead')
-dplyr::select(df1_A, age_classbylength, IGF1_ng_ml)
+select(df1_A, age_classbylength, IGF1_ng_ml)
 
 # Create a dataframe of all variables but the _IGF_ values, for all fish that begin with _S_
 df1_A <- filter(df1, str_starts(common_name,'S'))
-dplyr::select(df1_A, -IGF1_ng_ml)
+select(df1_A, -IGF1_ng_ml)
 ```
 
 ---
@@ -596,7 +592,26 @@ as.data.frame(untidy_counts_base) %>% head(n=12)
 ---
 ## Tibbles: Make your own - (pt1)
 __We will make our own tibble now from scratch, using some metadata that will be useful later__
-```{r, warning=FALSE, message=FALSE, cache=T}
+```{r, eval=F, echo=T}
+# Lets load in some packages
+library(org.Hs.eg.db)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+
+# Lets use the ENTREZ ID as a key
+keys <- untidy_counts$ENTREZ
+
+# We can use the ENTREZ ID to look up Gene Symbol
+symbols <- select(org.Hs.eg.db, keys = keys,columns = "SYMBOL", keytype = "ENTREZID")
+
+# We can use the ENTREZ ID to look up the chormosome the gene resides on
+chrs <- select(TxDb.Hsapiens.UCSC.hg19.knownGene, keys = keys, columns = "TXCHROM", keytype = "GENEID")
+
+# We can use the ENTREZ ID to get a list of genes with grange of their exons
+geneExons <- exonsBy(TxDb.Hsapiens.UCSC.hg19.knownGene,by = "gene")[keys]
+
+```
+
+```{r, warning=FALSE, message=FALSE, cache=T, eval=T, echo=F}
 # Lets load in some packages
 library(org.Hs.eg.db)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
@@ -616,7 +631,7 @@ geneExons <- exonsBy(TxDb.Hsapiens.UCSC.hg19.knownGene,by = "gene")[keys]
 ```
 ---
 ## Tibbles: Make your own - (pt2)
-```{r}
+```{r, echo=T,eval=F}
 # We will then use an apply to get the transcript length from each gene in the 
 # list. The transcript length is calculated by first flattening overlapping 
 # exons with reduce(), then calculating the length of each exon with width(), 
@@ -628,8 +643,15 @@ txsLength <- sapply(geneExons, function(x){ x %>%
 
 # Finally we have all this metadata. Lets put it together into a tibble. 
 counts_metadata <- tibble(ID = symbols$ENTREZID, SYMBOL = symbols$SYMBOL, CHR = chrs$TXCHROM, LENGTH = txsLength)
-
 ```
+```{r, eval=T, echo=F}
+txsLength <- sapply(geneExons, function(x){ x %>%
+    GenomicRanges::reduce() %>%
+    width() %>%
+    sum() })
+```
+# Finally we have all this metadata. Lets put it together into a tibble. 
+counts_metadata <- tibble(ID = symbols$ENTREZID, SYMBOL = symbols$SYMBOL, CHR = chrs$TXCHROM, LENGTH = txsLength)
 ---
 ## Tibbles: Make your own - (pt3)
 ```{r}
