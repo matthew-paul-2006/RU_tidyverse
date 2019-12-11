@@ -10,21 +10,25 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
-html_document:
-    toc: true # table of content true
+  html_document:
+    toc: true # table of contents true
     toc_float: yes
     depth: 3  # upto three depths of headings (specified by #, ## and ###)
     number_sections: false  ## if you want number sections at each table header
     theme: united  # many options for theme, this one is my favorite.
     highlight: tango  # specifies the syntax highlighting style
+params:
+  isSlides: "no"
 ---
 
----
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 AsSlides <- TRUE
+library(org.Hs.eg.db)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 ```
 
+---
 # Data wrangling with Tidy
 
 <b>Some problems we face when dealing with data regularly.</b>
@@ -51,7 +55,7 @@ Tidyverse is most importantly a philosophy for data analysis that more often the
 You can read their <a href="https://cran.r-project.org/web/packages/tidyverse/vignettes/manifesto.html">manifesto</a> to get a better understanding of the tidy ethos. 
   
 ---
-## What does it actually mean to be tidy?
+## What does it <i>actually</i> mean to be tidy?
 
 <ul>
   <li>A defined vision for coding style in R  
@@ -91,46 +95,30 @@ https://rockefelleruniversity.github.io/Plotting_In_R/
 
 ---
 # Lets get tidy!
-__First step lets load in the data we are using today__
+First step lets load in the data we are using today
 ```{r}
 cat(getwd())
 load(file='dataset/my_tidy.Rdata')
 ```
 
 ---
-## Are all data frames equal - (pt1)?
-```{r,eval=FALSE,echo=TRUE}
+## Are all data frames equal?
+```{r}
 head(df1)
 ```
 
-```{r,eval=TRUE,echo=FALSE}
-utils::head(df1)
-```
-
-```{r,eval=FALSE,echo=TRUE}
+```{r}
 head(df2)
 ```
 
-```{r,eval=TRUE,echo=FALSE}
-utils::head(df2)
-```
-
 ---
-## Are all data frames equal - (pt2)?
-```{r,eval=FALSE,echo=TRUE}
+### Are all data frames equal?
+```{r}
 head(df3a)
 ```
 
-```{r,eval=TRUE,echo=FALSE}
-utils::head(df3a)
-```
-
-```{r,eval=FALSE,echo=TRUE}
+```{r}
 head(df3b)
-```
-
-```{r,eval=TRUE,echo=FALSE}
-utils::head(df3b)
 ```
 
 ---
@@ -138,22 +126,13 @@ utils::head(df3b)
 
 A tidy dataset is a data frame (or table) for which the following are true:
 
-_ Each variable has its own column
-_ Each observation has its own row
-_ Each value has its own cell
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
 
-__Which of our dataframes is tidy?__
-
----
-## Which is a tidy dataset?
-
-A tidy dataset is a data frame (or table) for which the following are true:
-
-_ Each variable has its own column
-_ Each observation has its own row
-_ Each value has its own cell
-
-__Which of our dataframes is tidy?__  
+***Which of our dataframes is tidy?***
+--
+<p>&nbsp;</p>
 Our first dataframe is tidy
 
 ---
@@ -182,8 +161,8 @@ library(tidyverse)
 This package contains a variety of tools to access and manipulate dataframes.
 
 ---
-## dplyr::select - (pt1)
-__Select__ allows you to make a vector from a specific variable
+## dplyr::select
+**Select** allows you to make a vector from a specific variable
 ```{r, echo=F, eval=T}
 # Select one variable (common_name)
 dplyr::select(df1, common_name)
@@ -194,24 +173,24 @@ select(df1, common_name)
 ```
 
 ---
-## dplyr::select - (pt2)
-__Select__ allows you to make a dataframe from several variables
+#### dplyr::select
+**Select** allows you to make a dataframe from several variables
 ```{r}
 # Select two variables (age_classbylength and common_name)
 dplyr::select(df1, age_classbylength, common_name)
 ```
 
 ---
-## dplyr::select - (pt3)
-__Select__ allows you to make a dataframe excluding a variable
+#### dplyr::select
+**Select** allows you to make a dataframe excluding a variable
 ```{r}
 # Select all but one variable (length_mm)
 select(df1,-length_mm)
 ```
 
 ---
-## dplyr::select - (pt4)
-__Select__ allows you to make a dataframe from a range of variables
+#### dplyr::select
+**Select** allows you to make a dataframe from a range of variables
 ```{r}
 # Select all a range of contiguous varibles (common_name:length_mm)
 dplyr::select(df1, common_name:length_mm)
@@ -296,7 +275,7 @@ mutate(df1, scale(IGF1_ng_ml))
 _Mutate_ creates a named variable based on some form of computation
 ```{r}
 # A new variable is created called IGFngml_zscore, based on the 
-# caluclation of the z-score of the variable IGF1_ng_ml using scale()
+# calculation of the z-score of the variable IGF1_ng_ml using scale()
 mutate(df1, IGFngml_zscore = scale(IGF1_ng_ml))
 ```
 
@@ -626,10 +605,10 @@ library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 keys <- untidy_counts$ENTREZ
 
 # We can use the ENTREZ ID to look up Gene Symbol
-symbols <- select(org.Hs.eg.db, keys = keys,columns = "SYMBOL", keytype = "ENTREZID")
+symbols <- AnnotationDbi::select(org.Hs.eg.db, keys = keys,columns = "SYMBOL", keytype = "ENTREZID")
 
 # We can use the ENTREZ ID to look up the chormosome the gene resides on
-chrs <- select(TxDb.Hsapiens.UCSC.hg19.knownGene, keys = keys, columns = "TXCHROM", keytype = "GENEID")
+chrs <- AnnotationDbi::select(TxDb.Hsapiens.UCSC.hg19.knownGene, keys = keys, columns = "TXCHROM", keytype = "GENEID")
 
 # We can use the ENTREZ ID to get a list of genes with grange of their exons
 geneExons <- exonsBy(TxDb.Hsapiens.UCSC.hg19.knownGene,by = "gene")[keys]
@@ -643,7 +622,7 @@ geneExons <- exonsBy(TxDb.Hsapiens.UCSC.hg19.knownGene,by = "gene")[keys]
 # exons with reduce(), then calculating the length of each exon with width(), 
 # then summing upthe total exon length to get our transcript length. 
 txsLength <- sapply(geneExons, function(x){ x %>%
-    reduce() %>%
+    GenomicRanges::reduce() %>%
     width() %>%
     sum() })
 

@@ -2,6 +2,12 @@
 # pathToPres <- "/Users/tcarroll/Projects/Software/teaching/tidyR"
 # wkdDir <- "/Users/tcarroll/Projects/Software/teaching/tidyR/"
 
+#env_default <- parent.env
+# cleanSearch <- function(env_defaults) {
+#   currentList <- search()  
+#   deletes <- setdiff(currentList, env_defaults)
+#   sapply(deletes,function(x){detach(x, character.only = TRUE)})      
+# }
 
 pathToPres <- "/Users/mattpaul/Documents/Box Sync/RU/Teaching/teaching/tidyR"
 wkdDir <- "/Users/mattpaul/Documents/Box Sync/RU/Teaching/teaching/tidyR/"
@@ -35,14 +41,27 @@ file.copy(dir(file.path(pathToPres,"presRaw","imgs"),full.names = T),
 
 for(f in filesToCompile){
   file.copy(f,file.path(wkdDir,"presentations","slides",basename(f)),overwrite=TRUE)
-  invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))
+  #if(length(sessionInfo()$otherPkgs)>0){
+  #invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE))}
+  #cleanSearch(env_defaults)
   library(rmarkdown)
   render(file.path(wkdDir,"presentations","slides",basename(f)),output_format = "xaringan::moon_reader",knit_root_dir = getwd())
-  invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))
+  #callr::r(func=rmarkdown::render(file.path(wkdDir,"presentations","slides",basename(f)),output_format = "xaringan::moon_reader",knit_root_dir = getwd()), args=list(wkdDir,f), show = TRUE)
+  #invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE))
+  #cleanSearch(env_defaults)
   library(rmarkdown)
-  render(file.path(wkdDir,"presentations","slides",basename(f)),output_format = "html_document",output_dir = file.path(wkdDir,"presentations","singlepage"),knit_root_dir = getwd())
+  tx  <- readLines(f)
+  idx <- grep('---',tx)[-c(1,2)]
+  tx[idx]  <- gsub(pattern = "---", replace = "", x = tx[idx])
+  writeLines(tx, con=file.path(wkdDir,"presentations","singlepage",basename(f)))
+  #render(file.path(wkdDir,"presentations","singlepage",basename(f)),output_format = "html_document",output_dir = file.path(wkdDir,"presentations","singlepage"))#, envir = new.env())
+  callr::r(rmarkdown::render(file.path(wkdDir,"presentations","singlepage",basename(f)),output_format = "html_document",output_dir = file.path(wkdDir,"presentations","singlepage"),knit_root_dir = getwd()))
+  #cleanSearch(env_defaults)
 }
 
+
+
+file.path(wkdDir,"presentations","singlepage")
 # require(rmarkdown)
 # wkdDir <- "~/Projects/Software/teaching/tidyR/"
 # filesToCompile <- dir(file.path(wkdDir,"presentations","slides"),pattern="*.Rmd$",full.names = T)
