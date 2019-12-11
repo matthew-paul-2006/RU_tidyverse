@@ -592,7 +592,7 @@ as.data.frame(untidy_counts_base) %>% head(n=12)
 ---
 ## Tibbles: Make your own - (pt1)
 __We will make our own tibble now from scratch, using some metadata that will be useful later__
-```{r, eval=F, echo=T}
+```{r, eval=F, echo=T, purl=F}
 # Lets load in some packages
 library(org.Hs.eg.db)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
@@ -631,7 +631,7 @@ geneExons <- exonsBy(TxDb.Hsapiens.UCSC.hg19.knownGene,by = "gene")[keys]
 ```
 ---
 ## Tibbles: Make your own - (pt2)
-```{r, echo=T,eval=F}
+```{r, echo=T,eval=F, purl=F}
 # We will then use an apply to get the transcript length from each gene in the 
 # list. The transcript length is calculated by first flattening overlapping 
 # exons with reduce(), then calculating the length of each exon with width(), 
@@ -717,7 +717,7 @@ spread(tidier_counts, key="Sample", value="counts")
 ## tidyr::pivot_longer/pivot_wider
 Gather and spread are being retired. They are being replaced with pivot_tools.  
 There is slightly different nomencalture, but they pretty much do the same thing.
-```{r, eval=F, echo=T}
+```{r, eval=F, echo=T, purl=F}
 #
 pivot_longer(untidy_counts,names_to = "Sample", values_to = "counts", cols = c(-ENTREZ))
 gather(untidy_counts, key=Sample, value=counts, -ENTREZ)

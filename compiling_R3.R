@@ -17,7 +17,7 @@ setwd(wkdDir)
 dir.create(file.path(wkdDir,"presentations","slides","imgs"),recursive = TRUE,showWarnings = FALSE)
 dir.create(file.path(wkdDir,"presentations","singlepage","imgs"),recursive = TRUE,showWarnings = FALSE)
 dir.create(file.path(wkdDir,"presentations","slides","customCSS"),recursive = TRUE,showWarnings = FALSE)
-
+dir.create(file.path(wkdDir,"presentations","r_code"),recursive = TRUE,showWarnings = FALSE)
 
 filesToCompile <- dir(file.path(pathToPres,"presRaw"),pattern="*.Rmd$",full.names = T)
 # filesToCompile <- filesToCompile[grepl("bioconductor_introduction.Rmd|GenomicIntervals_In_Bioconductor.Rmd|SequencesInBioconductor.Rmd|GenomicScores_In_Bioconductor.Rmd",filesToCompile)]
@@ -57,17 +57,10 @@ for(f in filesToCompile){
   render(file.path(wkdDir,"presentations","singlepage",basename(f)),output_format = "html_document",output_dir = file.path(wkdDir,"presentations","singlepage"),knit_root_dir = getwd())#, envir = new.env())
   #callr::r(func=rmarkdown::render(file.path(wkdDir,"presentations","singlepage",basename(f)),output_format = "html_document",output_dir = file.path(wkdDir,"presentations","singlepage"),knit_root_dir = getwd()))
   #cleanSearch(env_defaults)
-  file.path(wkdDir,"presentations","singlepage")
+  knitr::purl(file.path(wkdDir,"presentations","singlepage",basename(f)),str_sub(file.path(wkdDir,"presentations","r_code",basename(f)),1,(nchar(file.path(wkdDir,"presentations","r_code",basename(f)))-2)))
 }
+
 
 unlink(file.path(wkdDir,"presentations/*/*.Rmd"))
 
 
-
-file.path(wkdDir,"presentations","singlepage")
-# require(rmarkdown)
-# wkdDir <- "~/Projects/Software/teaching/tidyR/"
-# filesToCompile <- dir(file.path(wkdDir,"presentations","slides"),pattern="*.Rmd$",full.names = T)
-# 
-# render(file.path(wkdDir,"presentations","slides",basename(f)),output_format = "xaringan::moon_reader",knit_root_dir = getwd())
-# render(file.path(wkdDir,"presentations","slides",basename(f)),output_format = "html_document",output_dir = file.path(wkdDir,"presentations","singlepage"),knit_root_dir = getwd())
