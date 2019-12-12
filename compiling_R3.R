@@ -63,4 +63,19 @@ for(f in filesToCompile){
 
 unlink(file.path(wkdDir,"presentations/*/*.Rmd"))
 
+exToCompile <- dir(file.path(pathToPres,"exercises"),pattern="*.Rmd$",full.names = T)
+for(f in exToCompile){
+  library(rmarkdown)
+  render(f, output_format = "html_document", output_dir = file.path(pathToPres,"exercises"), knit_root_dir = getwd())
+}
+
+ansToCompile <- dir(file.path(pathToPres,"answers"),pattern="*.Rmd$",full.names = T)
+for(f in ansToCompile){
+  library(rmarkdown)
+  render(f, output_format = "html_document", output_dir = file.path(pathToPres,"answers"), knit_root_dir = getwd())
+  knitr::purl(f,str_sub(f,1,nchar(f)-2))
+}
+
+
+
 

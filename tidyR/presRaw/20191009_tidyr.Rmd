@@ -1,7 +1,7 @@
 ---
-title: "Getting tidy <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>"
+title: "Data wrangling with tidy <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>"
 author: "Rockefeller University, Bioinformatics Resource Centre"
-date: "http://rockefelleruniversity.github.io/Intro_To_R_1Day/"
+date: "https://rockefelleruniversity.github.io/RU_tidyverse/"
 output: 
   xaringan::moon_reader:
     css: ["default", "metropolisCustom.css", "metropolis-fontsCustom.css"]
@@ -151,17 +151,15 @@ library(tidyverse)
 ```
 
 ---
-## These tools have same logic
-
- -> insert graphic here
- https://github.com/trinker/tidyr_in_a_nutshell
-
----
 # dplyr
-This package contains a variety of tools to access and manipulate dataframes.
+This package contains a variety of tools to access and manipulate dataframes.  
+
+They have a common rationale:
+
+![dplyr](./imgs/dplyr.png)
 
 ---
-## dplyr::select 
+## dplyr::select - (pt1)
 **Select** allows you to make a vector from a specific variable
 ```{r}
 # Select one variable (common_name)
@@ -169,7 +167,7 @@ select(df1, common_name)
 ```
 
 ---
-#### dplyr::select
+## dplyr::select - (pt2)
 **Select** allows you to make a dataframe from several variables
 ```{r}
 # Select two variables (age_classbylength and common_name)
@@ -177,7 +175,7 @@ select(df1, age_classbylength, common_name)
 ```
 
 ---
-#### dplyr::select
+## dplyr::select - (pt3)
 **Select** allows you to make a dataframe excluding a variable
 ```{r}
 # Select all but one variable (length_mm)
@@ -185,7 +183,7 @@ select(df1,-length_mm)
 ```
 
 ---
-#### dplyr::select
+## dplyr::select - (pt4)
 **Select** allows you to make a dataframe from a range of variables
 ```{r}
 # Select all a range of contiguous varibles (common_name:length_mm)
@@ -225,22 +223,16 @@ filter(df1, length_mm > 200 | length_mm < 120)
 ```
 
 ---
-## CHALLENGE
-<p>&nbsp;</p>
-_ Create a dataframe with the variables _age_ and _IGF_ for only the _Steelhead_ fish
-_ Create a dataframe with all the variables except the _IGF_ values, for all fish that begin with _S_
+## CHALLENGE: Time for an exercise!
+
+Exercise on dplyr's select and filter can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_RU_tidyverse_dplyr_select_and_filter.html)
 
 ---
-## ANSWERS
-```{r}
-# Create a dataframe of the variables _age_ and _IGF_ of only the _Steelhead_ fish
-df1_A <- filter(df1, common_name == 'Steelhead')
-select(df1_A, age_classbylength, IGF1_ng_ml)
+### Answers to exercise.
 
-# Create a dataframe of all variables but the _IGF_ values, for all fish that begin with _S_
-df1_A <- filter(df1, str_starts(common_name,'S'))
-select(df1_A, -IGF1_ng_ml)
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_ANSWERS_RU_tidyverse_dplyr_select_and_filter.html)
+
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_ANSWERS_RU_tidyverse_dplyr_select_and_filter.R)
 
 ---
 ## dplyr::arrange - (pt1)
@@ -276,25 +268,16 @@ mutate(df1, IGFngml_zscore = scale(IGF1_ng_ml))
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
 
-_ Create a dataframe with a new variable that contains the rank of the _length_ variable. Arrange this new data frame by _IGF_ (lowest to highest).
-_ Create a dataframe with a new variable that is _IGF_/_length_. Arrange by this new variable (highest to lowest).
+Exercise on dplyr's arrange and mutate can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_RU_tidyverse_dplyr_arrange_and_mutate.html)
 
 ---
-## ANSWERS
-```{r}
-# Create a dataframe with a new variable that contains the rank 
-# of the _length_ variable. Arrange this new data frame by 
-# _IGF_ (lowest to highest).
-df1_A <- mutate(df1, length_rank=rank(length_mm))
-arrange(df1_A, IGF1_ng_ml)
+### Answers to exercise.
 
-# Create a dataframe with a new variable that is _IGF_/_length_. 
-# Arrange by this new variable (highest to lowest).
-df1_A <- mutate(df1, IGF_perlength=IGF1_ng_ml/length_mm)
-arrange(df1_A, -IGF_perlength)
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_ANSWERS_RU_tidyverse_dplyr_arrange_and_mutate.html)
+
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_ANSWERS_RU_tidyverse_dplyr_arrange_and_mutate.R)
 
 ---
 ## dplyr::summarize - (pt1)
@@ -365,9 +348,9 @@ summarise(df1_A, mean_length_mm = mean(length_mm, na.rm = T))
 Piping was allows you to pass the result from one expression directly into another.  
 magrittR package developed the %>% pipe which is integral to the tidy way of formatting code
 
- -> same graphic as before , but extend
- https://github.com/trinker/tidyr_in_a_nutshell
+The pattern is similar but now follows a specific logical flow:
 
+![dplyr](./imgs/dplyr_pipe.png)
 ---
 ## Piping vs. not piping
 ```{r}
@@ -472,12 +455,12 @@ Now lets start from the beginning and tidy some data. First step is to read in d
 
 readr:
 
-_ read_csv(): comma separated (CSV) files  
-_ read_tsv(): tab separated files  
-_ read_delim(): general delimited files  
-_ read_fwf(): fixed width files  
-_ read_table(): tabular files where columns are separated by white-space  
-_ read_log(): web log files   
+* read_csv(): comma separated (CSV) files  
+* read_tsv(): tab separated files  
+* read_delim(): general delimited files  
+* read_fwf(): fixed width files  
+* read_table(): tabular files where columns are separated by white-space  
+* read_log(): web log files   
 
 ---
 ## Reading in with base
@@ -548,7 +531,7 @@ untidy_counts$ENTREZ
 ---
 ## CHALLENGE
 
-_ Read in count data as different data types. What happens when we extract the vector of these counts?
+* Read in count data as different data types. What happens when we extract the vector of these counts?
 
 ---
 ## ANSWER
@@ -666,9 +649,9 @@ What is wrong with the count dataframe from a tidy viewpoint?
 
 _Remember_. These are the rules:
 
-_ Each variable has its own column
-_ Each observation has its own row
-_ Each value has its own cell
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
 
 ```{r}
 untidy_counts
@@ -681,9 +664,9 @@ What is wrong with the count dataframe from a tidy viewpoint?
 
 _Remember_, these are the rules:
 
-_ Each variable has its own column
-_ Each observation has its own row
-_ Each value has its own cell
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
 
 __A single variable with multiple columns__
 
@@ -729,7 +712,7 @@ spread(tidier_counts, key=Sample, value=counts)
 ---
 ## CHALLENGE
 
-_ tidy up df2
+* tidy up df2
 
 ---
 ## ANSWER
@@ -745,9 +728,9 @@ df2 %>%
 
 _Remember_, these are the rules:
 
-_ Each variable has its own column
-_ Each observation has its own row
-_ Each value has its own cell
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
 
 ```{r}
 tidier_counts
@@ -758,9 +741,9 @@ tidier_counts
 
 _Remember_, these are the rules:
 
-_ Each variable has its own column
-_ Each observation has its own row
-_ Each value has its own cell
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
 
 __Multiple variables in a single column__
 
@@ -823,13 +806,13 @@ inner_join(tidy_counts, counts_metadata, by = c("ENTREZ" = "ID"))
 
 Inner Join 
 
-_ Keeps all observations in x and y with matching keys
+* Keeps all observations in x and y with matching keys
 
 Outer Join
 
-_ A left join keeps all observations in x and those in y with matching keys.
-_ A right join keeps all observations in y and those in x with matching keys. 
-_ A full join keeps all observations in x and y
+* A left join keeps all observations in x and those in y with matching keys.
+* A right join keeps all observations in y and those in x with matching keys. 
+* A full join keeps all observations in x and y
 
 ---
 ## EXAMPLE - Look at just expressed genes
@@ -865,8 +848,8 @@ tidy_counts_expressed %>% print(n=20)
 
 Filtering joins 
 
-_ A semi join only keeps all observations in x that are matched in y. y isn't returned. 
-_ A anti join only keeps all observations in x that are _not_ matched in y. y isn't returned. 
+* A semi join only keeps all observations in x that are matched in y. y isn't returned. 
+* A anti join only keeps all observations in x that are _not_ matched in y. y isn't returned. 
 
 ---
 ## dplyr::semi_join
@@ -887,7 +870,7 @@ anti_join(tidy_counts, expressed_genes)
 ---
 ## CHALLENGE
  
-_ Calculate CPMs and TPMs
+* Calculate CPMs and TPMs
 
 Hint:
 
@@ -941,21 +924,21 @@ A key difference compared to base is that it does not write out row names. Tibbl
 ---
 ## tidyverse so far
 __At this point we have covered or touched on the most essential facets of tidy__  
-_ ~~ggplot2 – making pretty graphs~~ 
-_ ~~readr – reading data into R~~  
-_ ~~dplyr – manipulating data~~  
-_ ~~tibble - working with tibbles~~  
-_ ~~tidyr – miscellaneous tools for tidying data~~
-_ purrr - iterating over data  
-_ stringr – working with strings  
-_ forcats - working with factors  
+* ~~ggplot2 – making pretty graphs~~ 
+* ~~readr – reading data into R~~  
+* ~~dplyr – manipulating data~~  
+* ~~tibble - working with tibbles~~  
+* ~~tidyr – miscellaneous tools for tidying data~~
+* purrr - iterating over data  
+* stringr – working with strings  
+* forcats - working with factors  
 
 ---
 # purrr - Functional programming 
 
-_ Applying functions to datasets  
-_ Base people use _for_ loops or apply  
-_ Big advantage is that purrr readily handles nested dataframes and has standard outputs
+* Applying functions to datasets  
+* Base people use _for_ loops or apply  
+* Big advantage is that purrr readily handles nested dataframes and has standard outputs
 
 ---
 ## purrr::map - tidy way to iterate - (pt1)
@@ -1241,11 +1224,29 @@ df1 %>%
 ---
 ## CHALLENGE
 
+1. Are there any Hox genes (starting with HOX), or ATPase genes (starting with ATP), in our expressed genes list?
+2. Subset to just ATPase genes. Create a new lowercase variable that has 'ATP' removed from the symbol.
+
 ---
 ## ANSWER
 ```{r}
-tidy_counts_expressed
+tidy_counts_expressed %>% 
+  mutate(ATPase = str_starts(SYMBOL,'ATP')) %>% 
+  split(.$Sample) %>% 
+  map(~sum(.$ATPase))
 
+tidy_counts_expressed %>% 
+  mutate(Hox = str_starts(SYMBOL,'HOX')) %>%
+  split(.$Sample) %>% 
+  map(~sum(.$HOX))
+
+
+
+tidy_counts_expressed %>% 
+  filter(str_starts(SYMBOL,'ATP')) %>%
+  mutate(ATPtype = str_replace_all(SYMBOL,'ATP','' )) %>%
+  mutate(ATPtype = str_to_lower(ATPtype))
+  
 ```
 
 ---
@@ -1445,14 +1446,14 @@ tidy_counts_expressed %>%
 # Summary 
 We have covered the core packages in the tidyverse  
 
-_ ~~ggplot2 – making pretty graphs~~ 
-_ ~~readr – reading data into R~~  
-_ ~~dplyr – manipulating data~~  
-_ ~~tibble - working with tibbles~~  
-_ ~~tidyr – miscellaneous tools for tidying data~~
-_ ~~purrr - iterating over data~~
-_ ~~stringr – working with strings~~  
-_ ~~forcats - working with factors~~  
+* ~~ggplot2 – making pretty graphs~~ 
+* ~~readr – reading data into R~~  
+* ~~dplyr – manipulating data~~  
+* ~~tibble - working with tibbles~~  
+* ~~tidyr – miscellaneous tools for tidying data~~
+* ~~purrr - iterating over data~~
+* ~~stringr – working with strings~~  
+* ~~forcats - working with factors~~  
 
 ---
 ## Tidy beyond this workshop
