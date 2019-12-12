@@ -398,33 +398,11 @@ anti_join(tidy_counts, expressed_genes)
 
 
 
-## ---- warning=FALSE, message=FALSE-------------------------------------------------------------------------------------------------------
-
-# Use Group to focus computation on each sample. Use mutate to make 
-# new variable that is the CPM
-tidy_counts_expressed <- tidy_counts_expressed  %>% 
-  group_by(Sample) %>% 
-  mutate(CPM=(counts/sum(counts))*1000000)
-
-# Join our tidy data to the metadata, then make new variable that is the TPM
-tidy_counts_expressed <- tidy_counts_expressed %>% 
-  inner_join(counts_metadata, by = c("ENTREZ" = "ID")) %>%  
-  mutate(TPM=(counts/sum(counts/LENGTH))*(1000000/LENGTH))
-
-# Simple X-Y plot comparing TPM and CPM. 
-p <- tidy_counts_expressed %>% 
-  ggplot(aes(x=CPM, y=TPM)) + 
-  geom_point() + 
-  scale_x_continuous(name="log2(CPM)",trans='log2') + 
-  scale_y_continuous(name="log2(TPM)",trans='log2')
-p
-
-
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 #Theres a wide range of writing  options. Can specify the delmiter directly or use a specific function
-write_delim(tidy_counts_expressed, '../expressed_genes_output.csv', delim =',')
+write_delim(tidy_counts_expressed_norm, '../expressed_genes_output.csv', delim =',')
 
-write_csv(tidy_counts_expressed, '../expressed_genes_output.csv')
+write_csv(tidy_counts_expressed_norm, '../expressed_genes_output.csv')
 
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
@@ -468,7 +446,7 @@ list(untidy_counts$ORTHO_1, untidy_counts$ORTHO_2) %>%
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 # Nest all the data by sample
-tidy_counts_nest <- tidy_counts_expressed %>% 
+tidy_counts_nest <- tidy_counts_expressed_norm %>% 
   group_by(Sample) %>%
   nest()
 
@@ -525,28 +503,6 @@ tidy_counts_nest %>%
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 
-df1_nest <- df1 %>% 
-  filter(common_name!='Coho salmon') %>% 
-  filter(common_name!='Sockeye salmon') %>% 
-  group_by(common_name) %>% 
-  nest()
-df1_nest
-
-
-df1_nest <- df1_nest %>%
-  mutate(my_model = map(data, ~lm(length_mm ~ IGF1_ng_ml, data = ., na.action = na.omit)))
-df1_nest 
-
-df1_nest <- df1_nest %>%
-  mutate(predictions=map(my_model, predict)) 
-df1_nest 
-
-df1_nest %>% pull(predictions)
-  
-
-
-## ----------------------------------------------------------------------------------------------------------------------------------------
-
 brc <- c("Tom", "Ji-Dung", "Matt")
 
 # Extract substrings from a range. Here the 1st to 3rd character
@@ -575,13 +531,13 @@ str_pad(brc2, width=10, side='left')
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 # Lets reuse our counts tibble. pull from dplyr can be used to grab a tibble 
 # column and make it into a vector
-tidy_counts_expressed %>% 
+tidy_counts_expressed_norm %>% 
   pull(SYMBOL) %>%
   head()
 
 # Here we pull our gene symbols from our tibble into a vector, and then convert 
 # them into title style capitalization
-tidy_counts_expressed %>% 
+tidy_counts_expressed_norm %>% 
   pull(SYMBOL) %>% 
   str_to_title() %>% 
   head()
@@ -590,13 +546,13 @@ tidy_counts_expressed %>%
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 # String manipulation functions can be used on tibbles using mutate. Here we convert
 # gene symbols to title style capitalization
-tidy_counts_expressed %>% 
+tidy_counts_expressed_norm %>% 
   mutate(SYMBOL = str_to_title(SYMBOL))
 
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 # Here we convert chromosome annotation to capitals
-tidy_counts_expressed %>% 
+tidy_counts_expressed_norm %>% 
   mutate(CHR = str_to_upper(CHR))
 
 
@@ -650,43 +606,23 @@ df1 %>%
 
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
-tidy_counts_expressed %>% 
-  mutate(ATPase = str_starts(SYMBOL,'ATP')) %>% 
-  split(.$Sample) %>% 
-  map(~sum(.$ATPase))
-
-tidy_counts_expressed %>% 
-  mutate(Hox = str_starts(SYMBOL,'HOX')) %>%
-  split(.$Sample) %>% 
-  map(~sum(.$HOX))
-
-
-
-tidy_counts_expressed %>% 
-  filter(str_starts(SYMBOL,'ATP')) %>%
-  mutate(ATPtype = str_replace_all(SYMBOL,'ATP','' )) %>%
-  mutate(ATPtype = str_to_lower(ATPtype))
-  
-
-
-## ----------------------------------------------------------------------------------------------------------------------------------------
 # Vectors are easy to turn into factors with factor()
-tidy_counts_expressed_samples <- tidy_counts_expressed %>% 
+tidy_counts_expressed_norm_samples <- tidy_counts_expressed_norm %>% 
   pull(Sample) %>% 
   factor() 
 
-tidy_counts_expressed_samples %>% head(n=10)
+tidy_counts_expressed_norm_samples %>% head(n=10)
 
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 # Can also modify the data type of a tibble column with as_facotr, in an approach we have used before.
-tidy_counts_expressed %>% 
+tidy_counts_expressed_norm %>% 
   ungroup() %>% 
   mutate_at(vars(Sample), as_factor) 
 
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
-tidy_counts_expressed %>% 
+tidy_counts_expressed_norm %>% 
   ungroup() %>% 
   mutate_at(vars(Sample), as_factor) %>% 
   pull(Sample) %>% head(n=10)
@@ -695,25 +631,25 @@ tidy_counts_expressed %>%
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 # When you factorize you can use a vector to determine the order
 my_levels1<-c('ORTHO_1','ORTHO_2','CD34_1','CD34_2')
-tidy_counts_expressed %>% 
+tidy_counts_expressed_norm %>% 
   pull(Sample) %>% 
   factor(levels = my_levels1 ) %>% head(n=10)
 
 # When you factorize anything not in the given levels is turned to NA
 my_levels2<-c('ORTHO_1','CD34_1')
-tidy_counts_expressed %>% 
+tidy_counts_expressed_norm %>% 
   pull(Sample) %>% 
   factor(levels = my_levels2 ) %>% head(n=10)
 
 # Its straightforward to grab the levels from the factor
-tidy_counts_expressed_samples %>% 
+tidy_counts_expressed_norm_samples %>% 
   levels()
 
 
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 
-p <- tidy_counts_expressed %>% 
+p <- tidy_counts_expressed_norm %>% 
   ungroup() %>% 
   mutate_at(vars(Sample), as_factor) %>% 
   group_by(Sample) %>% 
@@ -729,14 +665,14 @@ p
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 # fct_relevel - reorder manually
-tidy_counts_expressed %>% 
+tidy_counts_expressed_norm %>% 
   ungroup() %>% 
   mutate_at(vars(Sample), as_factor) %>%
   mutate(Sample = fct_relevel(Sample, my_levels1)) %>% 
   pull(Sample) %>% head(n=10)
 
 # fct_relevel - reorder manually
-tidy_counts_expressed %>% 
+tidy_counts_expressed_norm %>% 
   ungroup() %>% 
   mutate_at(vars(Sample), as_factor) %>%
   mutate(Sample = fct_relevel(Sample, my_levels2)) %>% 
@@ -747,7 +683,7 @@ tidy_counts_expressed %>%
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 # fct_reorder - reorder based on the data. Here we are ordering based
 # on mean counts for each sample.
-tidy_counts_expressed %>%
+tidy_counts_expressed_norm %>%
   ungroup() %>% 
   mutate_at(vars(Sample), as_factor) %>% 
   mutate(Sample = fct_reorder(Sample, counts, mean)) %>% 
@@ -757,7 +693,7 @@ tidy_counts_expressed %>%
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 
-p <- tidy_counts_expressed %>% 
+p <- tidy_counts_expressed_norm %>% 
   ungroup() %>% 
   mutate_at(vars(Sample), as_factor) %>%
   mutate(Sample=fct_relevel(Sample, my_levels1)) %>% 
@@ -818,12 +754,4 @@ df1 %>%
 A <- factor(c('Tom','Ji-Dung'))
 B <- factor('Matt')
 fct_c(A, B)
-
-
-## ----------------------------------------------------------------------------------------------------------------------------------------
-tidy_counts_expressed %>%
-  mutate(length_cat=if_else(LENGTH<3000, 'short', if_else(LENGTH>6000, 'long', 'medium'))) %>%
-  mutate(length_cat=as_factor(length_cat)) %>%
-  mutate(length_cat=fct_relevel(length_cat,levels=c('long', 'medium','short')))  %>% ggplot(aes(x=length_cat, y=TPM)) + geom_boxplot() + scale_y_continuous(trans='log2')
-  
 

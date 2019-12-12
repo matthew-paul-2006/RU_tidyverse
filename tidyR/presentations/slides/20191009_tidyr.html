@@ -1432,9 +1432,9 @@ Exercise on tidying can be found [here](http://rockefelleruniversity.github.io/R
 ---
 ### Answers to exercise.
 
-Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX5_ANSWERS_RU_tidyverse_tidying.html)
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX6_ANSWERS_RU_tidyverse_tidying.html)
 
-R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX5_ANSWERS_RU_tidyverse_tidying.R)
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX6_ANSWERS_RU_tidyverse_tidying.R)
 
 ---
 ## What is next to tidy?
@@ -1832,48 +1832,16 @@ anti_join(tidy_counts, expressed_genes)
 ```
 
 ---
-## CHALLENGE
- 
-* Calculate CPMs and TPMs
+## CHALLENGE: Time for an exercise!
 
-Hint:
-
-**Counts per million (CPM)** are the gene counts normalized to total counts in a sample, multiplied by a million to give you a sensible number.  
-
-gene_A_CPM = (gene_A_counts / sum(all_genes_counts)) * 1,000,000
-
-**Transcripts per million (TPM)** are the gene counts normalized to total counts in a sample, multiplied by a million to give you a sensible number.  
-
-gene_A_TPM = (gene_A_counts / sum(all_genes_counts / all_genes_lengths)) * 1/gene_A_length * 1,000,000
-
-More info on RNAseq quantification here:
-http://luisvalesilva.com/datasimple/rna-seq_units.html
+Exercise reviewing dplyr and joining can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX7_RU_tidyverse_dplyr_join.html)
 
 ---
-## ANSWER
+### Answers to exercise.
 
-```r
-# Use Group to focus computation on each sample. Use mutate to make 
-# new variable that is the CPM
-tidy_counts_expressed &lt;- tidy_counts_expressed  %&gt;% 
-  group_by(Sample) %&gt;% 
-  mutate(CPM=(counts/sum(counts))*1000000)
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX7_ANSWERS_RU_tidyverse_dplyr_join.html)
 
-# Join our tidy data to the metadata, then make new variable that is the TPM
-tidy_counts_expressed &lt;- tidy_counts_expressed %&gt;% 
-  inner_join(counts_metadata, by = c("ENTREZ" = "ID")) %&gt;%  
-  mutate(TPM=(counts/sum(counts/LENGTH))*(1000000/LENGTH))
-
-# Simple X-Y plot comparing TPM and CPM. 
-p &lt;- tidy_counts_expressed %&gt;% 
-  ggplot(aes(x=CPM, y=TPM)) + 
-  geom_point() + 
-  scale_x_continuous(name="log2(CPM)",trans='log2') + 
-  scale_y_continuous(name="log2(TPM)",trans='log2')
-p
-```
-
-![](20191009_tidyr_files/figure-html/unnamed-chunk-64-1.png)&lt;!-- --&gt;
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX7_ANSWERS_RU_tidyverse_dplyr_join.R)
 
 ---
 # Readr again: Writing out 
@@ -1881,9 +1849,9 @@ You've made a lovely new tibble file. Now you need to save it somewhere.
 
 ```r
 #Theres a wide range of writing  options. Can specify the delmiter directly or use a specific function
-write_delim(tidy_counts_expressed, '../expressed_genes_output.csv', delim =',')
+write_delim(tidy_counts_expressed_norm, '../expressed_genes_output.csv', delim =',')
 
-write_csv(tidy_counts_expressed, '../expressed_genes_output.csv')
+write_csv(tidy_counts_expressed_norm, '../expressed_genes_output.csv')
 ```
 
 A key difference compared to base is that it does not write out row names. Tibbles generally don't have rownames.
@@ -2010,7 +1978,7 @@ Each value within a tibble can contian more abstract information then just numbe
 
 ```r
 # Nest all the data by sample
-tidy_counts_nest &lt;- tidy_counts_expressed %&gt;% 
+tidy_counts_nest &lt;- tidy_counts_expressed_norm %&gt;% 
   group_by(Sample) %&gt;%
   nest()
 
@@ -2187,83 +2155,16 @@ tidy_counts_nest %&gt;%
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
 
-1. Create a nested dataframe of df1. Specifically only of the two largest groups by common_name, and nest by the common_name. 2. Create a linear model between length_mm and IGF1_ng_ml using purrr over the nested dataframe. Add the results back to the dataframe
-3. Create a new nested variable containing projections for length_mm based on your linear model (the function *predict* will be helpful here).
+Exercise reviewing purrr can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX8_RU_tidyverse_purrr.html)
 
 ---
-## ANSWER
+### Answers to exercise.
 
-```r
-df1_nest &lt;- df1 %&gt;% 
-  filter(common_name!='Coho salmon') %&gt;% 
-  filter(common_name!='Sockeye salmon') %&gt;% 
-  group_by(common_name) %&gt;% 
-  nest()
-df1_nest
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX8_ANSWERS_RU_tidyverse_purrr.html)
 
-```
-## # A tibble: 2 x 2
-## # Groups:   common_name [2]
-##   common_name              data
-##   &lt;chr&gt;          &lt;list&lt;df[,4]&gt;&gt;
-## 1 Chinook salmon       [46 × 4]
-## 2 Steelhead            [38 × 4]
-```
-
-```r
-df1_nest &lt;- df1_nest %&gt;%
-  mutate(my_model = map(data, ~lm(length_mm ~ IGF1_ng_ml, data = ., na.action = na.omit)))
-df1_nest 
-```
-
-```
-## # A tibble: 2 x 3
-## # Groups:   common_name [2]
-##   common_name              data my_model
-##   &lt;chr&gt;          &lt;list&lt;df[,4]&gt;&gt; &lt;list&gt;  
-## 1 Chinook salmon       [46 × 4] &lt;lm&gt;    
-## 2 Steelhead            [38 × 4] &lt;lm&gt;
-```
-
-```r
-df1_nest &lt;- df1_nest %&gt;%
-  mutate(predictions=map(my_model, predict)) 
-df1_nest 
-```
-
-```
-## # A tibble: 2 x 4
-## # Groups:   common_name [2]
-##   common_name              data my_model predictions
-##   &lt;chr&gt;          &lt;list&lt;df[,4]&gt;&gt; &lt;list&gt;   &lt;list&gt;     
-## 1 Chinook salmon       [46 × 4] &lt;lm&gt;     &lt;dbl [42]&gt; 
-## 2 Steelhead            [38 × 4] &lt;lm&gt;     &lt;dbl [35]&gt;
-```
-
-```r
-df1_nest %&gt;% pull(predictions)
-```
-
-```
-## [[1]]
-##        1        2        3        4        5        6        7        8        9       10       11       12       13       14       15 
-## 174.0853 204.0953 210.3557 231.1932 148.3513 259.7978 190.8976 171.3871 190.7028 191.2548 181.2579 122.7105 139.3573 147.1669 205.1610 
-##       16       17       18       19       20       22       23       24       25       26       27       28       30       31       34 
-## 178.0563 211.4999 232.4803 146.3425 176.3637 231.4895 232.0093 153.6838 244.9919 135.1426 181.6404 191.7068 202.8107 189.6438 219.2654 
-##       35       36       37       38       39       40       41       42       43       44       45       46 
-## 156.6304 180.8808 160.2568 177.5445 144.6843 131.2548 177.3148 176.9896 127.9072 196.2106 143.8471 178.5774 
-## 
-## [[2]]
-##        1        3        5        6        7        8        9       10       11       12       13       14       15       16       17 
-## 214.2574 213.1801 215.4682 215.3350 213.5525 214.6490 215.0501 215.0165 215.1124 212.9443 216.4120 216.0293 214.1118 214.5615 212.1104 
-##       18       19       20       21       22       23       24       26       27       28       29       30       31       32       33 
-## 214.9008 212.3449 213.9893 214.4727 214.2505 213.1433 212.0261 214.7772 215.5983 214.5010 215.3785 214.8688 215.1779 215.5824 212.6976 
-##       34       35       36       37       38 
-## 214.1116 214.7586 216.2151 215.3987 214.0160
-```
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX8_ANSWERS_RU_tidyverse_purrr.R)
 
 ---
 # stringr - working with strings
@@ -2342,7 +2243,7 @@ str_pad(brc2, width=10, side='left')
 ```r
 # Lets reuse our counts tibble. pull from dplyr can be used to grab a tibble 
 # column and make it into a vector
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   pull(SYMBOL) %&gt;%
   head()
 ```
@@ -2354,7 +2255,7 @@ tidy_counts_expressed %&gt;%
 ```r
 # Here we pull our gene symbols from our tibble into a vector, and then convert 
 # them into title style capitalization
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   pull(SYMBOL) %&gt;% 
   str_to_title() %&gt;% 
   head()
@@ -2369,7 +2270,7 @@ tidy_counts_expressed %&gt;%
 ```r
 # String manipulation functions can be used on tibbles using mutate. Here we convert
 # gene symbols to title style capitalization
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   mutate(SYMBOL = str_to_title(SYMBOL))
 ```
 
@@ -2395,7 +2296,7 @@ tidy_counts_expressed %&gt;%
 
 ```r
 # Here we convert chromosome annotation to capitals
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   mutate(CHR = str_to_upper(CHR))
 ```
 
@@ -2573,90 +2474,16 @@ df1 %&gt;%
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
 
-1. Are there any Hox genes (starting with HOX), or ATPase genes (starting with ATP), in our expressed genes list?
-2. Subset to just ATPase genes. Create a new lowercase variable that has 'ATP' removed from the symbol.
+Exercise reviewing purrr can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX9_RU_tidyverse_purrr.html)
 
 ---
-## ANSWER
+### Answers to exercise.
 
-```r
-tidy_counts_expressed %&gt;% 
-  mutate(ATPase = str_starts(SYMBOL,'ATP')) %&gt;% 
-  split(.$Sample) %&gt;% 
-  map(~sum(.$ATPase))
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX9_ANSWERS_RU_tidyverse_purrr.html)
 
-```
-## $CD34_1
-## [1] 15
-## 
-## $CD34_2
-## [1] 15
-## 
-## $ORTHO_1
-## [1] 15
-## 
-## $ORTHO_2
-## [1] 15
-```
-
-```r
-tidy_counts_expressed %&gt;% 
-  mutate(Hox = str_starts(SYMBOL,'HOX')) %&gt;%
-  split(.$Sample) %&gt;% 
-  map(~sum(.$HOX))
-```
-
-```
-## Warning: Unknown or uninitialised column: 'HOX'.
-
-## Warning: Unknown or uninitialised column: 'HOX'.
-
-## Warning: Unknown or uninitialised column: 'HOX'.
-
-## Warning: Unknown or uninitialised column: 'HOX'.
-```
-
-```
-## $CD34_1
-## [1] 0
-## 
-## $CD34_2
-## [1] 0
-## 
-## $ORTHO_1
-## [1] 0
-## 
-## $ORTHO_2
-## [1] 0
-```
-
-```r
-tidy_counts_expressed %&gt;% 
-  filter(str_starts(SYMBOL,'ATP')) %&gt;%
-  mutate(ATPtype = str_replace_all(SYMBOL,'ATP','' )) %&gt;%
-  mutate(ATPtype = str_to_lower(ATPtype))
-```
-
-```
-## # A tibble: 60 x 12
-## # Groups:   Sample [4]
-##    ENTREZ Sample  CellType Rep   counts count_total     CPM SYMBOL CHR   LENGTH     TPM ATPtype
-##    &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  
-##  1 476    CD34_1  CD34     1       4952       14023 33065.  ATP1A1 chr1    5912 15132.  1a1    
-##  2 476    ORTHO_1 ORTHO    1       3453       14023 41990.  ATP1A1 chr1    5912 18205.  1a1    
-##  3 476    CD34_2  CD34     2       4202       14023 39760.  ATP1A1 chr1    5912 16803.  1a1    
-##  4 476    ORTHO_2 ORTHO    2       1416       14023 43033.  ATP1A1 chr1    5912 19342.  1a1    
-##  5 477    CD34_1  CD34     1         13          44    86.8 ATP1A2 chr1    5972    39.3 1a2    
-##  6 477    ORTHO_1 ORTHO    1          3          44    36.5 ATP1A2 chr1    5972    15.7 1a2    
-##  7 477    CD34_2  CD34     2         26          44   246.  ATP1A2 chr1    5972   103.  1a2    
-##  8 477    ORTHO_2 ORTHO    2          2          44    60.8 ATP1A2 chr1    5972    27.0 1a2    
-##  9 478    CD34_1  CD34     1         78         266   521.  ATP1A3 chr19   4054   348.  1a3    
-## 10 478    ORTHO_1 ORTHO    1        121         266  1471.  ATP1A3 chr19   4054   930.  1a3    
-## # … with 50 more rows
-```
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX9_ANSWERS_RU_tidyverse_purrr.R)
 
 ---
 # forcats - Handling factors
@@ -2671,11 +2498,11 @@ _[This is base]_
 
 ```r
 # Vectors are easy to turn into factors with factor()
-tidy_counts_expressed_samples &lt;- tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm_samples &lt;- tidy_counts_expressed_norm %&gt;% 
   pull(Sample) %&gt;% 
   factor() 
 
-tidy_counts_expressed_samples %&gt;% head(n=10)
+tidy_counts_expressed_norm_samples %&gt;% head(n=10)
 ```
 
 ```
@@ -2687,7 +2514,7 @@ tidy_counts_expressed_samples %&gt;% head(n=10)
 
 ```r
 # Can also modify the data type of a tibble column with as_facotr, in an approach we have used before.
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) 
 ```
@@ -2712,7 +2539,7 @@ tidy_counts_expressed %&gt;%
 ## Making a factor - Tibbles
 
 ```r
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;% 
   pull(Sample) %&gt;% head(n=10)
@@ -2728,7 +2555,7 @@ tidy_counts_expressed %&gt;%
 ```r
 # When you factorize you can use a vector to determine the order
 my_levels1&lt;-c('ORTHO_1','ORTHO_2','CD34_1','CD34_2')
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   pull(Sample) %&gt;% 
   factor(levels = my_levels1 ) %&gt;% head(n=10)
 ```
@@ -2741,7 +2568,7 @@ tidy_counts_expressed %&gt;%
 ```r
 # When you factorize anything not in the given levels is turned to NA
 my_levels2&lt;-c('ORTHO_1','CD34_1')
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   pull(Sample) %&gt;% 
   factor(levels = my_levels2 ) %&gt;% head(n=10)
 ```
@@ -2753,7 +2580,7 @@ tidy_counts_expressed %&gt;%
 
 ```r
 # Its straightforward to grab the levels from the factor
-tidy_counts_expressed_samples %&gt;% 
+tidy_counts_expressed_norm_samples %&gt;% 
   levels()
 ```
 
@@ -2765,7 +2592,7 @@ tidy_counts_expressed_samples %&gt;%
 ## Why do we factorize? For order. 
 
 ```r
-p &lt;- tidy_counts_expressed %&gt;% 
+p &lt;- tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;% 
   group_by(Sample) %&gt;% 
@@ -2774,6 +2601,7 @@ p &lt;- tidy_counts_expressed %&gt;%
   geom_bar(stat = "identity") + 
   theme(axis.text.x = element_text(angle = 90))
 ```
+
 ---
 ## Why do we factorize? For order. 
 
@@ -2781,14 +2609,14 @@ p &lt;- tidy_counts_expressed %&gt;%
 p
 ```
 
-![](20191009_tidyr_files/figure-html/unnamed-chunk-96-1.png)&lt;!-- --&gt;
+![](20191009_tidyr_files/figure-html/unnamed-chunk-93-1.png)&lt;!-- --&gt;
 
 ---
 ## forcats::fct_relevel - Reorder manually
 
 ```r
 # fct_relevel - reorder manually
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;%
   mutate(Sample = fct_relevel(Sample, my_levels1)) %&gt;% 
@@ -2802,7 +2630,7 @@ tidy_counts_expressed %&gt;%
 
 ```r
 # fct_relevel - reorder manually
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;%
   mutate(Sample = fct_relevel(Sample, my_levels2)) %&gt;% 
@@ -2819,7 +2647,7 @@ tidy_counts_expressed %&gt;%
 ```r
 # fct_reorder - reorder based on the data. Here we are ordering based
 # on mean counts for each sample.
-tidy_counts_expressed %&gt;%
+tidy_counts_expressed_norm %&gt;%
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;% 
   mutate(Sample = fct_reorder(Sample, counts, mean)) %&gt;% 
@@ -2835,7 +2663,7 @@ tidy_counts_expressed %&gt;%
 ## Now our ordering can be fixed
 
 ```r
-p &lt;- tidy_counts_expressed %&gt;% 
+p &lt;- tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;%
   mutate(Sample=fct_relevel(Sample, my_levels1)) %&gt;% 
@@ -2852,7 +2680,7 @@ p &lt;- tidy_counts_expressed %&gt;%
 p
 ```
 
-![](20191009_tidyr_files/figure-html/unnamed-chunk-100-1.png)&lt;!-- --&gt;
+![](20191009_tidyr_files/figure-html/unnamed-chunk-97-1.png)&lt;!-- --&gt;
 
 ---
 ## forcats::fct_recode - Change levels
@@ -2999,40 +2827,17 @@ fct_c(A, B)
 ```
 
 ---
-## CHALLENGE
-1. Create new categorical variable based on whether a gene is short (0-3000), medium (0-6000) or long (6000+)
-2. Ensure categorical variable is a factor which is ordered from long, medium then short
-3. Draw a boxplot of TPMs between our new groups
+## CHALLENGE: Time for an exercise!
+
+Exercise reviewing purrr can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX10_RU_tidyverse_forcats.html)
 
 ---
-## ANSWER
+### Answers to exercise.
 
-```r
-tidy_counts_expressed %&gt;%
-  mutate(length_cat=if_else(LENGTH&lt;3000, 'short', if_else(LENGTH&gt;6000, 'long', 'medium'))) %&gt;%
-  mutate(length_cat=as_factor(length_cat)) %&gt;%
-  mutate(length_cat=fct_relevel(length_cat,levels=c('long', 'medium','short')))  %&gt;% ggplot(aes(x=length_cat, y=TPM)) + geom_boxplot() + scale_y_continuous(trans='log2')
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX10_ANSWERS_RU_tidyverse_forcats.html)
 
-```
-## Warning: Outer names are only allowed for unnamed scalar atomic inputs
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX10_ANSWERS_RU_tidyverse_forcats.R)
 
-## Warning: Outer names are only allowed for unnamed scalar atomic inputs
-
-## Warning: Outer names are only allowed for unnamed scalar atomic inputs
-
-## Warning: Outer names are only allowed for unnamed scalar atomic inputs
-```
-
-```
-## Warning: Transformation introduced infinite values in continuous y-axis
-```
-
-```
-## Warning: Removed 46 rows containing non-finite values (stat_boxplot).
-```
-
-![](20191009_tidyr_files/figure-html/unnamed-chunk-105-1.png)&lt;!-- --&gt;
 ---
 # Summary 
 We have covered the core packages in the tidyverse  
@@ -3087,19 +2892,6 @@ http://garrettgman.github.io/
 
 Cancer Research UK - Intermediate R course
 https://bioinformatics-core-shared-training.github.io/r-intermediate/
-
----
-# Thanks
-
-_BRC_
-Tom Carroll: tcarroll@rockefeller.edu
-Ji-Dung Luo: jluo@rockefeller.edu
-Matt Paul: mpaul@rockefeller.edu
-
-_Data Science Group_
-Eli Stoyanova
-Doug Barrows
-Greg Gedman
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
