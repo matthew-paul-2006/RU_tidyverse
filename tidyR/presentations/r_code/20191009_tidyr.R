@@ -126,18 +126,6 @@ mutate(df1_byname, IGFngml_zscore = scale(IGF1_ng_ml))
 
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
-# Group df1 by the variable _age_class_. 
-df1_A <- group_by(df1, age_classbylength)
-
-# Filter to get the biggest 5 by the variable _length_ in each group. 
-df1_A <- filter(df1_A, rank(-length_mm) <= 5)
-
-# Summarise this data frame over the variable _length_ by calculating the mean.
-summarise(df1_A, mean_length_mm = mean(length_mm, na.rm = T))
-
-
-
-## ----------------------------------------------------------------------------------------------------------------------------------------
 # Without pipe
 df1_byname <- group_by(df1, common_name)
 summarise(df1_byname, IGF1_ng_ml_ave = mean(IGF1_ng_ml, na.rm=T))
@@ -205,18 +193,6 @@ p
 
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
-
-df1 %>% 
-  filter(age_classbylength == 'yearling') %>%
-  group_by(common_name) %>% 
-  mutate(length_zscore = scale(length_mm)) %>%
-  ggplot(aes(x = common_name, y = length_zscore)) +
-  geom_boxplot(fill=c('gold','darkorange'))
-  
-
-
-## ----------------------------------------------------------------------------------------------------------------------------------------
-
 untidy_counts_base <- read.csv("dataset/hemato_rnaseq_counts.csv")
 # Base will print out everything
 untidy_counts_base
@@ -269,21 +245,6 @@ untidy_counts[[1]]
 # This is also the case if you use the dollar and colname 
 # to access a column
 untidy_counts$ENTREZ
-
-
-## ----------------------------------------------------------------------------------------------------------------------------------------
-untidy_counts_test <- read_csv("dataset/hemato_rnaseq_counts.csv", col_types = cols(
-    ENTREZ = col_character(),
-    CD34_1 = col_integer(),
-    ORTHO_1 = col_character(),
-    CD34_2 = col_factor(),
-    ORTHO_2 = col_logical()
-  ))
-
-untidy_counts_test$CD34_1 %>% head(n=8)
-untidy_counts_test$ORTHO_1 %>% head(n=8)
-untidy_counts_test$CD34_2 %>% head(n=8)
-untidy_counts_test$ORTHO_2 %>% head(n=8)
 
 
 ## ----------------------------------------------------------------------------------------------------------------------------------------
@@ -356,13 +317,6 @@ tidier_counts
 ## ----------------------------------------------------------------------------------------------------------------------------------------
 spread(tidier_counts, key="Sample", value="counts")
 
-
-
-
-## ----------------------------------------------------------------------------------------------------------------------------------------
-
-df2 %>% 
-  spread(value = value, key = variable)
 
 
 

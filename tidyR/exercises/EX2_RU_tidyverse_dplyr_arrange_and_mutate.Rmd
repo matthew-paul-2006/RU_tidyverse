@@ -8,7 +8,7 @@ output:
     theme: united  # many options for theme, this one is my favorite.
     highlight: tango  # specifies the syntax highlighting style
 ---
-
+<p>&nbsp;</p>
 These exercises cover the sections of [Data wrangling with tidy](https://rockefelleruniversity.github.io/RU_tidyverse/). 
 
 All files can be found in the "dataset" directory.

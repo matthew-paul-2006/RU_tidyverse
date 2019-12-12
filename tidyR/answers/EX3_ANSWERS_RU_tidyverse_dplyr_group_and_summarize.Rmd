@@ -1,5 +1,5 @@
 ---
-title: "EX2_ANSWERS_RU_tidyverse_dplyr_arrange_and_mutate"
+title: "EX3_ANSWERS_RU_tidyverse_dplyr_group_and_summarize"
 author: "Rockefeller University, Bioinformatics Resource Centre"
 date: "https://rockefelleruniversity.github.io/RU_tidyverse/"
 output: 
@@ -16,10 +16,11 @@ These exercises cover the sections of [Data wrangling with tidy](https://rockefe
 
 All files can be found in the "dataset" directory.
 <p>&nbsp;</p>
-**Exercise 2**  
+**Exercise 3**  
 <p>&nbsp;</p>
-1. Create a dataframe with a new variable that contains the rank of the _length_ variable. Arrange this new data frame by _IGF_ (lowest to highest).
-2. Create a dataframe with a new variable that is *IGF*/*length*. Arrange by this new variable (highest to lowest).
+1. Group df1 by the variable _age_class_. 
+2. Filter to get the biggest 5 by the variable _length_ in each group. 
+3. Summarise this data frame over the variable _length_ by calculating the mean. 
 
 # ANSWERS
 
@@ -31,21 +32,19 @@ library(tidyverse)
 
 ## Answer for Q1
 ```{r}
-# Create a dataframe with a new variable that contains the rank 
-# of the _length_ variable. Arrange this new data frame by 
-# _IGF_ (lowest to highest).
-df1_A <- mutate(df1, length_rank=rank(length_mm))
-arrange(df1_A, IGF1_ng_ml)
-
+# Group df1 by the variable _age_class_. 
+df1_A <- group_by(df1, age_classbylength)
+df1_A
 ```
 ## Answer for Q2
 ```{r}
-# Create a dataframe with a new variable that is _IGF_/_length_. 
-# Arrange by this new variable (highest to lowest).
-df1_A <- mutate(df1, IGF_perlength=IGF1_ng_ml/length_mm)
-arrange(df1_A, -IGF_perlength)
+# Filter to get the biggest 5 by the variable _length_ in each group. 
+df1_A <- filter(df1_A, rank(-length_mm) <= 5)
+df1_A
 ```
-
-
-
+## Answer for Q3
+```{r}
+# Summarise this data frame over the variable _length_ by calculating the mean.
+summarise(df1_A, mean_length_mm = mean(length_mm, na.rm = T))
+```
 

@@ -229,9 +229,9 @@ Exercise on dplyr's select and filter can be found [here](http://rockefelleruniv
 ---
 ### Answers to exercise.
 
-Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_ANSWERS_RU_tidyverse_dplyr_select_and_filter.html)
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX1_ANSWERS_RU_tidyverse_dplyr_select_and_filter.html)
 
-R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_ANSWERS_RU_tidyverse_dplyr_select_and_filter.R)
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX1_ANSWERS_RU_tidyverse_dplyr_select_and_filter.R)
 
 ---
 ## dplyr::arrange - (pt1)
@@ -269,14 +269,14 @@ mutate(df1, IGFngml_zscore = scale(IGF1_ng_ml))
 ---
 ## CHALLENGE: Time for an exercise!
 
-Exercise on dplyr's arrange and mutate can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_RU_tidyverse_dplyr_arrange_and_mutate.html)
+Exercise on dplyr's arrange and mutate can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX2_RU_tidyverse_dplyr_arrange_and_mutate.html)
 
 ---
 ### Answers to exercise.
 
-Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_ANSWERS_RU_tidyverse_dplyr_arrange_and_mutate.html)
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX2_ANSWERS_RU_tidyverse_dplyr_arrange_and_mutate.html)
 
-R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_ANSWERS_RU_tidyverse_dplyr_arrange_and_mutate.R)
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX2_ANSWERS_RU_tidyverse_dplyr_arrange_and_mutate.R)
 
 ---
 ## dplyr::summarize - (pt1)
@@ -320,26 +320,16 @@ mutate(df1_byname, IGFngml_zscore = scale(IGF1_ng_ml))
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
 
-1. Group df1 by the variable _age_class_. 
-2. Filter to get the biggest 5 by the variable _length_ in each group. 
-3. Summarise this data frame over the variable _length_ by calculating the mean. 
+Exercise on dplyr's grouping and summarize can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX3_RU_tidyverse_dplyr_group_and_summarize.html)
 
 ---
-## ANSWERS
+### Answers to exercise.
 
-```{r}
-# Group df1 by the variable _age_class_. 
-df1_A <- group_by(df1, age_classbylength)
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX3_ANSWERS_RU_tidyverse_dplyr_group_and_summarize.html)
 
-# Filter to get the biggest 5 by the variable _length_ in each group. 
-df1_A <- filter(df1_A, rank(-length_mm) <= 5)
-
-# Summarise this data frame over the variable _length_ by calculating the mean.
-summarise(df1_A, mean_length_mm = mean(length_mm, na.rm = T))
-
-```
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX3_ANSWERS_RU_tidyverse_dplyr_group_and_summarize.R)
 
 ---
 # Piping to string functions together
@@ -427,25 +417,16 @@ p
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
 
-1. Filter to only look at _juvenile_ in variable 
-2. Group by common_name
-3. Create new variable that is z-score of _length_ across groups
-4. Create boxplot of grouped length zscores
+Exercise on piping can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX4_RU_tidyverse_pipes.html)
 
 ---
-## ANSWER
-```{r}
+### Answers to exercise.
 
-df1 %>% 
-  filter(age_classbylength == 'yearling') %>%
-  group_by(common_name) %>% 
-  mutate(length_zscore = scale(length_mm)) %>%
-  ggplot(aes(x = common_name, y = length_zscore)) +
-  geom_boxplot(fill=c('gold','darkorange'))
-  
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX4_ANSWERS_RU_tidyverse_pipes.html)
+
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX4_ANSWERS_RU_tidyverse_pipes.R)
 
 ---
 # readr: Reading data into R
@@ -464,7 +445,6 @@ readr:
 ---
 ## Reading in with base
 ```{r}
-
 untidy_counts_base <- read.csv("dataset/hemato_rnaseq_counts.csv")
 # Base will print out everything
 untidy_counts_base
@@ -528,26 +508,16 @@ untidy_counts$ENTREZ
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
 
-* Read in count data as different data types. What happens when we extract the vector of these counts?
+Exercise on readr can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX5_RU_tidyverse_readr.html)
 
 ---
-## ANSWER
-```{r}
-untidy_counts_test <- read_csv("dataset/hemato_rnaseq_counts.csv", col_types = cols(
-    ENTREZ = col_character(),
-    CD34_1 = col_integer(),
-    ORTHO_1 = col_character(),
-    CD34_2 = col_factor(),
-    ORTHO_2 = col_logical()
-  ))
+### Answers to exercise.
 
-untidy_counts_test$CD34_1 %>% head(n=8)
-untidy_counts_test$ORTHO_1 %>% head(n=8)
-untidy_counts_test$CD34_2 %>% head(n=8)
-untidy_counts_test$ORTHO_2 %>% head(n=8)
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX5_ANSWERS_RU_tidyverse_readr.html)
+
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX5_ANSWERS_RU_tidyverse_readr.R)
 
 ---
 ## Tibbles: Converting to tibble - (pt1)
@@ -633,8 +603,7 @@ txsLength <- sapply(geneExons, function(x){ x %>%
     sum() })
 counts_metadata <- tibble(ID = symbols$ENTREZID, SYMBOL = symbols$SYMBOL, CHR = chrs$TXCHROM, LENGTH = txsLength)
 ```
-# Finally we have all this metadata. Lets put it together into a tibble. 
-counts_metadata <- tibble(ID = symbols$ENTREZID, SYMBOL = symbols$SYMBOL, CHR = chrs$TXCHROM, LENGTH = txsLength)
+
 ---
 ## Tibbles: Make your own - (pt3)
 ```{r}
@@ -709,18 +678,16 @@ spread(tidier_counts, key=Sample, value=counts)
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
 
-* tidy up df2
+Exercise on tidying can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX6_RU_tidyverse_tidying.html)
 
 ---
-## ANSWER
-```{r}
+### Answers to exercise.
 
-df2 %>% 
-  spread(value = value, key = variable)
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX5_ANSWERS_RU_tidyverse_tidying.html)
 
-```
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX5_ANSWERS_RU_tidyverse_tidying.R)
 
 ---
 ## What is next to tidy?
