@@ -1092,7 +1092,7 @@ df1 %>%
   str_detect('salmon')
 ```
 ---
-## stringr::detect - give me only patterns
+## stringr::subset - give me only patterns
 ```{r}
 # Subset returns the match if the pattern 'salmon' is present in vector
 df1 %>% 
