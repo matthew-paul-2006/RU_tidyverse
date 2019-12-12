@@ -28,7 +28,6 @@ library(org.Hs.eg.db)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 ```
 
----
 # Data wrangling with Tidy
 
 <b>Some problems we face when dealing with data regularly.</b>
@@ -112,7 +111,7 @@ head(df2)
 ```
 
 ---
-### Are all data frames equal?
+## Are all data frames equal?
 ```{r}
 head(df3a)
 ```
