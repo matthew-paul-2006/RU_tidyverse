@@ -478,7 +478,7 @@ tidy_counts_expressed <- tidy_counts_expressed  %>%
 # Join our tidy data to the metadata, then make new variable that is the TPM
 tidy_counts_expressed <- tidy_counts_expressed %>% 
   inner_join(counts_metadata, by = c("ENTREZ" = "ID")) %>%  
-  mutate(TPM=(counts/(LENGTH/1000))/(sum(counts)/1000000))
+  mutate(TPM=(counts/sum(counts/LENGTH))*(1000000/LENGTH))
 
 # Simple X-Y plot comparing TPM and CPM. 
 p <- tidy_counts_expressed %>% 
@@ -594,7 +594,24 @@ tidy_counts_nest %>%
 
 ## -----------------------------------------------------------------------------------------------------------------------------
 
+df1_nest <- df1 %>% 
+  filter(common_name!='Coho salmon') %>% 
+  filter(common_name!='Sockeye salmon') %>% 
+  group_by(common_name) %>% 
+  nest()
+df1_nest
 
+
+df1_nest <- df1_nest %>%
+  mutate(my_model = map(data, ~lm(length_mm ~ IGF1_ng_ml, data = ., na.action = na.omit)))
+df1_nest 
+
+df1_nest <- df1_nest %>%
+  mutate(predictions=map(my_model, predict)) 
+df1_nest 
+
+df1_nest %>% pull(predictions)
+  
 
 
 ## -----------------------------------------------------------------------------------------------------------------------------
@@ -602,14 +619,14 @@ tidy_counts_nest %>%
 brc <- c("Tom", "Ji-Dung", "Matt")
 
 # Extract substrings from a range. Here the 1st to 3rd character
-brc %>% str_sub( 1, 3)
+brc %>% str_sub(1, 3)
 
 # Extract substrings from a range. Here the 2nd to 2nd to last character
-brc %>% str_sub( 2, -2)
+brc %>% str_sub(2, -2)
 
 
 # Assign values back to substrings. Here the 2nd to 2nd to last character is replaced with X.
-str_sub(brc, 2, -2)<-'X'
+str_sub(brc, 2, -2) <- 'X'
 brc
 
 
@@ -702,7 +719,7 @@ df1 %>%
 
 
 ## -----------------------------------------------------------------------------------------------------------------------------
-
+tidy_counts_expressed
 
 
 
@@ -858,6 +875,9 @@ fct_c(A, B)
 
 
 ## -----------------------------------------------------------------------------------------------------------------------------
-
-
+tidy_counts_expressed %>%
+  mutate(length_cat=if_else(LENGTH<3000, 'short', if_else(LENGTH>6000, 'long', 'medium'))) %>%
+  mutate(length_cat=as_factor(length_cat)) %>%
+  mutate(length_cat=fct_relevel(length_cat,levels=c('long', 'medium','short')))  %>% ggplot(aes(x=length_cat, y=TPM)) + geom_boxplot() + scale_y_continuous(trans='log2')
+  
 

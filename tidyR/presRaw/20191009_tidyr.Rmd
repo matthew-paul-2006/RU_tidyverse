@@ -277,7 +277,7 @@ mutate(df1, IGFngml_zscore = scale(IGF1_ng_ml))
 
 ---
 ## CHALLENGE
-<p>&nbsp;</p>
+
 _ Create a dataframe with a new variable that contains the rank of the _length_ variable. Arrange this new data frame by _IGF_ (lowest to highest).
 _ Create a dataframe with a new variable that is _IGF_/_length_. Arrange by this new variable (highest to lowest).
 
@@ -889,7 +889,18 @@ anti_join(tidy_counts, expressed_genes)
  
 _ Calculate CPMs and TPMs
 
--> Show diagram of the math
+Hint:
+
+**Counts per million (CPM)** are the gene counts normalized to total counts in a sample, multiplied by a million to give you a sensible number.  
+
+gene_A_CPM = (gene_A_counts / sum(all_genes_counts)) * 1,000,000
+
+**Transcripts per million (TPM)** are the gene counts normalized to total counts in a sample, multiplied by a million to give you a sensible number.  
+
+gene_A_TPM = (gene_A_counts / sum(all_genes_counts / all_genes_lengths)) * 1/gene_A_length * 1,000,000
+
+More info on RNAseq quantification here:
+http://luisvalesilva.com/datasimple/rna-seq_units.html
 
 ---
 ## ANSWER
@@ -904,7 +915,7 @@ tidy_counts_expressed <- tidy_counts_expressed  %>%
 # Join our tidy data to the metadata, then make new variable that is the TPM
 tidy_counts_expressed <- tidy_counts_expressed %>% 
   inner_join(counts_metadata, by = c("ENTREZ" = "ID")) %>%  
-  mutate(TPM=(counts/(LENGTH/1000))/(sum(counts)/1000000))
+  mutate(TPM=(counts/sum(counts/LENGTH))*(1000000/LENGTH))
 
 # Simple X-Y plot comparing TPM and CPM. 
 p <- tidy_counts_expressed %>% 
@@ -1067,11 +1078,31 @@ tidy_counts_nest %>%
 ---
 ## CHALLENGE
 
+1. Create a nested dataframe of df1. Specifically only of the two largest groups by common_name, and nest by the common_name. 2. Create a linear model between length_mm and IGF1_ng_ml using purrr over the nested dataframe. Add the results back to the dataframe
+3. Create a new nested variable containing projections for length_mm based on your linear model (the function *predict* will be helpful here).
+
 ---
 ## ANSWER
 ```{r}
 
+df1_nest <- df1 %>% 
+  filter(common_name!='Coho salmon') %>% 
+  filter(common_name!='Sockeye salmon') %>% 
+  group_by(common_name) %>% 
+  nest()
+df1_nest
 
+
+df1_nest <- df1_nest %>%
+  mutate(my_model = map(data, ~lm(length_mm ~ IGF1_ng_ml, data = ., na.action = na.omit)))
+df1_nest 
+
+df1_nest <- df1_nest %>%
+  mutate(predictions=map(my_model, predict)) 
+df1_nest 
+
+df1_nest %>% pull(predictions)
+  
 ```
 
 ---
@@ -1094,14 +1125,14 @@ Many overlapping functions with base for combining, subsetting, converting and f
 brc <- c("Tom", "Ji-Dung", "Matt")
 
 # Extract substrings from a range. Here the 1st to 3rd character
-brc %>% str_sub( 1, 3)
+brc %>% str_sub(1, 3)
 
 # Extract substrings from a range. Here the 2nd to 2nd to last character
-brc %>% str_sub( 2, -2)
+brc %>% str_sub(2, -2)
 
 
 # Assign values back to substrings. Here the 2nd to 2nd to last character is replaced with X.
-str_sub(brc, 2, -2)<-'X'
+str_sub(brc, 2, -2) <- 'X'
 brc
 ```
 
@@ -1213,7 +1244,7 @@ df1 %>%
 ---
 ## ANSWER
 ```{r}
-
+tidy_counts_expressed
 
 ```
 
@@ -1397,12 +1428,18 @@ fct_c(A, B)
 
 ---
 ## CHALLENGE
-short/long genes
+1. Create new categorical variable based on whether a gene is short (0-3000), medium (0-6000) or long (6000+)
+2. Ensure categorical variable is a factor which is ordered from long, medium then short
+3. Draw a boxplot of TPMs between our new groups
+
 ---
 ## ANSWER
 ```{r}
-
-
+tidy_counts_expressed %>%
+  mutate(length_cat=if_else(LENGTH<3000, 'short', if_else(LENGTH>6000, 'long', 'medium'))) %>%
+  mutate(length_cat=as_factor(length_cat)) %>%
+  mutate(length_cat=fct_relevel(length_cat,levels=c('long', 'medium','short')))  %>% ggplot(aes(x=length_cat, y=TPM)) + geom_boxplot() + scale_y_continuous(trans='log2')
+  
 ```
 ---
 # Summary 
