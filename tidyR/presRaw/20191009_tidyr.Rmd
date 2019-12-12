@@ -96,7 +96,6 @@ https://rockefelleruniversity.github.io/Plotting_In_R/
 # Lets get tidy!
 First step lets load in the data we are using today
 ```{r}
-cat(getwd())
 load(file='dataset/my_tidy.Rdata')
 ```
 
