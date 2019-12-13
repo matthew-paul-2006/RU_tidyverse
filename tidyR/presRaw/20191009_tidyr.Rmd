@@ -81,11 +81,6 @@ You can read their <a href="https://cran.r-project.org/web/packages/tidyverse/vi
 Other tools have now been made for the tidy community. This community also overlaps with bioconductor. But the packages above are the linchpins that hold it together. 
 
 ---
-## What are we doing today
-
-Workflow Image for working with data.
-
----
 ## What we won't be doing today
 
 We already have a course online for plotting, including ggplot.     
@@ -1051,7 +1046,7 @@ str_pad(brc2, width=10, side='left')
 ```
 
 ---
-## stringr::str_to_* - Capitalization - (pt1)
+## stringr::str\_to\_* - Capitalization - (pt1)
 ```{r}
 # Lets reuse our counts tibble. pull from dplyr can be used to grab a tibble 
 # column and make it into a vector
@@ -1067,7 +1062,7 @@ tidy_counts_expressed_norm %>%
   head()
 ```
 ---
-## stringr::str_to_* - Capitalization - (pt2)
+## stringr::str\_to\_* - Capitalization - (pt2)
 ```{r}
 # String manipulation functions can be used on tibbles using mutate. Here we convert
 # gene symbols to title style capitalization
@@ -1075,7 +1070,7 @@ tidy_counts_expressed_norm %>%
   mutate(SYMBOL = str_to_title(SYMBOL))
 ```
 ---
-## stringr::str_to_* - Capitalization - (pt3)
+## stringr::str\_to\_* - Capitalization - (pt3)
 ```{r}
 # Here we convert chromosome annotation to capitals
 tidy_counts_expressed_norm %>% 
