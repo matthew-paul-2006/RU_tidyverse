@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Load in what we need
 ```{r}
+library(org.Hs.eg.db)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 require(reshape2)
 require(tidyverse)
 
@@ -22,7 +24,7 @@ require(tidyverse)
 #https://www.webapps.nwfsc.noaa.gov/apex/parrdata/inventory/tables/table/ocean_juvenile_salmon_metrics
 
 df1<-read_csv('~/Documents/Box Sync/RU/Teaching/teaching/tidyR/dataset/oceanjuvenilesalmon_NOAA.csv')
-df1<- df1 %>% select(salmon_id_number,common_name,age_classbylength,field_length_millimeters,insulin_like_grwth_fct_1_ng_ml)
+df1<- df1 %>% dplyr::select(salmon_id_number,common_name,age_classbylength,field_length_millimeters,insulin_like_grwth_fct_1_ng_ml)
 colnames(df1)[1]<-"salmon_id"
 colnames(df1)[4]<-"length_mm"
 colnames(df1)[5]<-"IGF1_ng_ml"
@@ -58,8 +60,7 @@ untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/teaching/tidyR/datas
     ORTHO_2 = col_integer()
   ))
 
-library(org.Hs.eg.db)
-library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+
 
 # Lets use the ENTREZ ID as a key
 keys <- untidy_counts$ENTREZ
@@ -121,7 +122,7 @@ tidy_counts_expressed_norm <- tidy_counts_expressed_norm %>%
 #save out all the datasets we are going to use
 ```{r}
 #save as a rdata object
-save(df1, df2, df3a, df3b,tidy_counts_expressed, tidy_counts_expressed_norm, file='~/Documents/Box Sync/RU/Teaching/teaching/tidyR/my_tidy.Rdata')
+save(df1, df2, df3a, df3b,tidy_counts_expressed, tidy_counts_expressed_norm, file='~/Documents/Box Sync/RU/Teaching/RU_side/RU_tidyverse/tidyR/dataset/my_tidy.Rdata')
 
 ```
 

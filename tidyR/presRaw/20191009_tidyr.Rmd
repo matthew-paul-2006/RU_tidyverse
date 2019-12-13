@@ -394,7 +394,7 @@ df1 %>%
 ## You can pipe straight to plots - (pt1)
 ```{r, warning=F, message=F}
 
-p <- mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% 
+p <- df1 %>% mutate(size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>% 
   group_by(common_name, size) %>% 
   summarize(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %>% 
   filter(common_name != 'Coho salmon')  %>% 
@@ -403,6 +403,7 @@ p <- mutate(df1,size=if_else(length_mm>200, 'big_fish', 'small_fish')) %>%
   geom_bar(stat = "identity", position = "dodge") + 
   theme(axis.text.x = element_text(angle = 90)) +
   scale_fill_brewer(palette = "Paired")
+
 ```
 ---
 ## You can pipe straight to plots - (pt2)
@@ -1136,14 +1137,14 @@ df1 %>%
 ---
 ## CHALLENGE: Time for an exercise!
 
-Exercise reviewing purrr can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX9_RU_tidyverse_purrr.html)
+Exercise reviewing purrr can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX9_RU_tidyverse_stringr.html)
 
 ---
 ### Answers to exercise.
 
-Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX9_ANSWERS_RU_tidyverse_purrr.html)
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX9_ANSWERS_RU_tidyverse_stringr.html)
 
-R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX9_ANSWERS_RU_tidyverse_purrr.R)
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX9_ANSWERS_RU_tidyverse_stringr.R)
 
 ---
 # forcats - Handling factors

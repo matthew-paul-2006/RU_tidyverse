@@ -1609,20 +1609,19 @@ All files can be found in the “dataset” directory.
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">length_cat=</span><span class="kw">if_else</span>(LENGTH<span class="op">&lt;</span><span class="dv">3000</span>, <span class="st">'short'</span>, <span class="kw">if_else</span>(LENGTH<span class="op">&gt;</span><span class="dv">6000</span>, <span class="st">'long'</span>, <span class="st">'medium'</span>)))</a></code></pre></div>
 <pre><code>## # A tibble: 376 x 12
 ## # Groups:   Sample [4]
-##    ENTREZ Sample CellType Rep   counts count_total    CPM SYMBOL CHR  
-##    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
-##  1 350    CD34_1 CD34     1        204         307 1.36e3 APOH   chr17
-##  2 350    ORTHO… ORTHO    1          0         307 0.     APOH   chr17
-##  3 350    CD34_2 CD34     2        103         307 9.75e2 APOH   chr17
-##  4 350    ORTHO… ORTHO    2          0         307 0.     APOH   chr17
-##  5 351    CD34_1 CD34     1      15586       26580 1.04e5 APP    chr21
-##  6 351    ORTHO… ORTHO    1        479       26580 5.82e3 APP    chr21
-##  7 351    CD34_2 CD34     2      10476       26580 9.91e4 APP    chr21
-##  8 351    ORTHO… ORTHO    2         39       26580 1.19e3 APP    chr21
-##  9 353    CD34_1 CD34     1        842        2471 5.62e3 APRT   chr16
-## 10 353    ORTHO… ORTHO    1        355        2471 4.32e3 APRT   chr16
-## # … with 366 more rows, and 3 more variables: LENGTH &lt;int&gt;, TPM &lt;dbl&gt;,
-## #   length_cat &lt;chr&gt;</code></pre>
+##    ENTREZ Sample  CellType Rep   counts count_total     CPM SYMBOL CHR   LENGTH    TPM length_cat
+##    &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;     
+##  1 350    CD34_1  CD34     1        204         307   1362. APOH   chr17   1201  3069. short     
+##  2 350    ORTHO_1 ORTHO    1          0         307      0  APOH   chr17   1201     0  short     
+##  3 350    CD34_2  CD34     2        103         307    975. APOH   chr17   1201  2027. short     
+##  4 350    ORTHO_2 ORTHO    2          0         307      0  APOH   chr17   1201     0  short     
+##  5 351    CD34_1  CD34     1      15586       26580 104068. APP    chr21   4480 62851. medium    
+##  6 351    ORTHO_1 ORTHO    1        479       26580   5825. APP    chr21   4480  3333. medium    
+##  7 351    CD34_2  CD34     2      10476       26580  99125. APP    chr21   4480 55281. medium    
+##  8 351    ORTHO_2 ORTHO    2         39       26580   1185. APP    chr21   4480   703. medium    
+##  9 353    CD34_1  CD34     1        842        2471   5622. APRT   chr16    807 18849. short     
+## 10 353    ORTHO_1 ORTHO    1        355        2471   4317. APRT   chr16    807 13711. short     
+## # … with 366 more rows</code></pre>
 </div>
 <div id="answer-2" class="section level2">
 <h2>Answer 2</h2>
@@ -1639,20 +1638,19 @@ All files can be found in the “dataset” directory.
 ## Warning: Outer names are only allowed for unnamed scalar atomic inputs</code></pre>
 <pre><code>## # A tibble: 376 x 12
 ## # Groups:   Sample [4]
-##    ENTREZ Sample CellType Rep   counts count_total    CPM SYMBOL CHR  
-##    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
-##  1 350    CD34_1 CD34     1        204         307 1.36e3 APOH   chr17
-##  2 350    ORTHO… ORTHO    1          0         307 0.     APOH   chr17
-##  3 350    CD34_2 CD34     2        103         307 9.75e2 APOH   chr17
-##  4 350    ORTHO… ORTHO    2          0         307 0.     APOH   chr17
-##  5 351    CD34_1 CD34     1      15586       26580 1.04e5 APP    chr21
-##  6 351    ORTHO… ORTHO    1        479       26580 5.82e3 APP    chr21
-##  7 351    CD34_2 CD34     2      10476       26580 9.91e4 APP    chr21
-##  8 351    ORTHO… ORTHO    2         39       26580 1.19e3 APP    chr21
-##  9 353    CD34_1 CD34     1        842        2471 5.62e3 APRT   chr16
-## 10 353    ORTHO… ORTHO    1        355        2471 4.32e3 APRT   chr16
-## # … with 366 more rows, and 3 more variables: LENGTH &lt;int&gt;, TPM &lt;dbl&gt;,
-## #   length_cat &lt;fct&gt;</code></pre>
+##    ENTREZ Sample  CellType Rep   counts count_total     CPM SYMBOL CHR   LENGTH    TPM length_cat
+##    &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt; &lt;fct&gt;     
+##  1 350    CD34_1  CD34     1        204         307   1362. APOH   chr17   1201  3069. short     
+##  2 350    ORTHO_1 ORTHO    1          0         307      0  APOH   chr17   1201     0  short     
+##  3 350    CD34_2  CD34     2        103         307    975. APOH   chr17   1201  2027. short     
+##  4 350    ORTHO_2 ORTHO    2          0         307      0  APOH   chr17   1201     0  short     
+##  5 351    CD34_1  CD34     1      15586       26580 104068. APP    chr21   4480 62851. medium    
+##  6 351    ORTHO_1 ORTHO    1        479       26580   5825. APP    chr21   4480  3333. medium    
+##  7 351    CD34_2  CD34     2      10476       26580  99125. APP    chr21   4480 55281. medium    
+##  8 351    ORTHO_2 ORTHO    2         39       26580   1185. APP    chr21   4480   703. medium    
+##  9 353    CD34_1  CD34     1        842        2471   5622. APRT   chr16    807 18849. short     
+## 10 353    ORTHO_1 ORTHO    1        355        2471   4317. APRT   chr16    807 13711. short     
+## # … with 366 more rows</code></pre>
 </div>
 <div id="answer-3" class="section level2">
 <h2>Answer 3</h2>
