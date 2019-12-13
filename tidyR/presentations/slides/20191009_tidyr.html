@@ -196,6 +196,33 @@ R is a vectorized programming language. R builds data frames from vectors, and R
 library(tidyverse)
 ```
 
+```
+## ── Attaching packages ─────────────────────────────────── tidyverse 1.3.0 ──
+```
+
+```
+## ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0
+```
+
+```
+## ── Conflicts ────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::collapse()   masks IRanges::collapse()
+## ✖ dplyr::combine()    masks Biobase::combine(), BiocGenerics::combine()
+## ✖ dplyr::desc()       masks IRanges::desc()
+## ✖ tidyr::expand()     masks S4Vectors::expand()
+## ✖ dplyr::filter()     masks stats::filter()
+## ✖ dplyr::first()      masks S4Vectors::first()
+## ✖ dplyr::lag()        masks stats::lag()
+## ✖ ggplot2::Position() masks BiocGenerics::Position(), base::Position()
+## ✖ purrr::reduce()     masks GenomicRanges::reduce(), IRanges::reduce()
+## ✖ dplyr::rename()     masks S4Vectors::rename()
+## ✖ dplyr::select()     masks AnnotationDbi::select()
+## ✖ dplyr::slice()      masks IRanges::slice()
+```
+
 ---
 # dplyr
 This package contains a variety of tools to access and manipulate dataframes.  
@@ -488,19 +515,19 @@ mutate(df1, scale(IGF1_ng_ml))
 
 ```
 ## # A tibble: 97 x 6
-##    salmon_id common_name    age_classbylength  length_mm IGF1_ng_ml `scale(IGF1_ng_ml)`[,1]
-##        &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;                  &lt;dbl&gt;      &lt;dbl&gt;                   &lt;dbl&gt;
-##  1     35032 Chinook salmon yearling                 147       41.3                  -0.258
-##  2     35035 Sockeye salmon juvenile                 121       NA                    NA    
-##  3     35036 Sockeye salmon juvenile                 112       NA                    NA    
-##  4     35037 Steelhead      juvenile                 220       42.7                  -0.191
-##  5     35038 Steelhead      juvenile                 152       NA                    NA    
-##  6     35033 Chinook salmon mixed age juvenile       444       62.1                   0.704
-##  7     35034 Sockeye salmon juvenile                 139       NA                    NA    
-##  8     35048 Steelhead      juvenile                 288       24.2                  -1.04 
-##  9     35049 Steelhead      juvenile                 190       NA                    NA    
-## 10     35050 Steelhead      juvenile                 283       63.5                   0.766
-## # … with 87 more rows
+##    salmon_id common_name age_classbyleng… length_mm IGF1_ng_ml
+##        &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;                &lt;dbl&gt;      &lt;dbl&gt;
+##  1     35032 Chinook sa… yearling               147       41.3
+##  2     35035 Sockeye sa… juvenile               121       NA  
+##  3     35036 Sockeye sa… juvenile               112       NA  
+##  4     35037 Steelhead   juvenile               220       42.7
+##  5     35038 Steelhead   juvenile               152       NA  
+##  6     35033 Chinook sa… mixed age juven…       444       62.1
+##  7     35034 Sockeye sa… juvenile               139       NA  
+##  8     35048 Steelhead   juvenile               288       24.2
+##  9     35049 Steelhead   juvenile               190       NA  
+## 10     35050 Steelhead   juvenile               283       63.5
+## # … with 87 more rows, and 1 more variable: `scale(IGF1_ng_ml)`[,1] &lt;dbl&gt;
 ```
 ---
 ## dplyr::mutate - (pt2)
@@ -514,19 +541,19 @@ mutate(df1, IGFngml_zscore = scale(IGF1_ng_ml))
 
 ```
 ## # A tibble: 97 x 6
-##    salmon_id common_name    age_classbylength  length_mm IGF1_ng_ml IGFngml_zscore[,1]
-##        &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;                  &lt;dbl&gt;      &lt;dbl&gt;              &lt;dbl&gt;
-##  1     35032 Chinook salmon yearling                 147       41.3             -0.258
-##  2     35035 Sockeye salmon juvenile                 121       NA               NA    
-##  3     35036 Sockeye salmon juvenile                 112       NA               NA    
-##  4     35037 Steelhead      juvenile                 220       42.7             -0.191
-##  5     35038 Steelhead      juvenile                 152       NA               NA    
-##  6     35033 Chinook salmon mixed age juvenile       444       62.1              0.704
-##  7     35034 Sockeye salmon juvenile                 139       NA               NA    
-##  8     35048 Steelhead      juvenile                 288       24.2             -1.04 
-##  9     35049 Steelhead      juvenile                 190       NA               NA    
-## 10     35050 Steelhead      juvenile                 283       63.5              0.766
-## # … with 87 more rows
+##    salmon_id common_name age_classbyleng… length_mm IGF1_ng_ml
+##        &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;                &lt;dbl&gt;      &lt;dbl&gt;
+##  1     35032 Chinook sa… yearling               147       41.3
+##  2     35035 Sockeye sa… juvenile               121       NA  
+##  3     35036 Sockeye sa… juvenile               112       NA  
+##  4     35037 Steelhead   juvenile               220       42.7
+##  5     35038 Steelhead   juvenile               152       NA  
+##  6     35033 Chinook sa… mixed age juven…       444       62.1
+##  7     35034 Sockeye sa… juvenile               139       NA  
+##  8     35048 Steelhead   juvenile               288       24.2
+##  9     35049 Steelhead   juvenile               190       NA  
+## 10     35050 Steelhead   juvenile               283       63.5
+## # … with 87 more rows, and 1 more variable: IGFngml_zscore[,1] &lt;dbl&gt;
 ```
 
 ---
@@ -643,19 +670,19 @@ mutate(df1_byname, IGFngml_zscore = scale(IGF1_ng_ml))
 ```
 ## # A tibble: 97 x 6
 ## # Groups:   common_name [4]
-##    salmon_id common_name    age_classbylength  length_mm IGF1_ng_ml IGFngml_zscore
-##        &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;                  &lt;dbl&gt;      &lt;dbl&gt;          &lt;dbl&gt;
-##  1     35032 Chinook salmon yearling                 147       41.3         -0.236
-##  2     35035 Sockeye salmon juvenile                 121       NA           NA    
-##  3     35036 Sockeye salmon juvenile                 112       NA           NA    
-##  4     35037 Steelhead      juvenile                 220       42.7         -0.176
-##  5     35038 Steelhead      juvenile                 152       NA           NA    
-##  6     35033 Chinook salmon mixed age juvenile       444       62.1          0.652
-##  7     35034 Sockeye salmon juvenile                 139       NA           NA    
-##  8     35048 Steelhead      juvenile                 288       24.2         -1.12 
-##  9     35049 Steelhead      juvenile                 190       NA           NA    
-## 10     35050 Steelhead      juvenile                 283       63.5          0.890
-## # … with 87 more rows
+##    salmon_id common_name age_classbyleng… length_mm IGF1_ng_ml
+##        &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;                &lt;dbl&gt;      &lt;dbl&gt;
+##  1     35032 Chinook sa… yearling               147       41.3
+##  2     35035 Sockeye sa… juvenile               121       NA  
+##  3     35036 Sockeye sa… juvenile               112       NA  
+##  4     35037 Steelhead   juvenile               220       42.7
+##  5     35038 Steelhead   juvenile               152       NA  
+##  6     35033 Chinook sa… mixed age juven…       444       62.1
+##  7     35034 Sockeye sa… juvenile               139       NA  
+##  8     35048 Steelhead   juvenile               288       24.2
+##  9     35049 Steelhead   juvenile               190       NA  
+## 10     35050 Steelhead   juvenile               283       63.5
+## # … with 87 more rows, and 1 more variable: IGFngml_zscore &lt;dbl&gt;
 ```
 
 ---
@@ -1097,12 +1124,16 @@ untidy_counts[[1]]
 ```
 
 ```
-##   [1] "350" "351" "353" "354" "355" "356" "357" "358" "359" "360" "361" "362" "363" "364" "366" "367" "368"
-##  [18] "369" "372" "373" "374" "375" "377" "378" "379" "381" "382" "383" "384" "387" "388" "389" "390" "391"
-##  [35] "392" "393" "394" "395" "396" "397" "398" "399" "400" "401" "402" "403" "405" "406" "407" "408" "409"
-##  [52] "410" "411" "412" "414" "415" "416" "417" "419" "420" "421" "427" "429" "430" "432" "433" "434" "435"
-##  [69] "440" "443" "444" "445" "460" "462" "463" "466" "467" "468" "471" "472" "473" "474" "475" "476" "477"
-##  [86] "478" "479" "480" "481" "482" "483" "486" "487" "488" "489" "490" "491" "492" "493" "495"
+##   [1] "350" "351" "353" "354" "355" "356" "357" "358" "359" "360" "361"
+##  [12] "362" "363" "364" "366" "367" "368" "369" "372" "373" "374" "375"
+##  [23] "377" "378" "379" "381" "382" "383" "384" "387" "388" "389" "390"
+##  [34] "391" "392" "393" "394" "395" "396" "397" "398" "399" "400" "401"
+##  [45] "402" "403" "405" "406" "407" "408" "409" "410" "411" "412" "414"
+##  [56] "415" "416" "417" "419" "420" "421" "427" "429" "430" "432" "433"
+##  [67] "434" "435" "440" "443" "444" "445" "460" "462" "463" "466" "467"
+##  [78] "468" "471" "472" "473" "474" "475" "476" "477" "478" "479" "480"
+##  [89] "481" "482" "483" "486" "487" "488" "489" "490" "491" "492" "493"
+## [100] "495"
 ```
 ---
 ## Subsetting to make vectors - (pt2)
@@ -1114,12 +1145,16 @@ untidy_counts$ENTREZ
 ```
 
 ```
-##   [1] "350" "351" "353" "354" "355" "356" "357" "358" "359" "360" "361" "362" "363" "364" "366" "367" "368"
-##  [18] "369" "372" "373" "374" "375" "377" "378" "379" "381" "382" "383" "384" "387" "388" "389" "390" "391"
-##  [35] "392" "393" "394" "395" "396" "397" "398" "399" "400" "401" "402" "403" "405" "406" "407" "408" "409"
-##  [52] "410" "411" "412" "414" "415" "416" "417" "419" "420" "421" "427" "429" "430" "432" "433" "434" "435"
-##  [69] "440" "443" "444" "445" "460" "462" "463" "466" "467" "468" "471" "472" "473" "474" "475" "476" "477"
-##  [86] "478" "479" "480" "481" "482" "483" "486" "487" "488" "489" "490" "491" "492" "493" "495"
+##   [1] "350" "351" "353" "354" "355" "356" "357" "358" "359" "360" "361"
+##  [12] "362" "363" "364" "366" "367" "368" "369" "372" "373" "374" "375"
+##  [23] "377" "378" "379" "381" "382" "383" "384" "387" "388" "389" "390"
+##  [34] "391" "392" "393" "394" "395" "396" "397" "398" "399" "400" "401"
+##  [45] "402" "403" "405" "406" "407" "408" "409" "410" "411" "412" "414"
+##  [56] "415" "416" "417" "419" "420" "421" "427" "429" "430" "432" "433"
+##  [67] "434" "435" "440" "443" "444" "445" "460" "462" "463" "466" "467"
+##  [78] "468" "471" "472" "473" "474" "475" "476" "477" "478" "479" "480"
+##  [89] "481" "482" "483" "486" "487" "488" "489" "490" "491" "492" "493"
+## [100] "495"
 ```
 
 ---
@@ -1948,12 +1983,16 @@ list(untidy_counts$ORTHO_1, untidy_counts$ORTHO_2) %&gt;%
 ```
 
 ```
-##   [1]     0   479   355     0   291     1     3  2225    12   502     1     1     6     0     0     0     0
-##  [18]  1034  1864   728     5  6697   314  4845     1   574  2265  1632 10977  2457   171   193     0   577
-##  [35]   304   138   464    67   702   410     0    11   147     0   218    25   824   175     1   111  1819
-##  [52]   197   217    45    15     0     1     0     5  1136   255 11889     0    13     0     0     1   151
-##  [69]  2520     0   151    15     0     0   118   480   402  6132   771   628   783     0    83  3453     3
-##  [86]   121     0     5    18  1392  1454     0    33  1118   153  1263     1     0  3585     0
+##   [1]     0   479   355     0   291     1     3  2225    12   502     1
+##  [12]     1     6     0     0     0     0  1034  1864   728     5  6697
+##  [23]   314  4845     1   574  2265  1632 10977  2457   171   193     0
+##  [34]   577   304   138   464    67   702   410     0    11   147     0
+##  [45]   218    25   824   175     1   111  1819   197   217    45    15
+##  [56]     0     1     0     5  1136   255 11889     0    13     0     0
+##  [67]     1   151  2520     0   151    15     0     0   118   480   402
+##  [78]  6132   771   628   783     0    83  3453     3   121     0     5
+##  [89]    18  1392  1454     0    33  1118   153  1263     1     0  3585
+## [100]     0
 ```
 
 ---
@@ -2004,19 +2043,19 @@ tidy_counts_nest$data[[1]]
 
 ```
 ## # A tibble: 94 x 10
-##    ENTREZ CellType Rep   counts count_total       CPM SYMBOL  CHR   LENGTH      TPM
-##    &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;int&gt;    &lt;dbl&gt;
-##  1 350    CD34     1        204         307   1362.   APOH    chr17   1201  3069.  
-##  2 351    CD34     1      15586       26580 104068.   APP     chr21   4480 62851.  
-##  3 353    CD34     1        842        2471   5622.   APRT    chr16    807 18849.  
-##  4 355    CD34     1        123         569    821.   FAS     chr10   6691   332.  
-##  5 356    CD34     1          1           2      6.68 FASLG   chr1    1859     9.72
-##  6 357    CD34     1        380         560   2537.   SHROOM2 chrX    8206   837.  
-##  7 358    CD34     1        572        7445   3819.   AQP1    chr7    3786  2729.  
-##  8 359    CD34     1          0          13      0    AQP2    chr12   4179     0   
-##  9 360    CD34     1        320        1982   2137.   AQP3    chr9    2950  1960.  
-## 10 361    CD34     1          0           1      0    AQP4    chr18   5217     0   
-## # … with 84 more rows
+##    ENTREZ CellType Rep   counts count_total    CPM SYMBOL CHR   LENGTH
+##    &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;
+##  1 350    CD34     1        204         307 1.36e3 APOH   chr17   1201
+##  2 351    CD34     1      15586       26580 1.04e5 APP    chr21   4480
+##  3 353    CD34     1        842        2471 5.62e3 APRT   chr16    807
+##  4 355    CD34     1        123         569 8.21e2 FAS    chr10   6691
+##  5 356    CD34     1          1           2 6.68e0 FASLG  chr1    1859
+##  6 357    CD34     1        380         560 2.54e3 SHROO… chrX    8206
+##  7 358    CD34     1        572        7445 3.82e3 AQP1   chr7    3786
+##  8 359    CD34     1          0          13 0.     AQP2   chr12   4179
+##  9 360    CD34     1        320        1982 2.14e3 AQP3   chr9    2950
+## 10 361    CD34     1          0           1 0.     AQP4   chr18   5217
+## # … with 84 more rows, and 1 more variable: TPM &lt;dbl&gt;
 ```
 ---
 ## tidyr::nest and purrr::map
@@ -2105,16 +2144,16 @@ tidy_counts_nest %&gt;%
 ```
 ## # A tibble: 8 x 8
 ## # Groups:   Sample [4]
-##   Sample             data my_model term        estimate std.error statistic  p.value
-##   &lt;chr&gt;   &lt;list&lt;df[,10]&gt;&gt; &lt;list&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 CD34_1        [94 × 10] &lt;lm&gt;     (Intercept) 3865.    1101.          3.51 6.94e- 4
-## 2 CD34_1        [94 × 10] &lt;lm&gt;     TPM            0.637    0.0398     16.0  2.75e-28
-## 3 ORTHO_1       [94 × 10] &lt;lm&gt;     (Intercept) 1522.     784.          1.94 5.53e- 2
-## 4 ORTHO_1       [94 × 10] &lt;lm&gt;     TPM            0.857    0.0271     31.6  3.83e-51
-## 5 CD34_2        [94 × 10] &lt;lm&gt;     (Intercept) 4083.    1085.          3.76 2.94e- 4
-## 6 CD34_2        [94 × 10] &lt;lm&gt;     TPM            0.616    0.0378     16.3  7.03e-29
-## 7 ORTHO_2       [94 × 10] &lt;lm&gt;     (Intercept) 1787.     937.          1.91 5.96e- 2
-## 8 ORTHO_2       [94 × 10] &lt;lm&gt;     TPM            0.832    0.0333     25.0  8.45e-43
+##   Sample         data my_model term    estimate std.error statistic  p.value
+##   &lt;chr&gt;   &lt;list&lt;df[,&gt; &lt;list&gt;   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 CD34_1    [94 × 10] &lt;lm&gt;     (Inter… 3865.    1101.          3.51 6.94e- 4
+## 2 CD34_1    [94 × 10] &lt;lm&gt;     TPM        0.637    0.0398     16.0  2.75e-28
+## 3 ORTHO_1   [94 × 10] &lt;lm&gt;     (Inter… 1522.     784.          1.94 5.53e- 2
+## 4 ORTHO_1   [94 × 10] &lt;lm&gt;     TPM        0.857    0.0271     31.6  3.83e-51
+## 5 CD34_2    [94 × 10] &lt;lm&gt;     (Inter… 4083.    1085.          3.76 2.94e- 4
+## 6 CD34_2    [94 × 10] &lt;lm&gt;     TPM        0.616    0.0378     16.3  7.03e-29
+## 7 ORTHO_2   [94 × 10] &lt;lm&gt;     (Inter… 1787.     937.          1.91 5.96e- 2
+## 8 ORTHO_2   [94 × 10] &lt;lm&gt;     TPM        0.832    0.0333     25.0  8.45e-43
 ```
 ---
 ## dplyr::unnest - expand out - (pt2)
@@ -2129,19 +2168,21 @@ tidy_counts_nest %&gt;%
 ```
 ## # A tibble: 752 x 17
 ## # Groups:   Sample [4]
-##    Sample ENTREZ CellType Rep   counts count_total    CPM SYMBOL CHR   LENGTH    TPM my_model term  estimate
-##    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt; &lt;list&gt;   &lt;chr&gt;    &lt;dbl&gt;
-##  1 CD34_1 350    CD34     1        204         307 1.36e3 APOH   chr17   1201 3.07e3 &lt;lm&gt;     (Int…    3865.
-##  2 CD34_1 351    CD34     1      15586       26580 1.04e5 APP    chr21   4480 6.29e4 &lt;lm&gt;     (Int…    3865.
-##  3 CD34_1 353    CD34     1        842        2471 5.62e3 APRT   chr16    807 1.88e4 &lt;lm&gt;     (Int…    3865.
-##  4 CD34_1 355    CD34     1        123         569 8.21e2 FAS    chr10   6691 3.32e2 &lt;lm&gt;     (Int…    3865.
-##  5 CD34_1 356    CD34     1          1           2 6.68e0 FASLG  chr1    1859 9.72e0 &lt;lm&gt;     (Int…    3865.
-##  6 CD34_1 357    CD34     1        380         560 2.54e3 SHROO… chrX    8206 8.37e2 &lt;lm&gt;     (Int…    3865.
-##  7 CD34_1 358    CD34     1        572        7445 3.82e3 AQP1   chr7    3786 2.73e3 &lt;lm&gt;     (Int…    3865.
-##  8 CD34_1 359    CD34     1          0          13 0.     AQP2   chr12   4179 0.     &lt;lm&gt;     (Int…    3865.
-##  9 CD34_1 360    CD34     1        320        1982 2.14e3 AQP3   chr9    2950 1.96e3 &lt;lm&gt;     (Int…    3865.
-## 10 CD34_1 361    CD34     1          0           1 0.     AQP4   chr18   5217 0.     &lt;lm&gt;     (Int…    3865.
-## # … with 742 more rows, and 3 more variables: std.error &lt;dbl&gt;, statistic &lt;dbl&gt;, p.value &lt;dbl&gt;
+##    Sample ENTREZ CellType Rep   counts count_total    CPM SYMBOL CHR  
+##    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
+##  1 CD34_1 350    CD34     1        204         307 1.36e3 APOH   chr17
+##  2 CD34_1 351    CD34     1      15586       26580 1.04e5 APP    chr21
+##  3 CD34_1 353    CD34     1        842        2471 5.62e3 APRT   chr16
+##  4 CD34_1 355    CD34     1        123         569 8.21e2 FAS    chr10
+##  5 CD34_1 356    CD34     1          1           2 6.68e0 FASLG  chr1 
+##  6 CD34_1 357    CD34     1        380         560 2.54e3 SHROO… chrX 
+##  7 CD34_1 358    CD34     1        572        7445 3.82e3 AQP1   chr7 
+##  8 CD34_1 359    CD34     1          0          13 0.     AQP2   chr12
+##  9 CD34_1 360    CD34     1        320        1982 2.14e3 AQP3   chr9 
+## 10 CD34_1 361    CD34     1          0           1 0.     AQP4   chr18
+## # … with 742 more rows, and 8 more variables: LENGTH &lt;int&gt;, TPM &lt;dbl&gt;,
+## #   my_model &lt;list&gt;, term &lt;chr&gt;, estimate &lt;dbl&gt;, std.error &lt;dbl&gt;,
+## #   statistic &lt;dbl&gt;, p.value &lt;dbl&gt;
 ```
 
 ---
@@ -2267,19 +2308,19 @@ tidy_counts_expressed_norm %&gt;%
 ```
 ## # A tibble: 376 x 11
 ## # Groups:   Sample [4]
-##    ENTREZ Sample  CellType Rep   counts count_total     CPM SYMBOL CHR   LENGTH    TPM
-##    &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt;
-##  1 350    CD34_1  CD34     1        204         307   1362. Apoh   chr17   1201  3069.
-##  2 350    ORTHO_1 ORTHO    1          0         307      0  Apoh   chr17   1201     0 
-##  3 350    CD34_2  CD34     2        103         307    975. Apoh   chr17   1201  2027.
-##  4 350    ORTHO_2 ORTHO    2          0         307      0  Apoh   chr17   1201     0 
-##  5 351    CD34_1  CD34     1      15586       26580 104068. App    chr21   4480 62851.
-##  6 351    ORTHO_1 ORTHO    1        479       26580   5825. App    chr21   4480  3333.
-##  7 351    CD34_2  CD34     2      10476       26580  99125. App    chr21   4480 55281.
-##  8 351    ORTHO_2 ORTHO    2         39       26580   1185. App    chr21   4480   703.
-##  9 353    CD34_1  CD34     1        842        2471   5622. Aprt   chr16    807 18849.
-## 10 353    ORTHO_1 ORTHO    1        355        2471   4317. Aprt   chr16    807 13711.
-## # … with 366 more rows
+##    ENTREZ Sample CellType Rep   counts count_total    CPM SYMBOL CHR  
+##    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
+##  1 350    CD34_1 CD34     1        204         307 1.36e3 Apoh   chr17
+##  2 350    ORTHO… ORTHO    1          0         307 0.     Apoh   chr17
+##  3 350    CD34_2 CD34     2        103         307 9.75e2 Apoh   chr17
+##  4 350    ORTHO… ORTHO    2          0         307 0.     Apoh   chr17
+##  5 351    CD34_1 CD34     1      15586       26580 1.04e5 App    chr21
+##  6 351    ORTHO… ORTHO    1        479       26580 5.82e3 App    chr21
+##  7 351    CD34_2 CD34     2      10476       26580 9.91e4 App    chr21
+##  8 351    ORTHO… ORTHO    2         39       26580 1.19e3 App    chr21
+##  9 353    CD34_1 CD34     1        842        2471 5.62e3 Aprt   chr16
+## 10 353    ORTHO… ORTHO    1        355        2471 4.32e3 Aprt   chr16
+## # … with 366 more rows, and 2 more variables: LENGTH &lt;int&gt;, TPM &lt;dbl&gt;
 ```
 ---
 ## stringr::str\_to\_* - Capitalization - (pt3)
@@ -2293,19 +2334,19 @@ tidy_counts_expressed_norm %&gt;%
 ```
 ## # A tibble: 376 x 11
 ## # Groups:   Sample [4]
-##    ENTREZ Sample  CellType Rep   counts count_total     CPM SYMBOL CHR   LENGTH    TPM
-##    &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt;
-##  1 350    CD34_1  CD34     1        204         307   1362. APOH   CHR17   1201  3069.
-##  2 350    ORTHO_1 ORTHO    1          0         307      0  APOH   CHR17   1201     0 
-##  3 350    CD34_2  CD34     2        103         307    975. APOH   CHR17   1201  2027.
-##  4 350    ORTHO_2 ORTHO    2          0         307      0  APOH   CHR17   1201     0 
-##  5 351    CD34_1  CD34     1      15586       26580 104068. APP    CHR21   4480 62851.
-##  6 351    ORTHO_1 ORTHO    1        479       26580   5825. APP    CHR21   4480  3333.
-##  7 351    CD34_2  CD34     2      10476       26580  99125. APP    CHR21   4480 55281.
-##  8 351    ORTHO_2 ORTHO    2         39       26580   1185. APP    CHR21   4480   703.
-##  9 353    CD34_1  CD34     1        842        2471   5622. APRT   CHR16    807 18849.
-## 10 353    ORTHO_1 ORTHO    1        355        2471   4317. APRT   CHR16    807 13711.
-## # … with 366 more rows
+##    ENTREZ Sample CellType Rep   counts count_total    CPM SYMBOL CHR  
+##    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
+##  1 350    CD34_1 CD34     1        204         307 1.36e3 APOH   CHR17
+##  2 350    ORTHO… ORTHO    1          0         307 0.     APOH   CHR17
+##  3 350    CD34_2 CD34     2        103         307 9.75e2 APOH   CHR17
+##  4 350    ORTHO… ORTHO    2          0         307 0.     APOH   CHR17
+##  5 351    CD34_1 CD34     1      15586       26580 1.04e5 APP    CHR21
+##  6 351    ORTHO… ORTHO    1        479       26580 5.82e3 APP    CHR21
+##  7 351    CD34_2 CD34     2      10476       26580 9.91e4 APP    CHR21
+##  8 351    ORTHO… ORTHO    2         39       26580 1.19e3 APP    CHR21
+##  9 353    CD34_1 CD34     1        842        2471 5.62e3 APRT   CHR16
+## 10 353    ORTHO… ORTHO    1        355        2471 4.32e3 APRT   CHR16
+## # … with 366 more rows, and 2 more variables: LENGTH &lt;int&gt;, TPM &lt;dbl&gt;
 ```
 
 ---
@@ -2320,12 +2361,15 @@ df1 %&gt;%
 ```
 
 ```
-##  [1]  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [18] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE
-## [35]  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-## [52]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE
-## [69]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE
-## [86]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+##  [1]  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE
+## [13] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [25] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [37] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [49]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [61]  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE
+## [73]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE
+## [85]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [97]  TRUE
 ```
 ---
 ## stringr::subset - give me only patterns
@@ -2338,16 +2382,21 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] "Chinook salmon" "Sockeye salmon" "Sockeye salmon" "Chinook salmon" "Sockeye salmon" "Chinook salmon"
-##  [7] "Chinook salmon" "Sockeye salmon" "Chinook salmon" "Chinook salmon" "Sockeye salmon" "Chinook salmon"
-## [13] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
-## [19] "Chinook salmon" "Coho salmon"    "Coho salmon"    "Chinook salmon" "Chinook salmon" "Chinook salmon"
-## [25] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Sockeye salmon" "Sockeye salmon"
-## [31] "Sockeye salmon" "Sockeye salmon" "Sockeye salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
-## [37] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
-## [43] "Chinook salmon" "Sockeye salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
-## [49] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
-## [55] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+##  [1] "Chinook salmon" "Sockeye salmon" "Sockeye salmon" "Chinook salmon"
+##  [5] "Sockeye salmon" "Chinook salmon" "Chinook salmon" "Sockeye salmon"
+##  [9] "Chinook salmon" "Chinook salmon" "Sockeye salmon" "Chinook salmon"
+## [13] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [17] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Coho salmon"   
+## [21] "Coho salmon"    "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [25] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [29] "Sockeye salmon" "Sockeye salmon" "Sockeye salmon" "Sockeye salmon"
+## [33] "Sockeye salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [37] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [41] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Sockeye salmon"
+## [45] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [49] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [53] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [57] "Chinook salmon" "Chinook salmon" "Chinook salmon"
 ```
 ---
 ## stringr::str_ends - ends with pattern?
@@ -2361,12 +2410,15 @@ df1 %&gt;%
 ```
 
 ```
-##  [1]  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [18] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE
-## [35]  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-## [52]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE
-## [69]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE
-## [86]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+##  [1]  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE
+## [13] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [25] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [37] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [49]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [61]  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE
+## [73]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE
+## [85]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [97]  TRUE
 ```
 
 ```r
@@ -2401,8 +2453,9 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] 1 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1
-## [53] 1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [1] 1 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1
+## [37] 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 0 1 1 1 1
+## [73] 1 1 1 1 1 1 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 ```
 
 ```r
@@ -2412,8 +2465,9 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] 3 2 2 0 0 3 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 3 2 3 3 2 0 0 0 0 0 0 3 3 3 3 3 3 3 3 3 3
-## [53] 3 3 3 3 3 3 3 2 2 2 2 2 0 3 0 0 3 3 3 3 3 3 3 3 3 2 0 0 0 0 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+##  [1] 3 2 2 0 0 3 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 3 2 3 3 2
+## [37] 0 0 0 0 0 0 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 0 3 0 0 3 3 3 3
+## [73] 3 3 3 3 3 2 0 0 0 0 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
 ```
 ---
 ## stringr::str_replace_all - replace a string
@@ -2426,26 +2480,31 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] "Chinook salmon"  "Sockeye salmon"  "Sockeye salmon"  "Steelhead trout" "Steelhead trout"
-##  [6] "Chinook salmon"  "Sockeye salmon"  "Steelhead trout" "Steelhead trout" "Steelhead trout"
-## [11] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
-## [16] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
-## [21] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
-## [26] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
-## [31] "Chinook salmon"  "Chinook salmon"  "Sockeye salmon"  "Chinook salmon"  "Chinook salmon" 
-## [36] "Sockeye salmon"  "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
-## [41] "Steelhead trout" "Steelhead trout" "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
-## [46] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
-## [51] "Coho salmon"     "Coho salmon"     "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
-## [56] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Sockeye salmon" 
-## [61] "Sockeye salmon"  "Sockeye salmon"  "Sockeye salmon"  "Sockeye salmon"  "Steelhead trout"
-## [66] "Chinook salmon"  "Steelhead trout" "Steelhead trout" "Chinook salmon"  "Chinook salmon" 
-## [71] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
-## [76] "Chinook salmon"  "Chinook salmon"  "Sockeye salmon"  "Steelhead trout" "Steelhead trout"
-## [81] "Steelhead trout" "Steelhead trout" "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
-## [86] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
-## [91] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
-## [96] "Chinook salmon"  "Chinook salmon"
+##  [1] "Chinook salmon"  "Sockeye salmon"  "Sockeye salmon"  "Steelhead trout"
+##  [5] "Steelhead trout" "Chinook salmon"  "Sockeye salmon"  "Steelhead trout"
+##  [9] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [13] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [17] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [21] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [25] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [29] "Steelhead trout" "Steelhead trout" "Chinook salmon"  "Chinook salmon" 
+## [33] "Sockeye salmon"  "Chinook salmon"  "Chinook salmon"  "Sockeye salmon" 
+## [37] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [41] "Steelhead trout" "Steelhead trout" "Chinook salmon"  "Chinook salmon" 
+## [45] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [49] "Chinook salmon"  "Chinook salmon"  "Coho salmon"     "Coho salmon"    
+## [53] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [57] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Sockeye salmon" 
+## [61] "Sockeye salmon"  "Sockeye salmon"  "Sockeye salmon"  "Sockeye salmon" 
+## [65] "Steelhead trout" "Chinook salmon"  "Steelhead trout" "Steelhead trout"
+## [69] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [73] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [77] "Chinook salmon"  "Sockeye salmon"  "Steelhead trout" "Steelhead trout"
+## [81] "Steelhead trout" "Steelhead trout" "Chinook salmon"  "Chinook salmon" 
+## [85] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [89] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [93] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [97] "Chinook salmon"
 ```
 ---
 ## stringr::str_replace_all - replace a string
@@ -2505,7 +2564,8 @@ tidy_counts_expressed_norm_samples %&gt;% head(n=10)
 ```
 
 ```
-##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1
+##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1 
+## [10] ORTHO_1
 ## Levels: CD34_1 CD34_2 ORTHO_1 ORTHO_2
 ```
 ---
@@ -2520,19 +2580,19 @@ tidy_counts_expressed_norm %&gt;%
 
 ```
 ## # A tibble: 376 x 11
-##    ENTREZ Sample  CellType Rep   counts count_total     CPM SYMBOL CHR   LENGTH    TPM
-##    &lt;chr&gt;  &lt;fct&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt;
-##  1 350    CD34_1  CD34     1        204         307   1362. APOH   chr17   1201  3069.
-##  2 350    ORTHO_1 ORTHO    1          0         307      0  APOH   chr17   1201     0 
-##  3 350    CD34_2  CD34     2        103         307    975. APOH   chr17   1201  2027.
-##  4 350    ORTHO_2 ORTHO    2          0         307      0  APOH   chr17   1201     0 
-##  5 351    CD34_1  CD34     1      15586       26580 104068. APP    chr21   4480 62851.
-##  6 351    ORTHO_1 ORTHO    1        479       26580   5825. APP    chr21   4480  3333.
-##  7 351    CD34_2  CD34     2      10476       26580  99125. APP    chr21   4480 55281.
-##  8 351    ORTHO_2 ORTHO    2         39       26580   1185. APP    chr21   4480   703.
-##  9 353    CD34_1  CD34     1        842        2471   5622. APRT   chr16    807 18849.
-## 10 353    ORTHO_1 ORTHO    1        355        2471   4317. APRT   chr16    807 13711.
-## # … with 366 more rows
+##    ENTREZ Sample CellType Rep   counts count_total    CPM SYMBOL CHR  
+##    &lt;chr&gt;  &lt;fct&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
+##  1 350    CD34_1 CD34     1        204         307 1.36e3 APOH   chr17
+##  2 350    ORTHO… ORTHO    1          0         307 0.     APOH   chr17
+##  3 350    CD34_2 CD34     2        103         307 9.75e2 APOH   chr17
+##  4 350    ORTHO… ORTHO    2          0         307 0.     APOH   chr17
+##  5 351    CD34_1 CD34     1      15586       26580 1.04e5 APP    chr21
+##  6 351    ORTHO… ORTHO    1        479       26580 5.82e3 APP    chr21
+##  7 351    CD34_2 CD34     2      10476       26580 9.91e4 APP    chr21
+##  8 351    ORTHO… ORTHO    2         39       26580 1.19e3 APP    chr21
+##  9 353    CD34_1 CD34     1        842        2471 5.62e3 APRT   chr16
+## 10 353    ORTHO… ORTHO    1        355        2471 4.32e3 APRT   chr16
+## # … with 366 more rows, and 2 more variables: LENGTH &lt;int&gt;, TPM &lt;dbl&gt;
 ```
 ---
 ## Making a factor - Tibbles
@@ -2545,7 +2605,8 @@ tidy_counts_expressed_norm %&gt;%
 ```
 
 ```
-##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1
+##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1 
+## [10] ORTHO_1
 ## Levels: CD34_1 ORTHO_1 CD34_2 ORTHO_2
 ```
 ---
@@ -2560,7 +2621,8 @@ tidy_counts_expressed_norm %&gt;%
 ```
 
 ```
-##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1
+##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1 
+## [10] ORTHO_1
 ## Levels: ORTHO_1 ORTHO_2 CD34_1 CD34_2
 ```
 
@@ -2573,7 +2635,8 @@ tidy_counts_expressed_norm %&gt;%
 ```
 
 ```
-##  [1] CD34_1  ORTHO_1 &lt;NA&gt;    &lt;NA&gt;    CD34_1  ORTHO_1 &lt;NA&gt;    &lt;NA&gt;    CD34_1  ORTHO_1
+##  [1] CD34_1  ORTHO_1 &lt;NA&gt;    &lt;NA&gt;    CD34_1  ORTHO_1 &lt;NA&gt;    &lt;NA&gt;    CD34_1 
+## [10] ORTHO_1
 ## Levels: ORTHO_1 CD34_1
 ```
 
@@ -2623,7 +2686,8 @@ tidy_counts_expressed_norm %&gt;%
 ```
 
 ```
-##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1
+##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1 
+## [10] ORTHO_1
 ## Levels: ORTHO_1 ORTHO_2 CD34_1 CD34_2
 ```
 
@@ -2637,7 +2701,8 @@ tidy_counts_expressed_norm %&gt;%
 ```
 
 ```
-##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1
+##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1 
+## [10] ORTHO_1
 ## Levels: ORTHO_1 CD34_1 CD34_2 ORTHO_2
 ```
 ---
@@ -2654,7 +2719,8 @@ tidy_counts_expressed_norm %&gt;%
 ```
 
 ```
-##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1
+##  [1] CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1  ORTHO_1 CD34_2  ORTHO_2 CD34_1 
+## [10] ORTHO_1
 ## Levels: ORTHO_2 ORTHO_1 CD34_2 CD34_1
 ```
 
@@ -2689,30 +2755,38 @@ df1$age_classbylength
 ```
 
 ```
-##  [1] "yearling"           "juvenile"           "juvenile"           "juvenile"          
-##  [5] "juvenile"           "mixed age juvenile" "juvenile"           "juvenile"          
-##  [9] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [13] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [17] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [21] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [25] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [29] "juvenile"           "juvenile"           "yearling"           "yearling"          
-## [33] "juvenile"           "yearling"           "mixed age juvenile" "juvenile"          
-## [37] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [41] "juvenile"           "juvenile"           "yearling"           "yearling"          
-## [45] "yearling"           "yearling"           "yearling"           "yearling"          
-## [49] "yearling"           "yearling"           "yearling"           "yearling"          
-## [53] "yearling"           "yearling"           "yearling"           "yearling"          
-## [57] "yearling"           "yearling"           "subyearling"        "juvenile"          
-## [61] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [65] "juvenile"           "yearling"           "juvenile"           "juvenile"          
-## [69] "mixed age juvenile" "yearling"           "yearling"           "yearling"          
-## [73] "yearling"           "yearling"           "yearling"           "yearling"          
-## [77] "yearling"           "juvenile"           "juvenile"           "juvenile"          
-## [81] "juvenile"           "juvenile"           "yearling"           "yearling"          
-## [85] "yearling"           "yearling"           "yearling"           "yearling"          
-## [89] "yearling"           "yearling"           "yearling"           "yearling"          
-## [93] "yearling"           "yearling"           "yearling"           "yearling"          
+##  [1] "yearling"           "juvenile"           "juvenile"          
+##  [4] "juvenile"           "juvenile"           "mixed age juvenile"
+##  [7] "juvenile"           "juvenile"           "juvenile"          
+## [10] "juvenile"           "juvenile"           "juvenile"          
+## [13] "juvenile"           "juvenile"           "juvenile"          
+## [16] "juvenile"           "juvenile"           "juvenile"          
+## [19] "juvenile"           "juvenile"           "juvenile"          
+## [22] "juvenile"           "juvenile"           "juvenile"          
+## [25] "juvenile"           "juvenile"           "juvenile"          
+## [28] "juvenile"           "juvenile"           "juvenile"          
+## [31] "yearling"           "yearling"           "juvenile"          
+## [34] "yearling"           "mixed age juvenile" "juvenile"          
+## [37] "juvenile"           "juvenile"           "juvenile"          
+## [40] "juvenile"           "juvenile"           "juvenile"          
+## [43] "yearling"           "yearling"           "yearling"          
+## [46] "yearling"           "yearling"           "yearling"          
+## [49] "yearling"           "yearling"           "yearling"          
+## [52] "yearling"           "yearling"           "yearling"          
+## [55] "yearling"           "yearling"           "yearling"          
+## [58] "yearling"           "subyearling"        "juvenile"          
+## [61] "juvenile"           "juvenile"           "juvenile"          
+## [64] "juvenile"           "juvenile"           "yearling"          
+## [67] "juvenile"           "juvenile"           "mixed age juvenile"
+## [70] "yearling"           "yearling"           "yearling"          
+## [73] "yearling"           "yearling"           "yearling"          
+## [76] "yearling"           "yearling"           "juvenile"          
+## [79] "juvenile"           "juvenile"           "juvenile"          
+## [82] "juvenile"           "yearling"           "yearling"          
+## [85] "yearling"           "yearling"           "yearling"          
+## [88] "yearling"           "yearling"           "yearling"          
+## [91] "yearling"           "yearling"           "yearling"          
+## [94] "yearling"           "yearling"           "yearling"          
 ## [97] "yearling"
 ```
 
@@ -2725,22 +2799,30 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] yearling       juvenile       juvenile       juvenile       juvenile       mixed juvenile
-##  [7] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
-## [13] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
-## [19] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
-## [25] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
-## [31] yearling       yearling       juvenile       yearling       mixed juvenile juvenile      
-## [37] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
-## [43] yearling       yearling       yearling       yearling       yearling       yearling      
-## [49] yearling       yearling       yearling       yearling       yearling       yearling      
-## [55] yearling       yearling       yearling       yearling       subyearling    juvenile      
-## [61] juvenile       juvenile       juvenile       juvenile       juvenile       yearling      
-## [67] juvenile       juvenile       mixed juvenile yearling       yearling       yearling      
-## [73] yearling       yearling       yearling       yearling       yearling       juvenile      
-## [79] juvenile       juvenile       juvenile       juvenile       yearling       yearling      
-## [85] yearling       yearling       yearling       yearling       yearling       yearling      
-## [91] yearling       yearling       yearling       yearling       yearling       yearling      
+##  [1] yearling       juvenile       juvenile       juvenile      
+##  [5] juvenile       mixed juvenile juvenile       juvenile      
+##  [9] juvenile       juvenile       juvenile       juvenile      
+## [13] juvenile       juvenile       juvenile       juvenile      
+## [17] juvenile       juvenile       juvenile       juvenile      
+## [21] juvenile       juvenile       juvenile       juvenile      
+## [25] juvenile       juvenile       juvenile       juvenile      
+## [29] juvenile       juvenile       yearling       yearling      
+## [33] juvenile       yearling       mixed juvenile juvenile      
+## [37] juvenile       juvenile       juvenile       juvenile      
+## [41] juvenile       juvenile       yearling       yearling      
+## [45] yearling       yearling       yearling       yearling      
+## [49] yearling       yearling       yearling       yearling      
+## [53] yearling       yearling       yearling       yearling      
+## [57] yearling       yearling       subyearling    juvenile      
+## [61] juvenile       juvenile       juvenile       juvenile      
+## [65] juvenile       yearling       juvenile       juvenile      
+## [69] mixed juvenile yearling       yearling       yearling      
+## [73] yearling       yearling       yearling       yearling      
+## [77] yearling       juvenile       juvenile       juvenile      
+## [81] juvenile       juvenile       yearling       yearling      
+## [85] yearling       yearling       yearling       yearling      
+## [89] yearling       yearling       yearling       yearling      
+## [93] yearling       yearling       yearling       yearling      
 ## [97] yearling      
 ## Levels: yearling juvenile mixed juvenile subyearling
 ```
@@ -2754,18 +2836,22 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] yearling    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
-##  [9] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
-## [17] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
-## [25] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    yearling    yearling   
-## [33] juvenile    yearling    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
-## [41] juvenile    juvenile    yearling    yearling    yearling    yearling    yearling    yearling   
-## [49] yearling    yearling    yearling    yearling    yearling    yearling    yearling    yearling   
-## [57] yearling    yearling    subyearling juvenile    juvenile    juvenile    juvenile    juvenile   
-## [65] juvenile    yearling    juvenile    juvenile    juvenile    yearling    yearling    yearling   
-## [73] yearling    yearling    yearling    yearling    yearling    juvenile    juvenile    juvenile   
-## [81] juvenile    juvenile    yearling    yearling    yearling    yearling    yearling    yearling   
-## [89] yearling    yearling    yearling    yearling    yearling    yearling    yearling    yearling   
+##  [1] yearling    juvenile    juvenile    juvenile    juvenile    juvenile   
+##  [7] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
+## [13] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
+## [19] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
+## [25] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
+## [31] yearling    yearling    juvenile    yearling    juvenile    juvenile   
+## [37] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
+## [43] yearling    yearling    yearling    yearling    yearling    yearling   
+## [49] yearling    yearling    yearling    yearling    yearling    yearling   
+## [55] yearling    yearling    yearling    yearling    subyearling juvenile   
+## [61] juvenile    juvenile    juvenile    juvenile    juvenile    yearling   
+## [67] juvenile    juvenile    juvenile    yearling    yearling    yearling   
+## [73] yearling    yearling    yearling    yearling    yearling    juvenile   
+## [79] juvenile    juvenile    juvenile    juvenile    yearling    yearling   
+## [85] yearling    yearling    yearling    yearling    yearling    yearling   
+## [91] yearling    yearling    yearling    yearling    yearling    yearling   
 ## [97] yearling   
 ## Levels: yearling juvenile subyearling
 ```
@@ -2801,15 +2887,19 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] yearling juvenile juvenile juvenile juvenile Other    juvenile juvenile juvenile juvenile juvenile
-## [12] juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile
-## [23] juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile yearling yearling juvenile
-## [34] yearling Other    juvenile juvenile juvenile juvenile juvenile juvenile juvenile yearling yearling
-## [45] yearling yearling yearling yearling yearling yearling yearling yearling yearling yearling yearling
-## [56] yearling yearling yearling Other    juvenile juvenile juvenile juvenile juvenile juvenile yearling
-## [67] juvenile juvenile Other    yearling yearling yearling yearling yearling yearling yearling yearling
-## [78] juvenile juvenile juvenile juvenile juvenile yearling yearling yearling yearling yearling yearling
-## [89] yearling yearling yearling yearling yearling yearling yearling yearling yearling
+##  [1] yearling juvenile juvenile juvenile juvenile Other    juvenile juvenile
+##  [9] juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile
+## [17] juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile
+## [25] juvenile juvenile juvenile juvenile juvenile juvenile yearling yearling
+## [33] juvenile yearling Other    juvenile juvenile juvenile juvenile juvenile
+## [41] juvenile juvenile yearling yearling yearling yearling yearling yearling
+## [49] yearling yearling yearling yearling yearling yearling yearling yearling
+## [57] yearling yearling Other    juvenile juvenile juvenile juvenile juvenile
+## [65] juvenile yearling juvenile juvenile Other    yearling yearling yearling
+## [73] yearling yearling yearling yearling yearling juvenile juvenile juvenile
+## [81] juvenile juvenile yearling yearling yearling yearling yearling yearling
+## [89] yearling yearling yearling yearling yearling yearling yearling yearling
+## [97] yearling
 ## Levels: yearling juvenile Other
 ```
 
@@ -2885,6 +2975,8 @@ There is a lot of support for all things tidy at: https://www.tidyverse.org/
 
 plyranges: dplyr equivalent for working with ranges i.e. Granges
 
+profileplyr: graphical and heatmap outputs for genomics
+
 readxl: This package is very useful when you want to import Excel sheets in R
 
 googledrive: Interact with your googledrive through R
@@ -2909,7 +3001,7 @@ https://r4ds.had.co.nz/
 Data Science with R text book   
 http://garrettgman.github.io/
 
-Cancer Research UK - Intermediate R course   
+Biounformatics Shared Training - Intermediate R course   
 https://bioinformatics-core-shared-training.github.io/r-intermediate/
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

@@ -1610,18 +1610,18 @@ All files can be found in the “dataset” directory.
 <a class="sourceLine" id="cb2-4" data-line-number="4">df1_A &lt;-<span class="st"> </span><span class="kw">mutate</span>(df1, <span class="dt">length_rank=</span><span class="kw">rank</span>(length_mm))</a>
 <a class="sourceLine" id="cb2-5" data-line-number="5"><span class="kw">arrange</span>(df1_A, IGF1_ng_ml)</a></code></pre></div>
 <pre><code>## # A tibble: 97 x 6
-##    salmon_id common_name    age_classbylength length_mm IGF1_ng_ml length_rank
-##        &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;                 &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;
-##  1     35045 Steelhead      juvenile                177       4.46        49  
-##  2     35081 Chinook salmon yearling                196       5.56        63.5
-##  3     35062 Steelhead      juvenile                198       5.90        65.5
-##  4     35138 Chinook salmon yearling                142       9.17        18  
-##  5     35039 Steelhead      juvenile                201       9.92        70  
-##  6     35135 Chinook salmon yearling                181      11.5         52.5
-##  7     35113 Chinook salmon yearling                162      14.2         38  
-##  8     35064 Steelhead      juvenile                225      16.0         80.5
-##  9     35082 Chinook salmon yearling                150      17.1         29.5
-## 10     35057 Steelhead      juvenile                240      20.2         86  
+##    salmon_id common_name   age_classbyleng… length_mm IGF1_ng_ml length_rank
+##        &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;                &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;
+##  1     35045 Steelhead     juvenile               177       4.46        49  
+##  2     35081 Chinook salm… yearling               196       5.56        63.5
+##  3     35062 Steelhead     juvenile               198       5.90        65.5
+##  4     35138 Chinook salm… yearling               142       9.17        18  
+##  5     35039 Steelhead     juvenile               201       9.92        70  
+##  6     35135 Chinook salm… yearling               181      11.5         52.5
+##  7     35113 Chinook salm… yearling               162      14.2         38  
+##  8     35064 Steelhead     juvenile               225      16.0         80.5
+##  9     35082 Chinook salm… yearling               150      17.1         29.5
+## 10     35057 Steelhead     juvenile               240      20.2         86  
 ## # … with 87 more rows</code></pre>
 </div>
 <div id="answer-for-q2" class="section level2">
@@ -1631,18 +1631,18 @@ All files can be found in the “dataset” directory.
 <a class="sourceLine" id="cb4-3" data-line-number="3">df1_A &lt;-<span class="st"> </span><span class="kw">mutate</span>(df1, <span class="dt">IGF_perlength=</span>IGF1_ng_ml<span class="op">/</span>length_mm)</a>
 <a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw">arrange</span>(df1_A, <span class="op">-</span>IGF_perlength)</a></code></pre></div>
 <pre><code>## # A tibble: 97 x 6
-##    salmon_id common_name    age_classbylength length_mm IGF1_ng_ml IGF_perlength
-##        &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;                 &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
-##  1     35055 Steelhead      juvenile                123       55.7         0.453
-##  2     35087 Coho salmon    yearling                164       73.6         0.449
-##  3     35142 Chinook salmon yearling                149       66.5         0.446
-##  4     35112 Chinook salmon yearling                205       90.5         0.442
-##  5     35092 Chinook salmon yearling                192       81.8         0.426
-##  6     35117 Chinook salmon yearling                147       61.2         0.416
-##  7     35090 Chinook salmon yearling                167       67.3         0.403
-##  8     35143 Chinook salmon yearling                204       80.9         0.397
-##  9     35059 Steelhead      juvenile                185       73.1         0.395
-## 10     35101 Steelhead      juvenile                167       65.4         0.392
+##    salmon_id common_name age_classbyleng… length_mm IGF1_ng_ml IGF_perlength
+##        &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;                &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
+##  1     35055 Steelhead   juvenile               123       55.7         0.453
+##  2     35087 Coho salmon yearling               164       73.6         0.449
+##  3     35142 Chinook sa… yearling               149       66.5         0.446
+##  4     35112 Chinook sa… yearling               205       90.5         0.442
+##  5     35092 Chinook sa… yearling               192       81.8         0.426
+##  6     35117 Chinook sa… yearling               147       61.2         0.416
+##  7     35090 Chinook sa… yearling               167       67.3         0.403
+##  8     35143 Chinook sa… yearling               204       80.9         0.397
+##  9     35059 Steelhead   juvenile               185       73.1         0.395
+## 10     35101 Steelhead   juvenile               167       65.4         0.392
 ## # … with 87 more rows</code></pre>
 </div>
 </div>

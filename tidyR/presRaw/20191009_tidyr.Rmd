@@ -1364,6 +1364,8 @@ There is a lot of support for all things tidy at: https://www.tidyverse.org/
 
 plyranges: dplyr equivalent for working with ranges i.e. Granges
 
+profileplyr: graphical and heatmap outputs for genomics
+
 readxl: This package is very useful when you want to import Excel sheets in R
 
 googledrive: Interact with your googledrive through R
@@ -1388,7 +1390,7 @@ https://r4ds.had.co.nz/
 Data Science with R text book   
 http://garrettgman.github.io/
 
-Cancer Research UK - Intermediate R course   
+Biounformatics Shared Training - Intermediate R course   
 https://bioinformatics-core-shared-training.github.io/r-intermediate/
 
 
