@@ -82,8 +82,9 @@ To install these,</p>
 <pre>
 install.packages("tidyverse",dependencies=TRUE)
 install.packages("broom",dependencies=TRUE)
-install.packages("org.Hs.eg.db",dependencies=TRUE)
-install.packages("TxDb.Hsapiens.UCSC.hg19.knownGene",dependencies=TRUE)
+install.packages("BiocManager")
+BiocManager::install("org.Hs.eg.db",dependencies=TRUE)
+BiocManager::install("TxDb.Hsapiens.UCSC.hg19.knownGene",dependencies=TRUE)
 </pre>
 </li>
 </ul>
