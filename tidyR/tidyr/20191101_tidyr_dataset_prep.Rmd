@@ -11,6 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Load in what we need
 ```{r}
+library(org.Hs.eg.db)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 require(reshape2)
 require(tidyverse)
 
@@ -22,7 +24,7 @@ require(tidyverse)
 #https://www.webapps.nwfsc.noaa.gov/apex/parrdata/inventory/tables/table/ocean_juvenile_salmon_metrics
 
 df1<-read_csv('~/Documents/Box Sync/RU/Teaching/teaching/tidyR/dataset/oceanjuvenilesalmon_NOAA.csv')
-df1<- df1 %>% select(salmon_id_number,common_name,age_classbylength,field_length_millimeters,insulin_like_grwth_fct_1_ng_ml)
+df1<- df1 %>% dplyr::select(salmon_id_number,common_name,age_classbylength,field_length_millimeters,insulin_like_grwth_fct_1_ng_ml)
 colnames(df1)[1]<-"salmon_id"
 colnames(df1)[4]<-"length_mm"
 colnames(df1)[5]<-"IGF1_ng_ml"
@@ -44,14 +46,83 @@ dds_counts<-cbind(rownames(dds_counts)[c(253:320,323:354)],dds_counts[c(253:320,
 colnames(dds_counts)<-c('ENTREZ', 'CD34_1', 'ORTHO_1', 'CD34_2', 'ORTHO_2')
 
 write.csv(dds_counts,'~/Documents/Box Sync/RU/Teaching/teaching/tidyR/dataset/hemato_rnaseq_counts.csv', row.names = F)
+
 ```
 
+# dataset 2 intermediates
+need some intermediate analysis sets already in the RData object to make it easy to load
+```{r}
+untidy_counts <- read_csv("~/Documents/Box Sync/RU/Teaching/teaching/tidyR/dataset/hemato_rnaseq_counts.csv", col_types = cols(
+    ENTREZ = col_character(),
+    CD34_1 = col_integer(),
+    ORTHO_1 = col_integer(),
+    CD34_2 = col_integer(),
+    ORTHO_2 = col_integer()
+  ))
 
+
+
+# Lets use the ENTREZ ID as a key
+keys <- untidy_counts$ENTREZ
+
+# We can use the ENTREZ ID to look up Gene Symbol
+symbols <- AnnotationDbi::select(org.Hs.eg.db, keys = keys,columns = "SYMBOL", keytype = "ENTREZID")
+
+# We can use the ENTREZ ID to look up the chormosome the gene resides on
+chrs <- AnnotationDbi::select(TxDb.Hsapiens.UCSC.hg19.knownGene, keys = keys, columns = "TXCHROM", keytype = "GENEID")
+
+# We can use the ENTREZ ID to get a list of genes with grange of their exons
+geneExons <- exonsBy(TxDb.Hsapiens.UCSC.hg19.knownGene,by = "gene")[keys]
+
+# We will then use an apply to get the transcript length from each gene in the 
+# list. The transcript length is calculated by first flattening overlapping 
+# exons with reduce(), then calculating the length of each exon with width(), 
+# then summing upthe total exon length to get our transcript length. 
+txsLength <- sapply(geneExons, function(x){ x %>%
+    GenomicRanges::reduce() %>%
+    width() %>%
+    sum() })
+
+# Finally we have all this metadata. Lets put it together into a tibble. 
+counts_metadata <- tibble(ID = symbols$ENTREZID, SYMBOL = symbols$SYMBOL, CHR = chrs$TXCHROM, LENGTH = txsLength)
+```
+```{r, eval=T, echo=F}
+txsLength <- sapply(geneExons, function(x){ x %>%
+    GenomicRanges::reduce() %>%
+    width() %>%
+    sum() })
+counts_metadata <- tibble(ID = symbols$ENTREZID, SYMBOL = symbols$SYMBOL, CHR = chrs$TXCHROM, LENGTH = txsLength)
+
+tidier_counts <- gather(untidy_counts, key="Sample", value="counts", -ENTREZ)
+tidier_counts <- separate(tidier_counts, Sample, sep = "_", into=c("CellType","Rep"), remove=TRUE)
+
+tidy_counts <- untidy_counts %>% 
+  gather(key=Sample, value=counts, -ENTREZ) %>% 
+  separate(Sample, sep = "_", into = c("CellType","Rep"), remove=FALSE)
+tidy_counts
+
+expressed_genes <- tidy_counts %>% 
+  group_by(ENTREZ) %>% 
+  summarise(count_total=sum(counts)) %>% 
+  filter(count_total>0)
+expressed_genes
+
+tidy_counts_expressed <- right_join(tidy_counts, expressed_genes, by = c("ENTREZ" = "ENTREZ"))
+
+tidy_counts_expressed_norm <- tidy_counts_expressed  %>% 
+  group_by(Sample) %>% 
+  mutate(CPM=(counts/sum(counts))*1000000)
+
+tidy_counts_expressed_norm <- tidy_counts_expressed_norm %>% 
+  inner_join(counts_metadata, by = c("ENTREZ" = "ID")) %>%  
+  mutate(TPM=(counts/sum(counts/LENGTH))*(1000000/LENGTH))
+
+```
 
 #save out all the datasets we are going to use
 ```{r}
 #save as a rdata object
-save(df1, df2, df3a, df3b, file='~/Documents/Box Sync/RU/Teaching/teaching/tidyR/my_tidy.Rdata')
+save(df1, df2, df3a, df3b,tidy_counts_expressed, tidy_counts_expressed_norm, file='~/Documents/Box Sync/RU/Teaching/RU_side/RU_tidyverse/tidyR/dataset/my_tidy.Rdata')
 
 ```
 

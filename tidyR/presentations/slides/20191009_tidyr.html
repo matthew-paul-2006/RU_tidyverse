@@ -12,7 +12,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Getting tidy
+# Data wrangling with tidy
 <html>
 <div style="float:left">
 
@@ -20,14 +20,13 @@ class: center, middle, inverse, title-slide
 <hr color='#EB811B' size=1px width=796px>
 </html>
 ### Rockefeller University, Bioinformatics Resource Centre
-### <a href="http://rockefelleruniversity.github.io/Intro_To_R_1Day/" class="uri">http://rockefelleruniversity.github.io/Intro_To_R_1Day/</a>
+### <a href="https://rockefelleruniversity.github.io/RU_tidyverse/" class="uri">https://rockefelleruniversity.github.io/RU_tidyverse/</a>
 
 ---
 
 
 
 
----
 # Data wrangling with Tidy
 
 &lt;b&gt;Some problems we face when dealing with data regularly.&lt;/b&gt;
@@ -81,11 +80,6 @@ You can read their &lt;a href="https://cran.r-project.org/web/packages/tidyverse
 Other tools have now been made for the tidy community. This community also overlaps with bioconductor. But the packages above are the linchpins that hold it together. 
 
 ---
-## What are we doing today
-
-Workflow Image for working with data.
-
----
 ## What we won't be doing today
 
 We already have a course online for plotting, including ggplot.     
@@ -95,14 +89,6 @@ https://rockefelleruniversity.github.io/Plotting_In_R/
 ---
 # Lets get tidy!
 First step lets load in the data we are using today
-
-```r
-cat(getwd())
-```
-
-```
-## /Users/mattpaul/Documents/Box Sync/RU/Teaching/teaching/tidyR
-```
 
 ```r
 load(file='dataset/my_tidy.Rdata')
@@ -145,7 +131,7 @@ head(df2)
 ```
 
 ---
-### Are all data frames equal?
+## Are all data frames equal?
 
 ```r
 head(df3a)
@@ -210,18 +196,43 @@ R is a vectorized programming language. R builds data frames from vectors, and R
 library(tidyverse)
 ```
 
----
-## These tools have same logic
+```
+## ── Attaching packages ─────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
+```
 
- -&gt; insert graphic here
- https://github.com/trinker/tidyr_in_a_nutshell
+```
+## ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0
+```
+
+```
+## ── Conflicts ────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::collapse()   masks IRanges::collapse()
+## ✖ dplyr::combine()    masks Biobase::combine(), BiocGenerics::combine()
+## ✖ dplyr::desc()       masks IRanges::desc()
+## ✖ tidyr::expand()     masks S4Vectors::expand()
+## ✖ dplyr::filter()     masks stats::filter()
+## ✖ dplyr::first()      masks S4Vectors::first()
+## ✖ dplyr::lag()        masks stats::lag()
+## ✖ ggplot2::Position() masks BiocGenerics::Position(), base::Position()
+## ✖ purrr::reduce()     masks GenomicRanges::reduce(), IRanges::reduce()
+## ✖ dplyr::rename()     masks S4Vectors::rename()
+## ✖ dplyr::select()     masks AnnotationDbi::select()
+## ✖ dplyr::slice()      masks IRanges::slice()
+```
 
 ---
 # dplyr
-This package contains a variety of tools to access and manipulate dataframes.
+This package contains a variety of tools to access and manipulate dataframes.  
+
+They have a common rationale:
+
+![dplyr](./imgs/dplyr.png)
 
 ---
-## dplyr::select 
+## dplyr::select - (pt1)
 **Select** allows you to make a vector from a specific variable
 
 ```r
@@ -247,7 +258,7 @@ select(df1, common_name)
 ```
 
 ---
-#### dplyr::select
+## dplyr::select - (pt2)
 **Select** allows you to make a dataframe from several variables
 
 ```r
@@ -273,7 +284,7 @@ select(df1, age_classbylength, common_name)
 ```
 
 ---
-#### dplyr::select
+## dplyr::select - (pt3)
 **Select** allows you to make a dataframe excluding a variable
 
 ```r
@@ -299,7 +310,7 @@ select(df1,-length_mm)
 ```
 
 ---
-#### dplyr::select
+## dplyr::select - (pt4)
 **Select** allows you to make a dataframe from a range of variables
 
 ```r
@@ -429,59 +440,16 @@ filter(df1, length_mm &gt; 200 | length_mm &lt; 120)
 ```
 
 ---
-## CHALLENGE
-&lt;p&gt;&amp;nbsp;&lt;/p&gt;
-_ Create a dataframe with the variables _age_ and _IGF_ for only the _Steelhead_ fish
-_ Create a dataframe with all the variables except the _IGF_ values, for all fish that begin with _S_
+## CHALLENGE: Time for an exercise!
+
+Exercise on dplyr's select and filter can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX1_RU_tidyverse_dplyr_select_and_filter.html)
 
 ---
-## ANSWERS
+### Answers to exercise.
 
-```r
-# Create a dataframe of the variables _age_ and _IGF_ of only the _Steelhead_ fish
-df1_A &lt;- filter(df1, common_name == 'Steelhead')
-select(df1_A, age_classbylength, IGF1_ng_ml)
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX1_ANSWERS_RU_tidyverse_dplyr_select_and_filter.html)
 
-```
-## # A tibble: 38 x 2
-##    age_classbylength IGF1_ng_ml
-##    &lt;chr&gt;                  &lt;dbl&gt;
-##  1 juvenile                42.7
-##  2 juvenile                NA  
-##  3 juvenile                24.2
-##  4 juvenile                NA  
-##  5 juvenile                63.5
-##  6 juvenile                61.2
-##  7 juvenile                30.6
-##  8 juvenile                49.4
-##  9 juvenile                56.3
-## 10 juvenile                55.7
-## # … with 28 more rows
-```
-
-```r
-# Create a dataframe of all variables but the _IGF_ values, for all fish that begin with _S_
-df1_A &lt;- filter(df1, str_starts(common_name,'S'))
-select(df1_A, -IGF1_ng_ml)
-```
-
-```
-## # A tibble: 49 x 4
-##    salmon_id common_name    age_classbylength length_mm
-##        &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;                 &lt;dbl&gt;
-##  1     35035 Sockeye salmon juvenile                121
-##  2     35036 Sockeye salmon juvenile                112
-##  3     35037 Steelhead      juvenile                220
-##  4     35038 Steelhead      juvenile                152
-##  5     35034 Sockeye salmon juvenile                139
-##  6     35048 Steelhead      juvenile                288
-##  7     35049 Steelhead      juvenile                190
-##  8     35050 Steelhead      juvenile                283
-##  9     35051 Steelhead      juvenile                279
-## 10     35052 Steelhead      juvenile                235
-## # … with 39 more rows
-```
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX1_ANSWERS_RU_tidyverse_dplyr_select_and_filter.R)
 
 ---
 ## dplyr::arrange - (pt1)
@@ -589,62 +557,16 @@ mutate(df1, IGFngml_zscore = scale(IGF1_ng_ml))
 ```
 
 ---
-## CHALLENGE
-&lt;p&gt;&amp;nbsp;&lt;/p&gt;
-_ Create a dataframe with a new variable that contains the rank of the _length_ variable. Arrange this new data frame by _IGF_ (lowest to highest).
-_ Create a dataframe with a new variable that is _IGF_/_length_. Arrange by this new variable (highest to lowest).
+## CHALLENGE: Time for an exercise!
+
+Exercise on dplyr's arrange and mutate can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX2_RU_tidyverse_dplyr_arrange_and_mutate.html)
 
 ---
-## ANSWERS
+### Answers to exercise.
 
-```r
-# Create a dataframe with a new variable that contains the rank 
-# of the _length_ variable. Arrange this new data frame by 
-# _IGF_ (lowest to highest).
-df1_A &lt;- mutate(df1, length_rank=rank(length_mm))
-arrange(df1_A, IGF1_ng_ml)
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX2_ANSWERS_RU_tidyverse_dplyr_arrange_and_mutate.html)
 
-```
-## # A tibble: 97 x 6
-##    salmon_id common_name    age_classbylength length_mm IGF1_ng_ml length_rank
-##        &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;                 &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;
-##  1     35045 Steelhead      juvenile                177       4.46        49  
-##  2     35081 Chinook salmon yearling                196       5.56        63.5
-##  3     35062 Steelhead      juvenile                198       5.90        65.5
-##  4     35138 Chinook salmon yearling                142       9.17        18  
-##  5     35039 Steelhead      juvenile                201       9.92        70  
-##  6     35135 Chinook salmon yearling                181      11.5         52.5
-##  7     35113 Chinook salmon yearling                162      14.2         38  
-##  8     35064 Steelhead      juvenile                225      16.0         80.5
-##  9     35082 Chinook salmon yearling                150      17.1         29.5
-## 10     35057 Steelhead      juvenile                240      20.2         86  
-## # … with 87 more rows
-```
-
-```r
-# Create a dataframe with a new variable that is _IGF_/_length_. 
-# Arrange by this new variable (highest to lowest).
-df1_A &lt;- mutate(df1, IGF_perlength=IGF1_ng_ml/length_mm)
-arrange(df1_A, -IGF_perlength)
-```
-
-```
-## # A tibble: 97 x 6
-##    salmon_id common_name    age_classbylength length_mm IGF1_ng_ml IGF_perlength
-##        &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;                 &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
-##  1     35055 Steelhead      juvenile                123       55.7         0.453
-##  2     35087 Coho salmon    yearling                164       73.6         0.449
-##  3     35142 Chinook salmon yearling                149       66.5         0.446
-##  4     35112 Chinook salmon yearling                205       90.5         0.442
-##  5     35092 Chinook salmon yearling                192       81.8         0.426
-##  6     35117 Chinook salmon yearling                147       61.2         0.416
-##  7     35090 Chinook salmon yearling                167       67.3         0.403
-##  8     35143 Chinook salmon yearling                204       80.9         0.397
-##  9     35059 Steelhead      juvenile                185       73.1         0.395
-## 10     35101 Steelhead      juvenile                167       65.4         0.392
-## # … with 87 more rows
-```
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX2_ANSWERS_RU_tidyverse_dplyr_arrange_and_mutate.R)
 
 ---
 ## dplyr::summarize - (pt1)
@@ -764,36 +686,16 @@ mutate(df1_byname, IGFngml_zscore = scale(IGF1_ng_ml))
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
 
-1. Group df1 by the variable _age_class_. 
-2. Filter to get the biggest 5 by the variable _length_ in each group. 
-3. Summarise this data frame over the variable _length_ by calculating the mean. 
+Exercise on dplyr's grouping and summarize can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX3_RU_tidyverse_dplyr_group_and_summarize.html)
 
 ---
-## ANSWERS
+### Answers to exercise.
 
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX3_ANSWERS_RU_tidyverse_dplyr_group_and_summarize.html)
 
-```r
-# Group df1 by the variable _age_class_. 
-df1_A &lt;- group_by(df1, age_classbylength)
-
-# Filter to get the biggest 5 by the variable _length_ in each group. 
-df1_A &lt;- filter(df1_A, rank(-length_mm) &lt;= 5)
-
-# Summarise this data frame over the variable _length_ by calculating the mean.
-summarise(df1_A, mean_length_mm = mean(length_mm, na.rm = T))
-```
-
-```
-## # A tibble: 4 x 2
-##   age_classbylength  mean_length_mm
-##   &lt;chr&gt;                       &lt;dbl&gt;
-## 1 juvenile                     274 
-## 2 mixed age juvenile           380.
-## 3 subyearling                   90 
-## 4 yearling                     213
-```
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX3_ANSWERS_RU_tidyverse_dplyr_group_and_summarize.R)
 
 ---
 # Piping to string functions together
@@ -801,9 +703,9 @@ summarise(df1_A, mean_length_mm = mean(length_mm, na.rm = T))
 Piping was allows you to pass the result from one expression directly into another.  
 magrittR package developed the %&gt;% pipe which is integral to the tidy way of formatting code
 
- -&gt; same graphic as before , but extend
- https://github.com/trinker/tidyr_in_a_nutshell
+The pattern is similar but now follows a specific logical flow:
 
+![dplyr](./imgs/dplyr_pipe.png)
 ---
 ## Piping vs. not piping
 
@@ -922,7 +824,7 @@ df1 %&gt;%
 ## You can pipe straight to plots - (pt1)
 
 ```r
-p &lt;- mutate(df1,size=if_else(length_mm&gt;200, 'big_fish', 'small_fish')) %&gt;% 
+p &lt;- df1 %&gt;% mutate(size=if_else(length_mm&gt;200, 'big_fish', 'small_fish')) %&gt;% 
   group_by(common_name, size) %&gt;% 
   summarize(IGF1_ng_ml_ave=mean(IGF1_ng_ml, na.rm=T)) %&gt;% 
   filter(common_name != 'Coho salmon')  %&gt;% 
@@ -939,29 +841,19 @@ p &lt;- mutate(df1,size=if_else(length_mm&gt;200, 'big_fish', 'small_fish')) %&g
 p
 ```
 
-![](20191009_tidyr_files/figure-html/unnamed-chunk-32-1.png)&lt;!-- --&gt;
+![](20191009_tidyr_files/figure-html/unnamed-chunk-29-1.png)&lt;!-- --&gt;
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
 
-1. Filter to only look at _juvenile_ in variable 
-2. Group by common_name
-3. Create new variable that is z-score of _length_ across groups
-4. Create boxplot of grouped length zscores
+Exercise on piping can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX4_RU_tidyverse_pipes.html)
 
 ---
-## ANSWER
+### Answers to exercise.
 
-```r
-df1 %&gt;% 
-  filter(age_classbylength == 'yearling') %&gt;%
-  group_by(common_name) %&gt;% 
-  mutate(length_zscore = scale(length_mm)) %&gt;%
-  ggplot(aes(x = common_name, y = length_zscore)) +
-  geom_boxplot(fill=c('gold','darkorange'))
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX4_ANSWERS_RU_tidyverse_pipes.html)
 
-![](20191009_tidyr_files/figure-html/unnamed-chunk-33-1.png)&lt;!-- --&gt;
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX4_ANSWERS_RU_tidyverse_pipes.R)
 
 ---
 # readr: Reading data into R
@@ -970,12 +862,12 @@ Now lets start from the beginning and tidy some data. First step is to read in d
 
 readr:
 
-_ read_csv(): comma separated (CSV) files  
-_ read_tsv(): tab separated files  
-_ read_delim(): general delimited files  
-_ read_fwf(): fixed width files  
-_ read_table(): tabular files where columns are separated by white-space  
-_ read_log(): web log files   
+* read_csv(): comma separated (CSV) files  
+* read_tsv(): tab separated files  
+* read_delim(): general delimited files  
+* read_fwf(): fixed width files  
+* read_table(): tabular files where columns are separated by white-space  
+* read_log(): web log files   
 
 ---
 ## Reading in with base
@@ -1232,11 +1124,13 @@ untidy_counts[[1]]
 ```
 
 ```
-##   [1] "350" "351" "353" "354" "355" "356" "357" "358" "359" "360" "361" "362" "363" "364" "366" "367" "368" "369" "372" "373"
-##  [21] "374" "375" "377" "378" "379" "381" "382" "383" "384" "387" "388" "389" "390" "391" "392" "393" "394" "395" "396" "397"
-##  [41] "398" "399" "400" "401" "402" "403" "405" "406" "407" "408" "409" "410" "411" "412" "414" "415" "416" "417" "419" "420"
-##  [61] "421" "427" "429" "430" "432" "433" "434" "435" "440" "443" "444" "445" "460" "462" "463" "466" "467" "468" "471" "472"
-##  [81] "473" "474" "475" "476" "477" "478" "479" "480" "481" "482" "483" "486" "487" "488" "489" "490" "491" "492" "493" "495"
+##   [1] "350" "351" "353" "354" "355" "356" "357" "358" "359" "360" "361" "362" "363" "364" "366"
+##  [16] "367" "368" "369" "372" "373" "374" "375" "377" "378" "379" "381" "382" "383" "384" "387"
+##  [31] "388" "389" "390" "391" "392" "393" "394" "395" "396" "397" "398" "399" "400" "401" "402"
+##  [46] "403" "405" "406" "407" "408" "409" "410" "411" "412" "414" "415" "416" "417" "419" "420"
+##  [61] "421" "427" "429" "430" "432" "433" "434" "435" "440" "443" "444" "445" "460" "462" "463"
+##  [76] "466" "467" "468" "471" "472" "473" "474" "475" "476" "477" "478" "479" "480" "481" "482"
+##  [91] "483" "486" "487" "488" "489" "490" "491" "492" "493" "495"
 ```
 ---
 ## Subsetting to make vectors - (pt2)
@@ -1248,75 +1142,26 @@ untidy_counts$ENTREZ
 ```
 
 ```
-##   [1] "350" "351" "353" "354" "355" "356" "357" "358" "359" "360" "361" "362" "363" "364" "366" "367" "368" "369" "372" "373"
-##  [21] "374" "375" "377" "378" "379" "381" "382" "383" "384" "387" "388" "389" "390" "391" "392" "393" "394" "395" "396" "397"
-##  [41] "398" "399" "400" "401" "402" "403" "405" "406" "407" "408" "409" "410" "411" "412" "414" "415" "416" "417" "419" "420"
-##  [61] "421" "427" "429" "430" "432" "433" "434" "435" "440" "443" "444" "445" "460" "462" "463" "466" "467" "468" "471" "472"
-##  [81] "473" "474" "475" "476" "477" "478" "479" "480" "481" "482" "483" "486" "487" "488" "489" "490" "491" "492" "493" "495"
+##   [1] "350" "351" "353" "354" "355" "356" "357" "358" "359" "360" "361" "362" "363" "364" "366"
+##  [16] "367" "368" "369" "372" "373" "374" "375" "377" "378" "379" "381" "382" "383" "384" "387"
+##  [31] "388" "389" "390" "391" "392" "393" "394" "395" "396" "397" "398" "399" "400" "401" "402"
+##  [46] "403" "405" "406" "407" "408" "409" "410" "411" "412" "414" "415" "416" "417" "419" "420"
+##  [61] "421" "427" "429" "430" "432" "433" "434" "435" "440" "443" "444" "445" "460" "462" "463"
+##  [76] "466" "467" "468" "471" "472" "473" "474" "475" "476" "477" "478" "479" "480" "481" "482"
+##  [91] "483" "486" "487" "488" "489" "490" "491" "492" "493" "495"
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
 
-_ Read in count data as different data types. What happens when we extract the vector of these counts?
+Exercise on readr can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX5_RU_tidyverse_readr.html)
 
 ---
-## ANSWER
+### Answers to exercise.
 
-```r
-untidy_counts_test &lt;- read_csv("dataset/hemato_rnaseq_counts.csv", col_types = cols(
-    ENTREZ = col_character(),
-    CD34_1 = col_integer(),
-    ORTHO_1 = col_character(),
-    CD34_2 = col_factor(),
-    ORTHO_2 = col_logical()
-  ))
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX5_ANSWERS_RU_tidyverse_readr.html)
 
-```
-## Warning: 62 parsing failures.
-## row     col           expected actual                               file
-##   2 ORTHO_2 1/0/T/F/TRUE/FALSE   39   'dataset/hemato_rnaseq_counts.csv'
-##   3 ORTHO_2 1/0/T/F/TRUE/FALSE   86   'dataset/hemato_rnaseq_counts.csv'
-##   5 ORTHO_2 1/0/T/F/TRUE/FALSE   16   'dataset/hemato_rnaseq_counts.csv'
-##   8 ORTHO_2 1/0/T/F/TRUE/FALSE   4051 'dataset/hemato_rnaseq_counts.csv'
-##  10 ORTHO_2 1/0/T/F/TRUE/FALSE   1114 'dataset/hemato_rnaseq_counts.csv'
-## ... ....... .................. ...... ..................................
-## See problems(...) for more details.
-```
-
-```r
-untidy_counts_test$CD34_1 %&gt;% head(n=8)
-```
-
-```
-## [1]   204 15586   842     0   123     1   380   572
-```
-
-```r
-untidy_counts_test$ORTHO_1 %&gt;% head(n=8)
-```
-
-```
-## [1] "0"    "479"  "355"  "0"    "291"  "1"    "3"    "2225"
-```
-
-```r
-untidy_counts_test$CD34_2 %&gt;% head(n=8)
-```
-
-```
-## [1] 103   10476 1188  0     139   0     177   597  
-## 82 Levels: 103 10476 1188 0 139 177 597 1 46 15 4 51 24 833 2741 148 138 4970 2576 1767 181 1159 1746 40 118 7405 ... 3053
-```
-
-```r
-untidy_counts_test$ORTHO_2 %&gt;% head(n=8)
-```
-
-```
-## [1] FALSE    NA    NA FALSE    NA FALSE FALSE    NA
-```
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX5_ANSWERS_RU_tidyverse_readr.R)
 
 ---
 ## Tibbles: Converting to tibble - (pt1)
@@ -1433,8 +1278,7 @@ txsLength &lt;- sapply(geneExons, function(x){ x %&gt;%
 counts_metadata &lt;- tibble(ID = symbols$ENTREZID, SYMBOL = symbols$SYMBOL, CHR = chrs$TXCHROM, LENGTH = txsLength)
 ```
 
-# Finally we have all this metadata. Lets put it together into a tibble. 
-counts_metadata &lt;- tibble(ID = symbols$ENTREZID, SYMBOL = symbols$SYMBOL, CHR = chrs$TXCHROM, LENGTH = txsLength)
+
 ---
 ## Tibbles: Make your own - (pt3)
 
@@ -1466,9 +1310,9 @@ What is wrong with the count dataframe from a tidy viewpoint?
 
 _Remember_. These are the rules:
 
-_ Each variable has its own column
-_ Each observation has its own row
-_ Each value has its own cell
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
 
 
 ```r
@@ -1499,9 +1343,9 @@ What is wrong with the count dataframe from a tidy viewpoint?
 
 _Remember_, these are the rules:
 
-_ Each variable has its own column
-_ Each observation has its own row
-_ Each value has its own cell
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
 
 __A single variable with multiple columns__
 
@@ -1599,43 +1443,25 @@ spread(tidier_counts, key=Sample, value=counts)
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
 
-_ tidy up df2
+Exercise on tidying can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX6_RU_tidyverse_tidying.html)
 
 ---
-## ANSWER
+### Answers to exercise.
 
-```r
-df2 %&gt;% 
-  spread(value = value, key = variable)
-```
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX6_ANSWERS_RU_tidyverse_tidying.html)
 
-```
-## # A tibble: 97 x 5
-##    salmon_id common_name    age_classbylength  length_mm IGF1_ng_ml
-##        &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;                  &lt;dbl&gt;      &lt;dbl&gt;
-##  1     35032 Chinook salmon yearling                 147      41.3 
-##  2     35033 Chinook salmon mixed age juvenile       444      62.1 
-##  3     35034 Sockeye salmon juvenile                 139      NA   
-##  4     35035 Sockeye salmon juvenile                 121      NA   
-##  5     35036 Sockeye salmon juvenile                 112      NA   
-##  6     35037 Steelhead      juvenile                 220      42.7 
-##  7     35038 Steelhead      juvenile                 152      NA   
-##  8     35039 Steelhead      juvenile                 201       9.92
-##  9     35040 Steelhead      juvenile                 200      38.1 
-## 10     35042 Steelhead      juvenile                 247      46.4 
-## # … with 87 more rows
-```
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX6_ANSWERS_RU_tidyverse_tidying.R)
 
 ---
 ## What is next to tidy?
 
 _Remember_, these are the rules:
 
-_ Each variable has its own column
-_ Each observation has its own row
-_ Each value has its own cell
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
 
 
 ```r
@@ -1664,9 +1490,9 @@ tidier_counts
 
 _Remember_, these are the rules:
 
-_ Each variable has its own column
-_ Each observation has its own row
-_ Each value has its own cell
+* Each variable has its own column
+* Each observation has its own row
+* Each value has its own cell
 
 __Multiple variables in a single column__
 
@@ -1855,13 +1681,13 @@ inner_join(tidy_counts, counts_metadata, by = c("ENTREZ" = "ID"))
 
 Inner Join 
 
-_ Keeps all observations in x and y with matching keys
+* Keeps all observations in x and y with matching keys
 
 Outer Join
 
-_ A left join keeps all observations in x and those in y with matching keys.
-_ A right join keeps all observations in y and those in x with matching keys. 
-_ A full join keeps all observations in x and y
+* A left join keeps all observations in x and those in y with matching keys.
+* A right join keeps all observations in y and those in x with matching keys. 
+* A full join keeps all observations in x and y
 
 ---
 ## EXAMPLE - Look at just expressed genes
@@ -1961,8 +1787,8 @@ tidy_counts_expressed %&gt;% print(n=20)
 
 Filtering joins 
 
-_ A semi join only keeps all observations in x that are matched in y. y isn't returned. 
-_ A anti join only keeps all observations in x that are _not_ matched in y. y isn't returned. 
+* A semi join only keeps all observations in x that are matched in y. y isn't returned. 
+* A anti join only keeps all observations in x that are _not_ matched in y. y isn't returned. 
 
 ---
 ## dplyr::semi_join
@@ -2024,37 +1850,16 @@ anti_join(tidy_counts, expressed_genes)
 ```
 
 ---
-## CHALLENGE
- 
-_ Calculate CPMs and TPMs
+## CHALLENGE: Time for an exercise!
 
--&gt; Show diagram of the math
+Exercise reviewing dplyr and joining can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX7_RU_tidyverse_dplyr_join.html)
 
 ---
-## ANSWER
+### Answers to exercise.
 
-```r
-# Use Group to focus computation on each sample. Use mutate to make 
-# new variable that is the CPM
-tidy_counts_expressed &lt;- tidy_counts_expressed  %&gt;% 
-  group_by(Sample) %&gt;% 
-  mutate(CPM=(counts/sum(counts))*1000000)
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX7_ANSWERS_RU_tidyverse_dplyr_join.html)
 
-# Join our tidy data to the metadata, then make new variable that is the TPM
-tidy_counts_expressed &lt;- tidy_counts_expressed %&gt;% 
-  inner_join(counts_metadata, by = c("ENTREZ" = "ID")) %&gt;%  
-  mutate(TPM=(counts/(LENGTH/1000))/(sum(counts)/1000000))
-
-# Simple X-Y plot comparing TPM and CPM. 
-p &lt;- tidy_counts_expressed %&gt;% 
-  ggplot(aes(x=CPM, y=TPM)) + 
-  geom_point() + 
-  scale_x_continuous(name="log2(CPM)",trans='log2') + 
-  scale_y_continuous(name="log2(TPM)",trans='log2')
-p
-```
-
-![](20191009_tidyr_files/figure-html/unnamed-chunk-70-1.png)&lt;!-- --&gt;
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX7_ANSWERS_RU_tidyverse_dplyr_join.R)
 
 ---
 # Readr again: Writing out 
@@ -2062,9 +1867,9 @@ You've made a lovely new tibble file. Now you need to save it somewhere.
 
 ```r
 #Theres a wide range of writing  options. Can specify the delmiter directly or use a specific function
-write_delim(tidy_counts_expressed, '../expressed_genes_output.csv', delim =',')
+write_delim(tidy_counts_expressed_norm, '../expressed_genes_output.csv', delim =',')
 
-write_csv(tidy_counts_expressed, '../expressed_genes_output.csv')
+write_csv(tidy_counts_expressed_norm, '../expressed_genes_output.csv')
 ```
 
 A key difference compared to base is that it does not write out row names. Tibbles generally don't have rownames.
@@ -2072,21 +1877,21 @@ A key difference compared to base is that it does not write out row names. Tibbl
 ---
 ## tidyverse so far
 __At this point we have covered or touched on the most essential facets of tidy__  
-_ ~~ggplot2 – making pretty graphs~~ 
-_ ~~readr – reading data into R~~  
-_ ~~dplyr – manipulating data~~  
-_ ~~tibble - working with tibbles~~  
-_ ~~tidyr – miscellaneous tools for tidying data~~
-_ purrr - iterating over data  
-_ stringr – working with strings  
-_ forcats - working with factors  
+* ~~ggplot2 – making pretty graphs~~ 
+* ~~readr – reading data into R~~  
+* ~~dplyr – manipulating data~~  
+* ~~tibble - working with tibbles~~  
+* ~~tidyr – miscellaneous tools for tidying data~~
+* purrr - iterating over data  
+* stringr – working with strings  
+* forcats - working with factors  
 
 ---
 # purrr - Functional programming 
 
-_ Applying functions to datasets  
-_ Base people use _for_ loops or apply  
-_ Big advantage is that purrr readily handles nested dataframes and has standard outputs
+* Applying functions to datasets  
+* Base people use _for_ loops or apply  
+* Big advantage is that purrr readily handles nested dataframes and has standard outputs
 
 ---
 ## purrr::map - tidy way to iterate - (pt1)
@@ -2172,11 +1977,13 @@ list(untidy_counts$ORTHO_1, untidy_counts$ORTHO_2) %&gt;%
 ```
 
 ```
-##   [1]     0   479   355     0   291     1     3  2225    12   502     1     1     6     0     0     0     0  1034  1864   728
-##  [21]     5  6697   314  4845     1   574  2265  1632 10977  2457   171   193     0   577   304   138   464    67   702   410
-##  [41]     0    11   147     0   218    25   824   175     1   111  1819   197   217    45    15     0     1     0     5  1136
-##  [61]   255 11889     0    13     0     0     1   151  2520     0   151    15     0     0   118   480   402  6132   771   628
-##  [81]   783     0    83  3453     3   121     0     5    18  1392  1454     0    33  1118   153  1263     1     0  3585     0
+##   [1]     0   479   355     0   291     1     3  2225    12   502     1     1     6     0     0
+##  [16]     0     0  1034  1864   728     5  6697   314  4845     1   574  2265  1632 10977  2457
+##  [31]   171   193     0   577   304   138   464    67   702   410     0    11   147     0   218
+##  [46]    25   824   175     1   111  1819   197   217    45    15     0     1     0     5  1136
+##  [61]   255 11889     0    13     0     0     1   151  2520     0   151    15     0     0   118
+##  [76]   480   402  6132   771   628   783     0    83  3453     3   121     0     5    18  1392
+##  [91]  1454     0    33  1118   153  1263     1     0  3585     0
 ```
 
 ---
@@ -2191,7 +1998,7 @@ Each value within a tibble can contian more abstract information then just numbe
 
 ```r
 # Nest all the data by sample
-tidy_counts_nest &lt;- tidy_counts_expressed %&gt;% 
+tidy_counts_nest &lt;- tidy_counts_expressed_norm %&gt;% 
   group_by(Sample) %&gt;%
   nest()
 
@@ -2229,15 +2036,15 @@ tidy_counts_nest$data[[1]]
 ## # A tibble: 94 x 10
 ##    ENTREZ CellType Rep   counts count_total       CPM SYMBOL  CHR   LENGTH      TPM
 ##    &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;int&gt;    &lt;dbl&gt;
-##  1 350    CD34     1        204         307   1362.   APOH    chr17   1201  1134.  
-##  2 351    CD34     1      15586       26580 104068.   APP     chr21   4480 23230.  
-##  3 353    CD34     1        842        2471   5622.   APRT    chr16    807  6967.  
-##  4 355    CD34     1        123         569    821.   FAS     chr10   6691   123.  
-##  5 356    CD34     1          1           2      6.68 FASLG   chr1    1859     3.59
-##  6 357    CD34     1        380         560   2537.   SHROOM2 chrX    8206   309.  
-##  7 358    CD34     1        572        7445   3819.   AQP1    chr7    3786  1009.  
+##  1 350    CD34     1        204         307   1362.   APOH    chr17   1201  3069.  
+##  2 351    CD34     1      15586       26580 104068.   APP     chr21   4480 62851.  
+##  3 353    CD34     1        842        2471   5622.   APRT    chr16    807 18849.  
+##  4 355    CD34     1        123         569    821.   FAS     chr10   6691   332.  
+##  5 356    CD34     1          1           2      6.68 FASLG   chr1    1859     9.72
+##  6 357    CD34     1        380         560   2537.   SHROOM2 chrX    8206   837.  
+##  7 358    CD34     1        572        7445   3819.   AQP1    chr7    3786  2729.  
 ##  8 359    CD34     1          0          13      0    AQP2    chr12   4179     0   
-##  9 360    CD34     1        320        1982   2137.   AQP3    chr9    2950   724.  
+##  9 360    CD34     1        320        1982   2137.   AQP3    chr9    2950  1960.  
 ## 10 361    CD34     1          0           1      0    AQP4    chr18   5217     0   
 ## # … with 84 more rows
 ```
@@ -2275,7 +2082,7 @@ tidy_counts_nest$my_model[[1]]
 ## 
 ## Coefficients:
 ## (Intercept)          TPM  
-##    3864.980        1.723
+##   3864.9798       0.6367
 ```
 ---
 ## broom::tidy - making models legible 
@@ -2312,8 +2119,8 @@ tidy_counts_nest$my_tidy_model[[1]]
 ## # A tibble: 2 x 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)  3865.    1101.         3.51 6.94e- 4
-## 2 TPM             1.72     0.108     16.0  2.75e-28
+## 1 (Intercept) 3865.    1101.          3.51 6.94e- 4
+## 2 TPM            0.637    0.0398     16.0  2.75e-28
 ```
 
 ---
@@ -2330,14 +2137,14 @@ tidy_counts_nest %&gt;%
 ## # Groups:   Sample [4]
 ##   Sample             data my_model term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;   &lt;list&lt;df[,10]&gt;&gt; &lt;list&gt;   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 CD34_1        [94 × 10] &lt;lm&gt;     (Intercept)  3865.   1101.          3.51 6.94e- 4
-## 2 CD34_1        [94 × 10] &lt;lm&gt;     TPM             1.72    0.108      16.0  2.75e-28
-## 3 ORTHO_1       [94 × 10] &lt;lm&gt;     (Intercept)  1522.    784.          1.94 5.53e- 2
-## 4 ORTHO_1       [94 × 10] &lt;lm&gt;     TPM             2.20    0.0696     31.6  3.83e-51
-## 5 CD34_2        [94 × 10] &lt;lm&gt;     (Intercept)  4083.   1085.          3.76 2.94e- 4
-## 6 CD34_2        [94 × 10] &lt;lm&gt;     TPM             1.54    0.0944     16.3  7.03e-29
-## 7 ORTHO_2       [94 × 10] &lt;lm&gt;     (Intercept)  1787.    937.          1.91 5.96e- 2
-## 8 ORTHO_2       [94 × 10] &lt;lm&gt;     TPM             2.21    0.0884     25.0  8.45e-43
+## 1 CD34_1        [94 × 10] &lt;lm&gt;     (Intercept) 3865.    1101.          3.51 6.94e- 4
+## 2 CD34_1        [94 × 10] &lt;lm&gt;     TPM            0.637    0.0398     16.0  2.75e-28
+## 3 ORTHO_1       [94 × 10] &lt;lm&gt;     (Intercept) 1522.     784.          1.94 5.53e- 2
+## 4 ORTHO_1       [94 × 10] &lt;lm&gt;     TPM            0.857    0.0271     31.6  3.83e-51
+## 5 CD34_2        [94 × 10] &lt;lm&gt;     (Intercept) 4083.    1085.          3.76 2.94e- 4
+## 6 CD34_2        [94 × 10] &lt;lm&gt;     TPM            0.616    0.0378     16.3  7.03e-29
+## 7 ORTHO_2       [94 × 10] &lt;lm&gt;     (Intercept) 1787.     937.          1.91 5.96e- 2
+## 8 ORTHO_2       [94 × 10] &lt;lm&gt;     TPM            0.832    0.0333     25.0  8.45e-43
 ```
 ---
 ## dplyr::unnest - expand out - (pt2)
@@ -2352,27 +2159,33 @@ tidy_counts_nest %&gt;%
 ```
 ## # A tibble: 752 x 17
 ## # Groups:   Sample [4]
-##    Sample ENTREZ CellType Rep   counts count_total    CPM SYMBOL CHR   LENGTH    TPM my_model term  estimate std.error
-##    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt; &lt;list&gt;   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;
-##  1 CD34_1 350    CD34     1        204         307 1.36e3 APOH   chr17   1201 1.13e3 &lt;lm&gt;     (Int…    3865.     1101.
-##  2 CD34_1 351    CD34     1      15586       26580 1.04e5 APP    chr21   4480 2.32e4 &lt;lm&gt;     (Int…    3865.     1101.
-##  3 CD34_1 353    CD34     1        842        2471 5.62e3 APRT   chr16    807 6.97e3 &lt;lm&gt;     (Int…    3865.     1101.
-##  4 CD34_1 355    CD34     1        123         569 8.21e2 FAS    chr10   6691 1.23e2 &lt;lm&gt;     (Int…    3865.     1101.
-##  5 CD34_1 356    CD34     1          1           2 6.68e0 FASLG  chr1    1859 3.59e0 &lt;lm&gt;     (Int…    3865.     1101.
-##  6 CD34_1 357    CD34     1        380         560 2.54e3 SHROO… chrX    8206 3.09e2 &lt;lm&gt;     (Int…    3865.     1101.
-##  7 CD34_1 358    CD34     1        572        7445 3.82e3 AQP1   chr7    3786 1.01e3 &lt;lm&gt;     (Int…    3865.     1101.
-##  8 CD34_1 359    CD34     1          0          13 0.     AQP2   chr12   4179 0.     &lt;lm&gt;     (Int…    3865.     1101.
-##  9 CD34_1 360    CD34     1        320        1982 2.14e3 AQP3   chr9    2950 7.24e2 &lt;lm&gt;     (Int…    3865.     1101.
-## 10 CD34_1 361    CD34     1          0           1 0.     AQP4   chr18   5217 0.     &lt;lm&gt;     (Int…    3865.     1101.
-## # … with 742 more rows, and 2 more variables: statistic &lt;dbl&gt;, p.value &lt;dbl&gt;
+##    Sample ENTREZ CellType Rep   counts count_total    CPM SYMBOL CHR   LENGTH    TPM my_model term 
+##    &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt; &lt;list&gt;   &lt;chr&gt;
+##  1 CD34_1 350    CD34     1        204         307 1.36e3 APOH   chr17   1201 3.07e3 &lt;lm&gt;     (Int…
+##  2 CD34_1 351    CD34     1      15586       26580 1.04e5 APP    chr21   4480 6.29e4 &lt;lm&gt;     (Int…
+##  3 CD34_1 353    CD34     1        842        2471 5.62e3 APRT   chr16    807 1.88e4 &lt;lm&gt;     (Int…
+##  4 CD34_1 355    CD34     1        123         569 8.21e2 FAS    chr10   6691 3.32e2 &lt;lm&gt;     (Int…
+##  5 CD34_1 356    CD34     1          1           2 6.68e0 FASLG  chr1    1859 9.72e0 &lt;lm&gt;     (Int…
+##  6 CD34_1 357    CD34     1        380         560 2.54e3 SHROO… chrX    8206 8.37e2 &lt;lm&gt;     (Int…
+##  7 CD34_1 358    CD34     1        572        7445 3.82e3 AQP1   chr7    3786 2.73e3 &lt;lm&gt;     (Int…
+##  8 CD34_1 359    CD34     1          0          13 0.     AQP2   chr12   4179 0.     &lt;lm&gt;     (Int…
+##  9 CD34_1 360    CD34     1        320        1982 2.14e3 AQP3   chr9    2950 1.96e3 &lt;lm&gt;     (Int…
+## 10 CD34_1 361    CD34     1          0           1 0.     AQP4   chr18   5217 0.     &lt;lm&gt;     (Int…
+## # … with 742 more rows, and 4 more variables: estimate &lt;dbl&gt;, std.error &lt;dbl&gt;, statistic &lt;dbl&gt;,
+## #   p.value &lt;dbl&gt;
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
+
+Exercise reviewing purrr can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX8_RU_tidyverse_purrr.html)
 
 ---
-## ANSWER
+### Answers to exercise.
 
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX8_ANSWERS_RU_tidyverse_purrr.html)
+
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX8_ANSWERS_RU_tidyverse_purrr.R)
 
 ---
 # stringr - working with strings
@@ -2394,7 +2207,7 @@ Many overlapping functions with base for combining, subsetting, converting and f
 brc &lt;- c("Tom", "Ji-Dung", "Matt")
 
 # Extract substrings from a range. Here the 1st to 3rd character
-brc %&gt;% str_sub( 1, 3)
+brc %&gt;% str_sub(1, 3)
 ```
 
 ```
@@ -2403,7 +2216,7 @@ brc %&gt;% str_sub( 1, 3)
 
 ```r
 # Extract substrings from a range. Here the 2nd to 2nd to last character
-brc %&gt;% str_sub( 2, -2)
+brc %&gt;% str_sub(2, -2)
 ```
 
 ```
@@ -2412,7 +2225,7 @@ brc %&gt;% str_sub( 2, -2)
 
 ```r
 # Assign values back to substrings. Here the 2nd to 2nd to last character is replaced with X.
-str_sub(brc, 2, -2)&lt;-'X'
+str_sub(brc, 2, -2) &lt;- 'X'
 brc
 ```
 
@@ -2446,12 +2259,12 @@ str_pad(brc2, width=10, side='left')
 ```
 
 ---
-## stringr::str_to_* - Capitalization - (pt1)
+## stringr::str\_to\_* - Capitalization - (pt1)
 
 ```r
 # Lets reuse our counts tibble. pull from dplyr can be used to grab a tibble 
 # column and make it into a vector
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   pull(SYMBOL) %&gt;%
   head()
 ```
@@ -2463,7 +2276,7 @@ tidy_counts_expressed %&gt;%
 ```r
 # Here we pull our gene symbols from our tibble into a vector, and then convert 
 # them into title style capitalization
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   pull(SYMBOL) %&gt;% 
   str_to_title() %&gt;% 
   head()
@@ -2473,12 +2286,12 @@ tidy_counts_expressed %&gt;%
 ## [1] "Apoh" "Apoh" "Apoh" "Apoh" "App"  "App"
 ```
 ---
-## stringr::str_to_* - Capitalization - (pt2)
+## stringr::str\_to\_* - Capitalization - (pt2)
 
 ```r
 # String manipulation functions can be used on tibbles using mutate. Here we convert
 # gene symbols to title style capitalization
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   mutate(SYMBOL = str_to_title(SYMBOL))
 ```
 
@@ -2487,24 +2300,24 @@ tidy_counts_expressed %&gt;%
 ## # Groups:   Sample [4]
 ##    ENTREZ Sample  CellType Rep   counts count_total     CPM SYMBOL CHR   LENGTH    TPM
 ##    &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt;
-##  1 350    CD34_1  CD34     1        204         307   1362. Apoh   chr17   1201  1134.
+##  1 350    CD34_1  CD34     1        204         307   1362. Apoh   chr17   1201  3069.
 ##  2 350    ORTHO_1 ORTHO    1          0         307      0  Apoh   chr17   1201     0 
-##  3 350    CD34_2  CD34     2        103         307    975. Apoh   chr17   1201   811.
+##  3 350    CD34_2  CD34     2        103         307    975. Apoh   chr17   1201  2027.
 ##  4 350    ORTHO_2 ORTHO    2          0         307      0  Apoh   chr17   1201     0 
-##  5 351    CD34_1  CD34     1      15586       26580 104068. App    chr21   4480 23230.
-##  6 351    ORTHO_1 ORTHO    1        479       26580   5825. App    chr21   4480  1300.
-##  7 351    CD34_2  CD34     2      10476       26580  99125. App    chr21   4480 22126.
-##  8 351    ORTHO_2 ORTHO    2         39       26580   1185. App    chr21   4480   265.
-##  9 353    CD34_1  CD34     1        842        2471   5622. Aprt   chr16    807  6967.
-## 10 353    ORTHO_1 ORTHO    1        355        2471   4317. Aprt   chr16    807  5349.
+##  5 351    CD34_1  CD34     1      15586       26580 104068. App    chr21   4480 62851.
+##  6 351    ORTHO_1 ORTHO    1        479       26580   5825. App    chr21   4480  3333.
+##  7 351    CD34_2  CD34     2      10476       26580  99125. App    chr21   4480 55281.
+##  8 351    ORTHO_2 ORTHO    2         39       26580   1185. App    chr21   4480   703.
+##  9 353    CD34_1  CD34     1        842        2471   5622. Aprt   chr16    807 18849.
+## 10 353    ORTHO_1 ORTHO    1        355        2471   4317. Aprt   chr16    807 13711.
 ## # … with 366 more rows
 ```
 ---
-## stringr::str_to_* - Capitalization - (pt3)
+## stringr::str\_to\_* - Capitalization - (pt3)
 
 ```r
 # Here we convert chromosome annotation to capitals
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   mutate(CHR = str_to_upper(CHR))
 ```
 
@@ -2513,16 +2326,16 @@ tidy_counts_expressed %&gt;%
 ## # Groups:   Sample [4]
 ##    ENTREZ Sample  CellType Rep   counts count_total     CPM SYMBOL CHR   LENGTH    TPM
 ##    &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt;
-##  1 350    CD34_1  CD34     1        204         307   1362. APOH   CHR17   1201  1134.
+##  1 350    CD34_1  CD34     1        204         307   1362. APOH   CHR17   1201  3069.
 ##  2 350    ORTHO_1 ORTHO    1          0         307      0  APOH   CHR17   1201     0 
-##  3 350    CD34_2  CD34     2        103         307    975. APOH   CHR17   1201   811.
+##  3 350    CD34_2  CD34     2        103         307    975. APOH   CHR17   1201  2027.
 ##  4 350    ORTHO_2 ORTHO    2          0         307      0  APOH   CHR17   1201     0 
-##  5 351    CD34_1  CD34     1      15586       26580 104068. APP    CHR21   4480 23230.
-##  6 351    ORTHO_1 ORTHO    1        479       26580   5825. APP    CHR21   4480  1300.
-##  7 351    CD34_2  CD34     2      10476       26580  99125. APP    CHR21   4480 22126.
-##  8 351    ORTHO_2 ORTHO    2         39       26580   1185. APP    CHR21   4480   265.
-##  9 353    CD34_1  CD34     1        842        2471   5622. APRT   CHR16    807  6967.
-## 10 353    ORTHO_1 ORTHO    1        355        2471   4317. APRT   CHR16    807  5349.
+##  5 351    CD34_1  CD34     1      15586       26580 104068. APP    CHR21   4480 62851.
+##  6 351    ORTHO_1 ORTHO    1        479       26580   5825. APP    CHR21   4480  3333.
+##  7 351    CD34_2  CD34     2      10476       26580  99125. APP    CHR21   4480 55281.
+##  8 351    ORTHO_2 ORTHO    2         39       26580   1185. APP    CHR21   4480   703.
+##  9 353    CD34_1  CD34     1        842        2471   5622. APRT   CHR16    807 18849.
+## 10 353    ORTHO_1 ORTHO    1        355        2471   4317. APRT   CHR16    807 13711.
 ## # … with 366 more rows
 ```
 
@@ -2538,14 +2351,16 @@ df1 %&gt;%
 ```
 
 ```
-##  [1]  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [21] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE
-## [41] FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-## [61]  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE
-## [81] FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+##  [1]  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [17] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE
+## [33]  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [49]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [65] FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE
+## [81] FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [97]  TRUE
 ```
 ---
-## stringr::detect - give me only patterns
+## stringr::subset - give me only patterns
 
 ```r
 # Subset returns the match if the pattern 'salmon' is present in vector
@@ -2555,15 +2370,18 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] "Chinook salmon" "Sockeye salmon" "Sockeye salmon" "Chinook salmon" "Sockeye salmon" "Chinook salmon" "Chinook salmon"
-##  [8] "Sockeye salmon" "Chinook salmon" "Chinook salmon" "Sockeye salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
-## [15] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Coho salmon"    "Coho salmon"   
-## [22] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
-## [29] "Sockeye salmon" "Sockeye salmon" "Sockeye salmon" "Sockeye salmon" "Sockeye salmon" "Chinook salmon" "Chinook salmon"
-## [36] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
-## [43] "Chinook salmon" "Sockeye salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
-## [50] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
-## [57] "Chinook salmon" "Chinook salmon" "Chinook salmon"
+##  [1] "Chinook salmon" "Sockeye salmon" "Sockeye salmon" "Chinook salmon" "Sockeye salmon"
+##  [6] "Chinook salmon" "Chinook salmon" "Sockeye salmon" "Chinook salmon" "Chinook salmon"
+## [11] "Sockeye salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [16] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Coho salmon"   
+## [21] "Coho salmon"    "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [26] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Sockeye salmon" "Sockeye salmon"
+## [31] "Sockeye salmon" "Sockeye salmon" "Sockeye salmon" "Chinook salmon" "Chinook salmon"
+## [36] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [41] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Sockeye salmon" "Chinook salmon"
+## [46] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [51] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
+## [56] "Chinook salmon" "Chinook salmon" "Chinook salmon" "Chinook salmon"
 ```
 ---
 ## stringr::str_ends - ends with pattern?
@@ -2577,11 +2395,13 @@ df1 %&gt;%
 ```
 
 ```
-##  [1]  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [21] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE
-## [41] FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-## [61]  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE
-## [81] FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+##  [1]  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+## [17] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE
+## [33]  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [49]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [65] FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE
+## [81] FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+## [97]  TRUE
 ```
 
 ```r
@@ -2616,8 +2436,9 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] 1 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-## [62] 1 1 1 0 1 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+##  [1] 1 1 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1
+## [49] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+## [97] 1
 ```
 
 ```r
@@ -2627,8 +2448,9 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] 3 2 2 0 0 3 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 3 2 3 3 2 0 0 0 0 0 0 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 2
-## [62] 2 2 2 0 3 0 0 3 3 3 3 3 3 3 3 3 2 0 0 0 0 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+##  [1] 3 2 2 0 0 3 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 3 2 3 3 2 0 0 0 0 0 0 3 3 3 3 3 3
+## [49] 3 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 0 3 0 0 3 3 3 3 3 3 3 3 3 2 0 0 0 0 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+## [97] 3
 ```
 ---
 ## stringr::str_replace_all - replace a string
@@ -2641,23 +2463,26 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] "Chinook salmon"  "Sockeye salmon"  "Sockeye salmon"  "Steelhead trout" "Steelhead trout" "Chinook salmon" 
-##  [7] "Sockeye salmon"  "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
-## [13] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
-## [19] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
-## [25] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
-## [31] "Chinook salmon"  "Chinook salmon"  "Sockeye salmon"  "Chinook salmon"  "Chinook salmon"  "Sockeye salmon" 
-## [37] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
-## [43] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
-## [49] "Chinook salmon"  "Chinook salmon"  "Coho salmon"     "Coho salmon"     "Chinook salmon"  "Chinook salmon" 
-## [55] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Sockeye salmon" 
-## [61] "Sockeye salmon"  "Sockeye salmon"  "Sockeye salmon"  "Sockeye salmon"  "Steelhead trout" "Chinook salmon" 
-## [67] "Steelhead trout" "Steelhead trout" "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
-## [73] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Sockeye salmon" 
-## [79] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Chinook salmon"  "Chinook salmon" 
-## [85] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
-## [91] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
-## [97] "Chinook salmon"
+##  [1] "Chinook salmon"  "Sockeye salmon"  "Sockeye salmon"  "Steelhead trout" "Steelhead trout"
+##  [6] "Chinook salmon"  "Sockeye salmon"  "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [11] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [16] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [21] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [26] "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [31] "Chinook salmon"  "Chinook salmon"  "Sockeye salmon"  "Chinook salmon"  "Chinook salmon" 
+## [36] "Sockeye salmon"  "Steelhead trout" "Steelhead trout" "Steelhead trout" "Steelhead trout"
+## [41] "Steelhead trout" "Steelhead trout" "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [46] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [51] "Coho salmon"     "Coho salmon"     "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [56] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Sockeye salmon" 
+## [61] "Sockeye salmon"  "Sockeye salmon"  "Sockeye salmon"  "Sockeye salmon"  "Steelhead trout"
+## [66] "Chinook salmon"  "Steelhead trout" "Steelhead trout" "Chinook salmon"  "Chinook salmon" 
+## [71] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [76] "Chinook salmon"  "Chinook salmon"  "Sockeye salmon"  "Steelhead trout" "Steelhead trout"
+## [81] "Steelhead trout" "Steelhead trout" "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [86] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [91] "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon"  "Chinook salmon" 
+## [96] "Chinook salmon"  "Chinook salmon"
 ```
 ---
 ## stringr::str_replace_all - replace a string
@@ -2685,11 +2510,16 @@ df1 %&gt;%
 ```
 
 ---
-## CHALLENGE
+## CHALLENGE: Time for an exercise!
+
+Exercise reviewing purrr can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX9_RU_tidyverse_stringr.html)
 
 ---
-## ANSWER
+### Answers to exercise.
 
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX9_ANSWERS_RU_tidyverse_stringr.html)
+
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX9_ANSWERS_RU_tidyverse_stringr.R)
 
 ---
 # forcats - Handling factors
@@ -2704,11 +2534,11 @@ _[This is base]_
 
 ```r
 # Vectors are easy to turn into factors with factor()
-tidy_counts_expressed_samples &lt;- tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm_samples &lt;- tidy_counts_expressed_norm %&gt;% 
   pull(Sample) %&gt;% 
   factor() 
 
-tidy_counts_expressed_samples %&gt;% head(n=10)
+tidy_counts_expressed_norm_samples %&gt;% head(n=10)
 ```
 
 ```
@@ -2720,7 +2550,7 @@ tidy_counts_expressed_samples %&gt;% head(n=10)
 
 ```r
 # Can also modify the data type of a tibble column with as_facotr, in an approach we have used before.
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) 
 ```
@@ -2729,23 +2559,23 @@ tidy_counts_expressed %&gt;%
 ## # A tibble: 376 x 11
 ##    ENTREZ Sample  CellType Rep   counts count_total     CPM SYMBOL CHR   LENGTH    TPM
 ##    &lt;chr&gt;  &lt;fct&gt;   &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;       &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;int&gt;  &lt;dbl&gt;
-##  1 350    CD34_1  CD34     1        204         307   1362. APOH   chr17   1201  1134.
+##  1 350    CD34_1  CD34     1        204         307   1362. APOH   chr17   1201  3069.
 ##  2 350    ORTHO_1 ORTHO    1          0         307      0  APOH   chr17   1201     0 
-##  3 350    CD34_2  CD34     2        103         307    975. APOH   chr17   1201   811.
+##  3 350    CD34_2  CD34     2        103         307    975. APOH   chr17   1201  2027.
 ##  4 350    ORTHO_2 ORTHO    2          0         307      0  APOH   chr17   1201     0 
-##  5 351    CD34_1  CD34     1      15586       26580 104068. APP    chr21   4480 23230.
-##  6 351    ORTHO_1 ORTHO    1        479       26580   5825. APP    chr21   4480  1300.
-##  7 351    CD34_2  CD34     2      10476       26580  99125. APP    chr21   4480 22126.
-##  8 351    ORTHO_2 ORTHO    2         39       26580   1185. APP    chr21   4480   265.
-##  9 353    CD34_1  CD34     1        842        2471   5622. APRT   chr16    807  6967.
-## 10 353    ORTHO_1 ORTHO    1        355        2471   4317. APRT   chr16    807  5349.
+##  5 351    CD34_1  CD34     1      15586       26580 104068. APP    chr21   4480 62851.
+##  6 351    ORTHO_1 ORTHO    1        479       26580   5825. APP    chr21   4480  3333.
+##  7 351    CD34_2  CD34     2      10476       26580  99125. APP    chr21   4480 55281.
+##  8 351    ORTHO_2 ORTHO    2         39       26580   1185. APP    chr21   4480   703.
+##  9 353    CD34_1  CD34     1        842        2471   5622. APRT   chr16    807 18849.
+## 10 353    ORTHO_1 ORTHO    1        355        2471   4317. APRT   chr16    807 13711.
 ## # … with 366 more rows
 ```
 ---
 ## Making a factor - Tibbles
 
 ```r
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;% 
   pull(Sample) %&gt;% head(n=10)
@@ -2761,7 +2591,7 @@ tidy_counts_expressed %&gt;%
 ```r
 # When you factorize you can use a vector to determine the order
 my_levels1&lt;-c('ORTHO_1','ORTHO_2','CD34_1','CD34_2')
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   pull(Sample) %&gt;% 
   factor(levels = my_levels1 ) %&gt;% head(n=10)
 ```
@@ -2774,7 +2604,7 @@ tidy_counts_expressed %&gt;%
 ```r
 # When you factorize anything not in the given levels is turned to NA
 my_levels2&lt;-c('ORTHO_1','CD34_1')
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   pull(Sample) %&gt;% 
   factor(levels = my_levels2 ) %&gt;% head(n=10)
 ```
@@ -2786,7 +2616,7 @@ tidy_counts_expressed %&gt;%
 
 ```r
 # Its straightforward to grab the levels from the factor
-tidy_counts_expressed_samples %&gt;% 
+tidy_counts_expressed_norm_samples %&gt;% 
   levels()
 ```
 
@@ -2798,7 +2628,7 @@ tidy_counts_expressed_samples %&gt;%
 ## Why do we factorize? For order. 
 
 ```r
-p &lt;- tidy_counts_expressed %&gt;% 
+p &lt;- tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;% 
   group_by(Sample) %&gt;% 
@@ -2807,6 +2637,7 @@ p &lt;- tidy_counts_expressed %&gt;%
   geom_bar(stat = "identity") + 
   theme(axis.text.x = element_text(angle = 90))
 ```
+
 ---
 ## Why do we factorize? For order. 
 
@@ -2814,14 +2645,14 @@ p &lt;- tidy_counts_expressed %&gt;%
 p
 ```
 
-![](20191009_tidyr_files/figure-html/unnamed-chunk-102-1.png)&lt;!-- --&gt;
+![](20191009_tidyr_files/figure-html/unnamed-chunk-93-1.png)&lt;!-- --&gt;
 
 ---
 ## forcats::fct_relevel - Reorder manually
 
 ```r
 # fct_relevel - reorder manually
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;%
   mutate(Sample = fct_relevel(Sample, my_levels1)) %&gt;% 
@@ -2835,7 +2666,7 @@ tidy_counts_expressed %&gt;%
 
 ```r
 # fct_relevel - reorder manually
-tidy_counts_expressed %&gt;% 
+tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;%
   mutate(Sample = fct_relevel(Sample, my_levels2)) %&gt;% 
@@ -2852,7 +2683,7 @@ tidy_counts_expressed %&gt;%
 ```r
 # fct_reorder - reorder based on the data. Here we are ordering based
 # on mean counts for each sample.
-tidy_counts_expressed %&gt;%
+tidy_counts_expressed_norm %&gt;%
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;% 
   mutate(Sample = fct_reorder(Sample, counts, mean)) %&gt;% 
@@ -2868,7 +2699,7 @@ tidy_counts_expressed %&gt;%
 ## Now our ordering can be fixed
 
 ```r
-p &lt;- tidy_counts_expressed %&gt;% 
+p &lt;- tidy_counts_expressed_norm %&gt;% 
   ungroup() %&gt;% 
   mutate_at(vars(Sample), as_factor) %&gt;%
   mutate(Sample=fct_relevel(Sample, my_levels1)) %&gt;% 
@@ -2885,7 +2716,7 @@ p &lt;- tidy_counts_expressed %&gt;%
 p
 ```
 
-![](20191009_tidyr_files/figure-html/unnamed-chunk-106-1.png)&lt;!-- --&gt;
+![](20191009_tidyr_files/figure-html/unnamed-chunk-97-1.png)&lt;!-- --&gt;
 
 ---
 ## forcats::fct_recode - Change levels
@@ -2895,26 +2726,31 @@ df1$age_classbylength
 ```
 
 ```
-##  [1] "yearling"           "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-##  [6] "mixed age juvenile" "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [11] "juvenile"           "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [16] "juvenile"           "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [21] "juvenile"           "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [26] "juvenile"           "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [31] "yearling"           "yearling"           "juvenile"           "yearling"           "mixed age juvenile"
-## [36] "juvenile"           "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [41] "juvenile"           "juvenile"           "yearling"           "yearling"           "yearling"          
-## [46] "yearling"           "yearling"           "yearling"           "yearling"           "yearling"          
-## [51] "yearling"           "yearling"           "yearling"           "yearling"           "yearling"          
-## [56] "yearling"           "yearling"           "yearling"           "subyearling"        "juvenile"          
-## [61] "juvenile"           "juvenile"           "juvenile"           "juvenile"           "juvenile"          
-## [66] "yearling"           "juvenile"           "juvenile"           "mixed age juvenile" "yearling"          
-## [71] "yearling"           "yearling"           "yearling"           "yearling"           "yearling"          
-## [76] "yearling"           "yearling"           "juvenile"           "juvenile"           "juvenile"          
-## [81] "juvenile"           "juvenile"           "yearling"           "yearling"           "yearling"          
-## [86] "yearling"           "yearling"           "yearling"           "yearling"           "yearling"          
-## [91] "yearling"           "yearling"           "yearling"           "yearling"           "yearling"          
-## [96] "yearling"           "yearling"
+##  [1] "yearling"           "juvenile"           "juvenile"           "juvenile"          
+##  [5] "juvenile"           "mixed age juvenile" "juvenile"           "juvenile"          
+##  [9] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
+## [13] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
+## [17] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
+## [21] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
+## [25] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
+## [29] "juvenile"           "juvenile"           "yearling"           "yearling"          
+## [33] "juvenile"           "yearling"           "mixed age juvenile" "juvenile"          
+## [37] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
+## [41] "juvenile"           "juvenile"           "yearling"           "yearling"          
+## [45] "yearling"           "yearling"           "yearling"           "yearling"          
+## [49] "yearling"           "yearling"           "yearling"           "yearling"          
+## [53] "yearling"           "yearling"           "yearling"           "yearling"          
+## [57] "yearling"           "yearling"           "subyearling"        "juvenile"          
+## [61] "juvenile"           "juvenile"           "juvenile"           "juvenile"          
+## [65] "juvenile"           "yearling"           "juvenile"           "juvenile"          
+## [69] "mixed age juvenile" "yearling"           "yearling"           "yearling"          
+## [73] "yearling"           "yearling"           "yearling"           "yearling"          
+## [77] "yearling"           "juvenile"           "juvenile"           "juvenile"          
+## [81] "juvenile"           "juvenile"           "yearling"           "yearling"          
+## [85] "yearling"           "yearling"           "yearling"           "yearling"          
+## [89] "yearling"           "yearling"           "yearling"           "yearling"          
+## [93] "yearling"           "yearling"           "yearling"           "yearling"          
+## [97] "yearling"
 ```
 
 ```r
@@ -2926,18 +2762,22 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] yearling       juvenile       juvenile       juvenile       juvenile       mixed juvenile juvenile       juvenile      
-##  [9] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
-## [17] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
-## [25] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile       yearling       yearling      
-## [33] juvenile       yearling       mixed juvenile juvenile       juvenile       juvenile       juvenile       juvenile      
-## [41] juvenile       juvenile       yearling       yearling       yearling       yearling       yearling       yearling      
-## [49] yearling       yearling       yearling       yearling       yearling       yearling       yearling       yearling      
-## [57] yearling       yearling       subyearling    juvenile       juvenile       juvenile       juvenile       juvenile      
-## [65] juvenile       yearling       juvenile       juvenile       mixed juvenile yearling       yearling       yearling      
-## [73] yearling       yearling       yearling       yearling       yearling       juvenile       juvenile       juvenile      
-## [81] juvenile       juvenile       yearling       yearling       yearling       yearling       yearling       yearling      
-## [89] yearling       yearling       yearling       yearling       yearling       yearling       yearling       yearling      
+##  [1] yearling       juvenile       juvenile       juvenile       juvenile       mixed juvenile
+##  [7] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
+## [13] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
+## [19] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
+## [25] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
+## [31] yearling       yearling       juvenile       yearling       mixed juvenile juvenile      
+## [37] juvenile       juvenile       juvenile       juvenile       juvenile       juvenile      
+## [43] yearling       yearling       yearling       yearling       yearling       yearling      
+## [49] yearling       yearling       yearling       yearling       yearling       yearling      
+## [55] yearling       yearling       yearling       yearling       subyearling    juvenile      
+## [61] juvenile       juvenile       juvenile       juvenile       juvenile       yearling      
+## [67] juvenile       juvenile       mixed juvenile yearling       yearling       yearling      
+## [73] yearling       yearling       yearling       yearling       yearling       juvenile      
+## [79] juvenile       juvenile       juvenile       juvenile       yearling       yearling      
+## [85] yearling       yearling       yearling       yearling       yearling       yearling      
+## [91] yearling       yearling       yearling       yearling       yearling       yearling      
 ## [97] yearling      
 ## Levels: yearling juvenile mixed juvenile subyearling
 ```
@@ -2951,16 +2791,19 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] yearling    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
-## [11] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
-## [21] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
-## [31] yearling    yearling    juvenile    yearling    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
-## [41] juvenile    juvenile    yearling    yearling    yearling    yearling    yearling    yearling    yearling    yearling   
-## [51] yearling    yearling    yearling    yearling    yearling    yearling    yearling    yearling    subyearling juvenile   
-## [61] juvenile    juvenile    juvenile    juvenile    juvenile    yearling    juvenile    juvenile    juvenile    yearling   
-## [71] yearling    yearling    yearling    yearling    yearling    yearling    yearling    juvenile    juvenile    juvenile   
-## [81] juvenile    juvenile    yearling    yearling    yearling    yearling    yearling    yearling    yearling    yearling   
-## [91] yearling    yearling    yearling    yearling    yearling    yearling    yearling   
+##  [1] yearling    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
+##  [9] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
+## [17] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
+## [25] juvenile    juvenile    juvenile    juvenile    juvenile    juvenile    yearling    yearling   
+## [33] juvenile    yearling    juvenile    juvenile    juvenile    juvenile    juvenile    juvenile   
+## [41] juvenile    juvenile    yearling    yearling    yearling    yearling    yearling    yearling   
+## [49] yearling    yearling    yearling    yearling    yearling    yearling    yearling    yearling   
+## [57] yearling    yearling    subyearling juvenile    juvenile    juvenile    juvenile    juvenile   
+## [65] juvenile    yearling    juvenile    juvenile    juvenile    yearling    yearling    yearling   
+## [73] yearling    yearling    yearling    yearling    yearling    juvenile    juvenile    juvenile   
+## [81] juvenile    juvenile    yearling    yearling    yearling    yearling    yearling    yearling   
+## [89] yearling    yearling    yearling    yearling    yearling    yearling    yearling    yearling   
+## [97] yearling   
 ## Levels: yearling juvenile subyearling
 ```
 ---
@@ -2995,14 +2838,16 @@ df1 %&gt;%
 ```
 
 ```
-##  [1] yearling juvenile juvenile juvenile juvenile Other    juvenile juvenile juvenile juvenile juvenile juvenile juvenile
-## [14] juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile
-## [27] juvenile juvenile juvenile juvenile yearling yearling juvenile yearling Other    juvenile juvenile juvenile juvenile
-## [40] juvenile juvenile juvenile yearling yearling yearling yearling yearling yearling yearling yearling yearling yearling
-## [53] yearling yearling yearling yearling yearling yearling Other    juvenile juvenile juvenile juvenile juvenile juvenile
-## [66] yearling juvenile juvenile Other    yearling yearling yearling yearling yearling yearling yearling yearling juvenile
-## [79] juvenile juvenile juvenile juvenile yearling yearling yearling yearling yearling yearling yearling yearling yearling
-## [92] yearling yearling yearling yearling yearling yearling
+##  [1] yearling juvenile juvenile juvenile juvenile Other    juvenile juvenile juvenile juvenile
+## [11] juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile
+## [21] juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile juvenile
+## [31] yearling yearling juvenile yearling Other    juvenile juvenile juvenile juvenile juvenile
+## [41] juvenile juvenile yearling yearling yearling yearling yearling yearling yearling yearling
+## [51] yearling yearling yearling yearling yearling yearling yearling yearling Other    juvenile
+## [61] juvenile juvenile juvenile juvenile juvenile yearling juvenile juvenile Other    yearling
+## [71] yearling yearling yearling yearling yearling yearling yearling juvenile juvenile juvenile
+## [81] juvenile juvenile yearling yearling yearling yearling yearling yearling yearling yearling
+## [91] yearling yearling yearling yearling yearling yearling yearling
 ## Levels: yearling juvenile Other
 ```
 
@@ -3039,23 +2884,29 @@ fct_c(A, B)
 ```
 
 ---
-## CHALLENGE
-short/long genes
+## CHALLENGE: Time for an exercise!
+
+Exercise reviewing purrr can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/exercises/EX10_RU_tidyverse_forcats.html)
+
 ---
-## ANSWER
+### Answers to exercise.
+
+Answers can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX10_ANSWERS_RU_tidyverse_forcats.html)
+
+R code for solutions can be found [here](http://rockefelleruniversity.github.io/RU_tidyverse/tidyR/answers/EX10_ANSWERS_RU_tidyverse_forcats.R)
 
 ---
 # Summary 
 We have covered the core packages in the tidyverse  
 
-_ ~~ggplot2 – making pretty graphs~~ 
-_ ~~readr – reading data into R~~  
-_ ~~dplyr – manipulating data~~  
-_ ~~tibble - working with tibbles~~  
-_ ~~tidyr – miscellaneous tools for tidying data~~
-_ ~~purrr - iterating over data~~
-_ ~~stringr – working with strings~~  
-_ ~~forcats - working with factors~~  
+* ~~ggplot2 – making pretty graphs~~ 
+* ~~readr – reading data into R~~  
+* ~~dplyr – manipulating data~~  
+* ~~tibble - working with tibbles~~  
+* ~~tidyr – miscellaneous tools for tidying data~~
+* ~~purrr - iterating over data~~
+* ~~stringr – working with strings~~  
+* ~~forcats - working with factors~~  
 
 ---
 ## Tidy beyond this workshop
@@ -3071,6 +2922,8 @@ There is a lot of support for all things tidy at: https://www.tidyverse.org/
 ## Tidy packages to check out:
 
 plyranges: dplyr equivalent for working with ranges i.e. Granges
+
+profileplyr: graphical and heatmap outputs for genomics
 
 readxl: This package is very useful when you want to import Excel sheets in R
 
@@ -3093,24 +2946,11 @@ https://rockefelleruniversity.github.io/Plotting_In_R/
 R for Data Science text book  
 https://r4ds.had.co.nz/
 
-Data Science with R text book
+Data Science with R text book   
 http://garrettgman.github.io/
 
-Cancer Research UK - Intermediate R course
+Biounformatics Shared Training - Intermediate R course   
 https://bioinformatics-core-shared-training.github.io/r-intermediate/
-
----
-# Thanks
-
-_BRC_
-Tom Carroll: tcarroll@rockefeller.edu
-Ji-Dung Luo: jluo@rockefeller.edu
-Matt Paul: mpaul@rockefeller.edu
-
-_Data Science Group_
-Eli Stoyanova
-Doug Barrows
-Greg Gedman
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

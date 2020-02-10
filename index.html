@@ -2,7 +2,7 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
-    <title>tidyverse by BRC</title>
+    <title>Data wrangling with tidy by BRC</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,10 +11,10 @@
   </head>
   <body>
     <section class="page-header">
-      <h1 class="project-name">tidyverse</h1>
+      <h1 class="project-name">Data wrangling with tidy</h1>
       <h2 class="project-tagline">Rockefeller University, BRC Course - Data wrangling with tidy</h2>
-      <a href="https://github.com/RockefellerUniversity/Intro_To_R_1Day/zipball/master" class="btn">Download.zip</a>
-      <a href="https://github.com/RockefellerUniversity/Intro_To_R_1Day/tarball/master" class="btn">Download.tar.gz</a>
+      <a href="https://github.com/RockefellerUniversity/RU_tidyverse/zipball/master" class="btn">Download.zip</a>
+      <a href="https://github.com/RockefellerUniversity/RU_tidyverse/tarball/master" class="btn">Download.tar.gz</a>
     </section>
 
     <section class="main-content">
@@ -28,11 +28,11 @@
 <h2>
 <a id="the-course" class="anchor" href="#the-course" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The Course</h2>
 
-<p>This course introduces the tidyverse collection of packages for R, and outlines some of the key ideas and functions.</p>
+<p>This course introduces the tidyverse collection of packages for R, and outlines some of their key ideas and functions.</p>
 
-The course is presented as both HTMl and Rpres markdown (to allow for intergration of the presentation in the RStudion enviroment itself).  Exercises and answer sheets are included after all subsections to practice techniques and provide future reference examples. </p>
+The course is presented as both HTML and Rpres markdown (to allow for intergration of the presentation in the RStudio enviroment itself).  Exercises and answer sheets are included after all subsections to practice techniques and provide future reference examples. </p>
 
-<p>Course material and exercises are available to view as rendered HTML at <a href="https://rockefelleruniversity.github.io/Intro_To_R_1Day/">https://rockefelleruniversity.github.io/Intro_To_R_1Day/</a>.<br>
+<p>Course material and exercises are available to view as rendered HTML at <a href="https://rockefelleruniversity.github.io/RU_tidyverse/">https://rockefelleruniversity.github.io/RU_tidyverse/</a>.<br>
 All material is available to download under GPL v2 license.</p>
 
 <h2>
@@ -66,7 +66,7 @@ To install these,</p>
 <li>Install the packages in the R console using devtools
 <pre>
 install.packages("devtools",dependencies=TRUE)
-devtools::install_github("rockefelleruniversity/Intro_To_R_1Day",subdir="introToR",build_vignettes=TRUE)
+devtools::install_github("rockefelleruniversity/RU_tidyverse",subdir="rutidyverse",build_vignettes=TRUE)
 </pre>
 </li>
 </ul>
@@ -80,9 +80,11 @@ To install these,</p>
 <li>First launch RStudio</li>
 <li>Install the packages in the R console using install.packages 
 <pre>
-install.packages("ggplot2",dependencies=TRUE)
-install.packages("rmarkdown",dependencies=TRUE)
-install.packages("yaml",dependencies=TRUE)
+install.packages("tidyverse",dependencies=TRUE)
+install.packages("broom",dependencies=TRUE)
+install.packages("BiocManager")
+BiocManager::install("org.Hs.eg.db",dependencies=TRUE)
+BiocManager::install("TxDb.Hsapiens.UCSC.hg19.knownGene",dependencies=TRUE)
 </pre>
 </li>
 </ul>
@@ -90,18 +92,18 @@ install.packages("yaml",dependencies=TRUE)
 <h4>
 <a id="download-the-material" class="anchor" href="#download-the-material" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download the material</h4>
 
-<p>The material can either be downloaded as a <a href="https://github.com/rockefelleruniversity/Intro_To_R_1Day/archive/master.zip">zip</a></p>
+<p>The material can either be downloaded through this link as a <a href="https://github.com/rockefelleruniversity/RU_tidyverse/archive/master.zip">zip</a>, or by running this command in temrinal:</p>
 
 <pre>
-wget https://github.com/rockefelleruniversity/Intro_To_R_1Day/archive/master.zip ./
+wget https://github.com/rockefelleruniversity/RU_tidyverse/archive/master.zip ./
 </pre>
 
 <h2>
 <a id="The workshop" class="anchor" href="#The workshop" aria-hidden="true"><span class="octicon octicon-link"></span></a>The workshop</h2>
 
-Link to HTML presentation - <a href="./r_course/presentations/slides/introToR_Session1.html">Session 1</a><br>
-Link to single page, printable HTML - <a href="./r_course/presentations/singlepage/introToR_Session1.html">Session 1</a><br>
-Link to R code included in presentation- - <a href="./r_course/presentations/rcode/introToR_Session1.R">Session 1</a><br>
+Link to HTML presentation - <a href="./tidyR/presentations/slides/20191009_tidyr.html">Workshop</a><br>
+Link to single page, printable HTML - <a href="./tidyR/presentations/singlepage/20191009_tidyr.html">Workshop</a><br>
+Link to R code included in presentation - <a href="./tidyR/presentations/r_code/20191009_tidyr.R">Workshop</a><br>
 
 <iframe src="./tidyR/presentations/slides/20191009_tidyr.html" width="100%" height="400"></iframe>
 
